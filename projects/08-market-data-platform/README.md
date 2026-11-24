@@ -224,7 +224,7 @@ Known limitations are listed in full in
 | Backpressure produces observable lag, not silent drops | sink and ingestor block and retry; WebSocket drops are counted and reported in-band | scenario and integration outage tests, failure demo step 3 |
 | All timestamps identify clock/source; query retention is defined | `clocks` and `retention` in every response; column comments in ClickHouse | `TestHistoricalQueryPaginatesWithoutLossOrRepeat`, `TestClickHouseSchemaAndDeduplication` |
 
-Test results and what they do and do not show: [docs/test-report.md](docs/test-report.md).
+The recorded test runs and coverage report are in [docs/evidence/](docs/evidence/).
 
 ## Layout
 

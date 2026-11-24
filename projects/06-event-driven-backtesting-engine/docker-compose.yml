@@ -1,0 +1,13 @@
+# Runs the deterministic demo in a container and leaves the reports in ./runs.
+# The engine is an offline batch program: no ports, no network, no credentials.
+#
+#   docker compose run --rm backtester                      # the demo
+#   docker compose run --rm backtester python -m backtester run \
+#       --strategy examples/momentum.py --data data/demo/bars.parquet --seed 42
+services:
+  backtester:
+    build: .
+    network_mode: none
+    volumes:
+      - ./data:/app/data
+      - ./runs:/app/runs

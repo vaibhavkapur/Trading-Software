@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev,parquet]"
+      - name: Lint
+        run: |
+          ruff check src tests scripts
+          ruff format --check src tests scripts
+      - name: Unit tests
+        run: pytest tests/unit
+      - name: Integration, scenario and replay tests
+        run: pytest tests/integration tests/scenarios --junitxml=reports/junit.xml
+      - name: Deterministic demo
+        run: PYTHONPATH=src python -m tca demo
+      - name: Reconcile the committed report without the tca package
+        run: python scripts/reconcile.py --data examples/data --report examples/report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: reports/

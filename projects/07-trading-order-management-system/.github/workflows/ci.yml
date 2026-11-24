@@ -1,0 +1,42 @@
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      # The database-backed suites run against the official PostgreSQL 17
+      # image. Its password is generated for this job and masked; nothing
+      # secret is stored in the repository.
+      - name: Start PostgreSQL 17
+        run: |
+          pw="$(openssl rand -hex 16)"
+          echo "::add-mask::$pw"
+          docker run -d --name pg -e POSTGRES_PASSWORD="$pw" -p 127.0.0.1:5432:5432 postgres:17 -c max_connections=200
+          for i in $(seq 1 60); do docker exec pg pg_isready -U postgres && break; sleep 1; done
+          docker exec pg pg_isready -U postgres
+          url="postgres://postgres:$pw@127.0.0.1:5432/postgres?sslmode=disable"
+          {
+            echo "OMS_TEST_DATABASE_URL=$url"
+            echo "OMS_DEMO_DATABASE_URL=$url"
+          } >> "$GITHUB_ENV"
+      - run: make setup
+      - run: make lint
+      - run: make test
+      - run: make integration-test
+      - run: make scenario-test
+      - run: make demo
+      - name: Build the container image
+        run: docker build -t oms:ci .
+      - name: Compose file is valid
+        run: |
+          ./scripts/gen-env.sh
+          docker compose config --quiet

@@ -1,0 +1,10 @@
+# Local secrets: created by `make setup`, never committed.
+.env
+
+# Build and run artifacts
+/bin/
+/data/
+*.test
+*.out
+*.tmp
+.DS_Store

@@ -1,0 +1,17 @@
+# Local paper-trading stack. Published on loopback only: the dev environment uses a
+# well-known API key and exposes simulator fault injection.
+services:
+  atp:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      ATP_ENV: dev
+      ATP_MARKET_SESSION: always
+      # Optional: enables the Claude planner. Injected from your shell, never committed.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - atp-data:/data
+
+volumes:
+  atp-data:

@@ -1,0 +1,111 @@
+# Scripted walkthrough: in-process pipeline, simulated data, injected failures
+# captured 2026-11-24T07:02:50Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: make demo
+
+Market data platform: walkthrough
+SIMULATED DATA ONLY. Two invented venues publish random-walk prices; nothing here is
+real market data and nothing connects to a real venue or account. This process runs the
+same services as the Kafka/ClickHouse deployment on an in-memory log and store.
+
+== 1. Two feeds with different wire formats become one schema
+   venue alpha sent (JSON over WebSocket):   {"ch":"trade","sym":"ABC","seq":1,"ts":"2026-11-24T07:02:50.426724Z","px":"99.97","qty":"30","side":"S","tid":"A-1"}
+   venue beta sent (delimited over TCP):     T|1|1795503770424447|LMN.B|12498|160|1|1
+   canonical trade from alpha                 {"type":"trade","instrument_id":"venueA:ABC","trade_id":"A-1","price_ticks":9997,"quantity":30,"aggressor":"sell","event_time":"2026-11-24T07:02:50.426724Z","receive_time":"2026-11-24T07:02:50.426799Z","provider":"alpha","session":"A-20261124T070250.421","seq_domain":"ABC","seq":1,"source":"live","normalizer_version":1}
+   canonical trade from beta                  {"type":"trade","instrument_id":"venueB:ABC.B","trade_id":"2","price_ticks":9997,"quantity":80,"aggressor":"sell","event_time":"2026-11-24T07:02:50.431206Z","receive_time":"2026-11-24T07:02:50.431249Z","provider":"beta","session":"B-20261124T070250.421","seq_domain":"main","seq":4,"source":"live","normalizer_version":1}
+   ok    800 provider events published, 800 in the raw topic
+   ok    800 canonical events, 800 distinct
+   ok    clean flow: store holds 800 rows, expected 800
+   ok    no gaps declared
+   GET /v1/trades?instrument_id=venueA:XYZ&limit=2  ->  200
+       {"aggressor":"buy","event_time":"2026-11-24T07:02:50.459954Z","instrument_id":"venueA:XYZ","normalizer_version":1,"price_ticks":15005,"provider":"alpha","quantity":90,"receive_time":"2026-11-24T07:02:50.460014Z","seq":5,"seq_domain":"XYZ","session":"A-20261124T070250.421","source":"live","trade_id":"A-6","type":"trade"}
+       {"aggressor":"buy","event_time":"2026-11-24T07:02:50.469016Z","instrument_id":"venueA:XYZ","normalizer_version":1,"price_ticks":15004,"provider":"alpha","quantity":10,"receive_time":"2026-11-24T07:02:50.469074Z","seq":6,"seq_domain":"XYZ","session":"A-20261124T070250.421","source":"live","trade_id":"A-9","type":"trade"}
+       tick_size=0.01 lot_size=1 retention={"days":90,"measured_on":"event_time","oldest_queryable":"2026-08-26T00:00:00Z"}
+       clocks={"event_time":"venue clock, as supplied by the provider (UTC)","receive_time":"ingestor host clock when the frame was read (UTC)"}
+   ok    historical query answered from the store
+   ok    live subscriber (WS /v1/stream) has received 282 events for 2 instruments
+
+== 2. Both venues drop the connection: the ingestors resume where they stopped
+   ok    mdp_ingest_reconnects_total = 2
+   ok    events published during the reconnect were resent by the venues: no gap
+   ok    after reconnect: store holds 1200 rows, expected 1200
+
+== 3. Venue beta loses 4 events for good: the loss is declared, not hidden
+   gap record: {"type":"gap","provider":"beta","venue":"venueB","session":"B-20261124T070250.421","seq_domain":"main","from_seq":601,"to_seq":604,"receive_time":"2026-11-24T07:02:51.80581Z","source":"live"}
+   ok    declared missing sequence numbers = 4
+   ok    the ingestor first asked the venue to resend (mdp_ingest_resyncs_total{provider="beta"} = 1)
+   live subscriber received: {"from_seq":601,"missing":4,"provider":"beta","reason":"feed_gap","receive_time":"2026-11-24T07:02:51.80581Z","seq_domain":"main","to_seq":604,"type":"gap","venue":"venueB"}
+   ok    live subscriber was told about the gap in-band
+   ok    GET /v1/gaps?instrument_id=venueB:XYZ.B reports 1 gap
+   ok    after loss: store holds 1396 rows, expected 1396
+
+== 4. Duplicate delivery, unparseable frames and an off-tick price
+   ok    5 frames sent twice; mdp_ingest_duplicates_total{provider="alpha"} = 5
+   ok    dead letters by reason: map[PRICE_NOT_ON_TICK:1 UNPARSEABLE_FRAME:2]
+   dead letter: {"stage":"normalize","reason":"PRICE_NOT_ON_TICK","detail":"price 99.8301 is not a multiple of tick 0.01","provider":"alpha","raw":"{\"provider\":\"alpha\",\"session\":\"A-20261124T070250.421\",\"domain\":\"ABC\",\"seq\":236,\"kind\":\"trade\",\"symbol\":\"ABC\",\"price\":\"99.8301\",\"qty\":\"20\",\"trade_id\":\"A-225\",\"side\":\"sell\",\"event_time\":\"2026-11-24T07:02:52.095146Z\",\"receive_time\":\"2026-11-24T07:02:52.095202Z\",\"source\":\"live\"}","receive_time":"2026-11-24T07:02:52.095202Z"}
+   a price between two ticks is rejected, never rounded: prices are integer ticks end to end
+   ok    after bad input: store holds 1595 rows, expected 1595
+
+== 5. A venue clock running ahead, and late events: flagged, timestamps untouched
+   ok    mdp_flagged_events_total{flag="clock_skew"} = 20
+   ok    mdp_flagged_events_total{flag="stale"} = 3
+   event_time (venue clock) 2026-11-24T07:02:54.337971Z
+   receive_time (our clock) 2026-11-24T07:02:52.338065Z   flags=[clock_skew]
+   ok    the venue's timestamp is kept as sent, 2s ahead of ours; the two clocks are never merged
+   ok    after clock faults: store holds 1635 rows, expected 1635
+
+== 6. Venue alpha goes silent: subscribers see it go stale
+   status for venueA:XYZ:   {"age_ms":1449,"dropped":0,"feed_gaps":0,"instrument_id":"venueA:XYZ","last_event_time":"2026-11-24T07:02:54.370892Z","last_receive_time":"2026-11-24T07:02:52.370961Z","stale":true}
+   status for venueB:XYZ.B: {"age_ms":59,"dropped":0,"feed_gaps":1,"instrument_id":"venueB:XYZ.B","last_event_time":"2026-11-24T07:02:53.765224Z","last_receive_time":"2026-11-24T07:02:53.765356Z","stale":false}
+   ok    venueA:XYZ is reported stale while venueB:XYZ.B stays fresh
+   ok    after the silence: store holds 1820 rows, expected 1820
+
+== 7. The store goes down: lag builds up where you can see it, then drains
+   sink consumer lag = 600 records, mdp_sink_retrying = 1, failed inserts = 7
+   ok    the outage is visible as lag and as a retrying sink
+   GET /v1/trades during the outage -> 503 {"code":"STORE_UNAVAILABLE","message":"historical store is unavailable"}
+   ok    historical queries fail loudly instead of returning partial data
+   ok    live delivery does not depend on the store: 211 more events reached the subscriber
+   store back: sink drained 600 records in 83ms
+   ok    sink lag is back to 0
+   ok    after the outage (nothing dropped, nothing doubled): store holds 2420 rows, expected 2420
+
+== 8. The normalizer dies before saving its position: events are reprocessed, facts are not duplicated
+   restarted normalizer caught up in 35ms
+   canonical log: 3220 records for 2820 distinct facts (400 delivered twice: at-least-once)
+   ok    the restart did redeliver events
+   ok    after redelivery (the store's sorting key is the deduplication key): store holds 2820 rows, expected 2820
+   ok    the gateway did not forward the repeats to subscribers (400 suppressed)
+   ok    no new gap was declared
+
+== Metrics (GET /metrics on the gateway), a selection
+   mdp_consumer_catchup_seconds{consumer="normalizer"} 4.875e-06
+   mdp_consumer_catchup_seconds{consumer="sink"} 1.1042e-05
+   mdp_gap_missing_events_total{provider="beta"} 4
+   mdp_gaps_total{provider="beta"} 1
+   mdp_ingest_bytes_total{provider="alpha"} 165945
+   mdp_ingest_bytes_total{provider="beta"} 84222
+   mdp_ingest_duplicates_total{provider="alpha"} 5
+   mdp_ingest_events_total{kind="depth",provider="beta"} 149
+   mdp_ingest_events_total{kind="quote",provider="alpha"} 933
+   mdp_ingest_events_total{kind="quote",provider="beta"} 863
+   mdp_ingest_events_total{kind="trade",provider="alpha"} 407
+   mdp_ingest_events_total{kind="trade",provider="beta"} 469
+   mdp_ingest_reconnects_total{provider="alpha"} 1
+   mdp_ingest_reconnects_total{provider="beta"} 2
+   mdp_normalizer_rejects_total{reason="PRICE_NOT_ON_TICK"} 1
+   mdp_sink_insert_failures_total{kind="transient"} 7
+   mdp_sink_rows_total{table="depth"} 172
+   mdp_sink_rows_total{table="gaps"} 1
+   mdp_sink_rows_total{table="quotes"} 2050
+   mdp_sink_rows_total{table="trades"} 998
+   mdp_ws_dropped_total 0
+   receive -> normalized p50 <= 3.2ms, p99 <= 819.2ms  (histogram bucket bounds, n=3220; includes the injected outage)
+   receive -> stored     p50 <= 25.6ms, p99 <= 819.2ms  (histogram bucket bounds, n=3220; includes the injected outage)
+   receive -> delivered  p50 <= 3.2ms, p99 <= 6.4ms  (histogram bucket bounds, n=2820; includes the injected outage)
+
+Ingest health:  alpha: events=1340 gaps=0 duplicates=5 reconnects=1 resyncs=0 parse_errors=2
+                beta: events=1481 gaps=1 duplicates=0 reconnects=2 resyncs=1 parse_errors=0
+All checks passed. Latency figures above are from this run on this machine and are not a performance claim.
+
+exit status: 0

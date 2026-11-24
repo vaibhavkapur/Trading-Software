@@ -1,0 +1,67 @@
+# SIMULATED / PAPER TRADING ONLY. The only broker is the simulator.
+#
+# Every secret comes from the environment (a git-ignored .env file) and
+# compose refuses to start if one is missing. Create them with:
+#
+#   make env      # writes .env with fresh random values
+#   make up
+#
+# Ports are published on loopback only.
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: oms
+      POSTGRES_DB: oms
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run `make env` first}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oms -d oms"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  brokersim:
+    build: .
+    entrypoint: ["/brokersim"]
+    command: []
+    environment:
+      BROKERSIM_HTTP_ADDR: 0.0.0.0:9090
+      BROKERSIM_API_KEY: ${OMS_BROKER_API_KEY:?run `make env` first}
+      BROKERSIM_WEBHOOK_SECRET: ${OMS_BROKER_WEBHOOK_SECRET:?run `make env` first}
+      BROKERSIM_WEBHOOK_URL: http://oms:8080/v1/broker/webhooks
+    ports:
+      - "127.0.0.1:9090:9090"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  oms:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      brokersim:
+        condition: service_started
+    environment:
+      OMS_HTTP_ADDR: 0.0.0.0:8080
+      OMS_DATABASE_URL: postgres://oms:${POSTGRES_PASSWORD:?run `make env` first}@postgres:5432/oms?sslmode=disable
+      OMS_API_KEYS: ${OMS_API_KEYS:?run `make env` first}
+      OMS_RISK_LIMITS_FILE: /etc/oms/risk-limits.json
+      OMS_BROKER_URL: http://brokersim:9090
+      OMS_BROKER_API_KEY: ${OMS_BROKER_API_KEY:?run `make env` first}
+      OMS_BROKER_WEBHOOK_SECRET: ${OMS_BROKER_WEBHOOK_SECRET:?run `make env` first}
+      OMS_ROLES: api,outbox,reconciler
+      OMS_RECONCILE_INTERVAL: 30s
+    ports:
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+volumes:
+  pgdata:

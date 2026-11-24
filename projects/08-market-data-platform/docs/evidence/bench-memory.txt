@@ -1,0 +1,24 @@
+# Load test on the in-memory log and store
+# captured 2026-11-24T07:02:55Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: make bench   (mdp bench --rate 2000 --duration 10s --backlog 50000)
+
+mdp bench: SIMULATED load. Measured on one run on one machine; not a capacity claim.
+  infra  in-memory log and store (measures the services, not Kafka or ClickHouse)
+  host   darwin/arm64, 10 CPUs, go1.27.1
+
+Phase 1: paced feed, 2 venues x 2000 events/s for 10s
+  published                39992 events
+  ingested                 39992 events, 3655919 bytes in 10.01s = 3997 events/s, 0.37 MB/s
+  stored                   39992 rows   (gaps 0, duplicates dropped 0, reconnects 0, rejects 0)
+  receive -> normalized    p50 <= 3.20 ms, p99 <= 6.40 ms   (histogram bucket upper bounds, n=39992)
+  receive -> stored        p50 <= 204.80 ms, p99 <= 409.60 ms   (histogram bucket upper bounds, n=39992)
+  receive -> WS client     p50 2.83 ms, p99 5.96 ms, max 26.10 ms   (exact, n=39992, dropped for slow consumer: 0)
+  max consumer lag seen    normalizer 0 records, sink 840 records   (sampled every 100 ms)
+
+Phase 2: catch-up. Normalizer and sink are stopped while 50000 events arrive, then restarted
+  ingest (unpaced)         50000 events in 0.15s = 340189 events/s   (reconnects 0)
+  catch-up                 50000 raw events normalized and stored in 0.34s = 148951 events/s
+  store                    89992 rows, expected 89992
+
+exit status: 0

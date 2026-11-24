@@ -1,0 +1,7 @@
+{
+  "question": "Does abnormal volume predict next-day returns in a liquid equity universe?",
+  "dataset_id": "sim_us_liquid_equities_v1",
+  "horizon_days": 1,
+  "walk_forward": true,
+  "seed": 20260101
+}

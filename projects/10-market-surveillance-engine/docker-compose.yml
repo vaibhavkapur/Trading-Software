@@ -1,0 +1,23 @@
+# Simulated data only. Tokens are injected from the environment and must be
+# set by the caller (16 characters or more each), for example:
+#
+#   export SURV_INGEST_TOKEN=$(openssl rand -hex 16)
+#   export SURV_ADMIN_TOKEN=$(openssl rand -hex 16)
+#   export SURV_ANALYST_TOKENS="alice:$(openssl rand -hex 16),bob:$(openssl rand -hex 16)"
+#   docker compose up --build
+#
+# The simulator routes are on (-sim) because this file is for demos.
+services:
+  surveild:
+    build: .
+    command: ["-sim"]
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      SURV_INGEST_TOKEN: ${SURV_INGEST_TOKEN:?set SURV_INGEST_TOKEN}
+      SURV_ADMIN_TOKEN: ${SURV_ADMIN_TOKEN:?set SURV_ADMIN_TOKEN}
+      SURV_ANALYST_TOKENS: ${SURV_ANALYST_TOKENS:?set SURV_ANALYST_TOKENS}
+    volumes:
+      - surv-data:/data
+volumes:
+  surv-data:

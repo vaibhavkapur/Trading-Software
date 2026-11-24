@@ -1,0 +1,115 @@
+ruleset test-1
+events 1213 (orders 1078, trades 135, late 0)
+alerts 16 from 48 detections (32 folded)
+
+alr-a3db10796144 HIGH_ORDER_TRADE_RATIO v1 MEDIUM
+  accounts E0002-QS in SIMC, 13:59:20.000..14:01:20.000, occurrences 7
+  evidence 94 events (sha256 9c1e773a3ec3), trigger ord:XSIM:E0002-E68
+  observed   amends=0 cancels=25 messages=52 new_orders=27 order_trade_ratio=52 trades=0
+  thresholds high_min_ratio=100 medium_min_ratio=50 min_messages=40 min_ratio=20
+  E0002-QS sent 52 order messages in SIMC between 14:00:20.000Z and 14:01:20.000Z (27 new, 0 amends, 25 cancels) against no trades (counted as 1 for the ratio): an order-to-trade ratio of 52.0. The rule fires at a ratio of 20 or more with at least 40 messages. Many messages per trade can be ordinary re-quoting; treat this as a lead to review.
+
+alr-5f509464eb1c HIGH_ORDER_TRADE_RATIO v1 MEDIUM
+  accounts E0003-FLK in SIMA, 13:59:30.000..14:01:30.000, occurrences 7
+  evidence 91 events (sha256 46186a04e29e), trigger ord:XSIM:E0003-E51
+  observed   amends=78 cancels=0 messages=91 new_orders=13 order_trade_ratio=91 trades=0
+  thresholds high_min_ratio=100 medium_min_ratio=50 min_messages=40 min_ratio=20
+  E0003-FLK sent 91 order messages in SIMA between 14:00:20.000Z and 14:01:20.000Z (13 new, 78 amends, 0 cancels) against no trades (counted as 1 for the ratio): an order-to-trade ratio of 91.0. The rule fires at a ratio of 20 or more with at least 40 messages. Many messages per trade can be ordinary re-quoting; treat this as a lead to review.
+
+alr-528f076bb150 LAYERING_LIKE v1 HIGH
+  accounts E0000-LAY in SIMA, 14:00:01.890..14:00:25.026, occurrences 2
+  evidence 22 events (sha256 b0900d596e20), trigger ord:XSIM:E0000-E23
+  observed   cancel_pct=100 cancelled_qty=7200 imbalance_ratio=24 layered_orders=4 layered_qty=7200 opposite_exec_qty=300 price_levels=4
+  thresholds cancel_within_s=10 high_min_imbalance_ratio=15 lookback_s=30 medium_min_imbalance_ratio=8 min_cancel_pct=80 min_imbalance_ratio=4 min_layer_orders=3 min_price_levels=3
+  E0000-LAY had 4 SELL orders in SIMA resting at 4 price levels (7200 units, none of it traded) when it executed 300 units on the BUY side at 14:00:21.910Z. Within 10s it cancelled 7200 units (100.0%) of those SELL orders. Resting quantity was 24.0x the executed quantity. The rule needs at least 3 orders at 3 or more levels, 80% cancelled, and a 4x imbalance. This shape also arises from ordinary cancel-and-replace quoting; it is a lead for review, not a conclusion.
+
+alr-ea1c0dbc26b5 WASH_TRADE_LIKE v1 LOW
+  accounts E0001-WSH in SIMB, 14:00:09.957..14:00:13.506, occurrences 2
+  evidence 3 events (sha256 b78466c1f7bd), trigger trd:XSIM:E0001-T10
+  observed   self_traded_qty=800 self_trades=3
+  thresholds high_min_trades=12 lookback_s=300 medium_min_trades=6 min_self_trades=2
+  Account E0001-WSH was on both the buy and the sell side of 3 trades in SIMB (800 units) between 14:00:09.957Z and 14:00:13.506Z. The rule fires at 2 or more such trades within 300s. Self-matching can be accidental (for example two strategies of one firm crossing); this is a lead for review, not a conclusion.
+
+alr-2a9282e8159e HIGH_ORDER_TRADE_RATIO v1 MEDIUM
+  accounts E0009-QS in SIMA, 14:00:10.000..14:02:00.000, occurrences 6
+  evidence 75 events (sha256 93379fc7d6c2), trigger ord:XSIM:E0009-E76
+  observed   amends=0 cancels=35 messages=75 new_orders=40 order_trade_ratio=75 trades=0
+  thresholds high_min_ratio=100 medium_min_ratio=50 min_messages=40 min_ratio=20
+  E0009-QS sent 75 order messages in SIMA between 14:01:00.000Z and 14:02:00.000Z (40 new, 0 amends, 35 cancels) against no trades (counted as 1 for the ratio): an order-to-trade ratio of 75.0. The rule fires at a ratio of 20 or more with at least 40 messages. Many messages per trade can be ordinary re-quoting; treat this as a lead to review.
+
+alr-dcb11b85ef8e HIGH_CANCEL_RATE v1 LOW
+  accounts E0002-QS in SIMC, 14:00:20.000..14:01:20.000, occurrences 1
+  evidence 52 events (sha256 8d32d6abf9cd), trigger ord:XSIM:E0002-E147
+  observed   cancel_rate_pct=92.59 cancels=25 new_orders=27 trades=0
+  thresholds high_min_new_orders=150 medium_min_new_orders=50 min_cancel_rate_pct=90 min_new_orders=20
+  E0002-QS entered 27 new orders in SIMC between 14:00:20.000Z and 14:01:20.000Z and sent 25 cancels (92.6% of new orders). The rule fires at 90% or more with at least 20 new orders in the window. High cancellation is common in legitimate quoting; this says the pattern is worth a look, nothing more.
+
+alr-e797f4a77491 HIGH_ORDER_TRADE_RATIO v1 HIGH
+  accounts E0010-FLK in SIMB, 14:00:20.000..14:02:20.000, occurrences 7
+  evidence 133 events (sha256 0bcada97a124), trigger ord:XSIM:E0010-E55
+  observed   amends=120 cancels=0 messages=132 new_orders=12 order_trade_ratio=132 trades=1
+  thresholds high_min_ratio=100 medium_min_ratio=50 min_messages=40 min_ratio=20
+  E0010-FLK sent 132 order messages in SIMB between 14:01:10.000Z and 14:02:10.000Z (12 new, 120 amends, 0 cancels) against 1 trade: an order-to-trade ratio of 132.0. The rule fires at a ratio of 20 or more with at least 40 messages. Many messages per trade can be ordinary re-quoting; treat this as a lead to review.
+
+alr-144e8f3db710 LAYERING_LIKE v1 HIGH
+  accounts E0000-LAY in SIMA, 14:00:31.834..14:00:37.152, occurrences 1
+  evidence 11 events (sha256 93dab49916ff), trigger ord:XSIM:E0000-E60
+  observed   cancel_pct=100 cancelled_qty=4500 imbalance_ratio=22.5 layered_orders=5 layered_qty=4500 opposite_exec_qty=200 price_levels=5
+  thresholds cancel_within_s=10 high_min_imbalance_ratio=15 lookback_s=30 medium_min_imbalance_ratio=8 min_cancel_pct=80 min_imbalance_ratio=4 min_layer_orders=3 min_price_levels=3
+  E0000-LAY had 5 BUY orders in SIMA resting at 5 price levels (4500 units, none of it traded) when it executed 200 units on the SELL side at 14:00:34.775Z. Within 10s it cancelled 4500 units (100.0%) of those BUY orders. Resting quantity was 22.5x the executed quantity. The rule needs at least 3 orders at 3 or more levels, 80% cancelled, and a 4x imbalance. This shape also arises from ordinary cancel-and-replace quoting; it is a lead for review, not a conclusion.
+
+alr-57bb4f34ba56 LAYERING_LIKE v1 HIGH
+  accounts E0007-LAY in SIMB, 14:00:52.000..14:00:57.011, occurrences 1
+  evidence 11 events (sha256 80e66f169aec), trigger ord:XSIM:E0007-E20
+  observed   cancel_pct=100 cancelled_qty=10000 imbalance_ratio=100 layered_orders=5 layered_qty=10000 opposite_exec_qty=100 price_levels=5
+  thresholds cancel_within_s=10 high_min_imbalance_ratio=15 lookback_s=30 medium_min_imbalance_ratio=8 min_cancel_pct=80 min_imbalance_ratio=4 min_layer_orders=3 min_price_levels=3
+  E0007-LAY had 5 BUY orders in SIMB resting at 5 price levels (10000 units, none of it traded) when it executed 100 units on the SELL side at 14:00:54.461Z. Within 10s it cancelled 10000 units (100.0%) of those BUY orders. Resting quantity was 100.0x the executed quantity. The rule needs at least 3 orders at 3 or more levels, 80% cancelled, and a 4x imbalance. This shape also arises from ordinary cancel-and-replace quoting; it is a lead for review, not a conclusion.
+
+alr-9a20bb930c02 WASH_TRADE_LIKE v1 MEDIUM
+  accounts E0008-WSH in SIMC, 14:00:59.918..14:01:08.586, occurrences 5
+  evidence 6 events (sha256 9b5ffffce500), trigger trd:XSIM:E0008-T10
+  observed   self_traded_qty=1900 self_trades=6
+  thresholds high_min_trades=12 lookback_s=300 medium_min_trades=6 min_self_trades=2
+  Account E0008-WSH was on both the buy and the sell side of 6 trades in SIMC (1900 units) between 14:00:59.918Z and 14:01:08.586Z. The rule fires at 2 or more such trades within 300s. Self-matching can be accidental (for example two strategies of one firm crossing); this is a lead for review, not a conclusion.
+
+alr-338273e34244 LAYERING_LIKE v1 HIGH
+  accounts E0007-LAY in SIMB, 14:01:10.765..14:01:37.365, occurrences 2
+  evidence 28 events (sha256 d6a09eecd3e0), trigger ord:XSIM:E0007-E43
+  observed   cancel_pct=100 cancelled_qty=8400 imbalance_ratio=42 layered_orders=7 layered_qty=8400 opposite_exec_qty=200 price_levels=7
+  thresholds cancel_within_s=10 high_min_imbalance_ratio=15 lookback_s=30 medium_min_imbalance_ratio=8 min_cancel_pct=80 min_imbalance_ratio=4 min_layer_orders=3 min_price_levels=3
+  E0007-LAY had 7 SELL orders in SIMB resting at 7 price levels (8400 units, none of it traded) when it executed 200 units on the BUY side at 14:01:33.917Z. Within 10s it cancelled 8400 units (100.0%) of those SELL orders. Resting quantity was 42.0x the executed quantity. The rule needs at least 3 orders at 3 or more levels, 80% cancelled, and a 4x imbalance. This shape also arises from ordinary cancel-and-replace quoting; it is a lead for review, not a conclusion.
+
+alr-ff02d7a37387 HIGH_CANCEL_RATE v1 LOW
+  accounts E0012-MM in SIMA, 14:01:30.000..14:02:40.000, occurrences 2
+  evidence 103 events (sha256 61eaa0494c40), trigger ord:XSIM:E0012-E180
+  observed   cancel_rate_pct=120.83 cancels=29 new_orders=24 trades=3
+  thresholds high_min_new_orders=150 medium_min_new_orders=50 min_cancel_rate_pct=90 min_new_orders=20
+  E0012-MM entered 24 new orders in SIMA between 14:01:40.000Z and 14:02:40.000Z and sent 29 cancels (120.8% of new orders). The rule fires at 90% or more with at least 20 new orders in the window. High cancellation is common in legitimate quoting; this says the pattern is worth a look, nothing more.
+
+alr-bf1a08b6ce1e WASH_TRADE_LIKE v1 LOW
+  accounts E0013-XA,E0013-XB in SIMB, 14:01:41.156..14:02:01.942, occurrences 1
+  evidence 4 events (sha256 c18964c250db), trigger trd:XSIM:E0013-T20
+  observed   offset_pct=100 pair_trades=4 price_diff_bps=3.44 qty_a_buys=700 qty_b_buys=700
+  thresholds high_min_trades=12 lookback_s=300 max_price_diff_bps=10 medium_min_trades=6 min_offset_pct=90 min_pair_trades=4
+  E0013-XA and E0013-XB traded SIMB with each other 4 times between 14:01:41.156Z and 14:02:01.942Z: E0013-XA bought 700 units from E0013-XB and E0013-XB bought 700 units back (100.0% offsetting) at average prices 3.44 bps apart. The rule fires at 4 or more trades, 90% offsetting and prices within 10 bps. Two active participants can meet repeatedly by chance; this is a lead for review, not a conclusion.
+
+alr-1791ecf8699b LAYERING_LIKE v1 LOW
+  accounts E0012-MM in SIMA, 14:01:44.029..14:01:49.900, occurrences 1
+  evidence 9 events (sha256 7a76e2479eed), trigger ord:XSIM:E0012-E130
+  observed   cancel_pct=100 cancelled_qty=1200 imbalance_ratio=4 layered_orders=4 layered_qty=1200 opposite_exec_qty=300 price_levels=4
+  thresholds cancel_within_s=10 high_min_imbalance_ratio=15 lookback_s=30 medium_min_imbalance_ratio=8 min_cancel_pct=80 min_imbalance_ratio=4 min_layer_orders=3 min_price_levels=3
+  E0012-MM had 4 SELL orders in SIMA resting at 4 price levels (1200 units, none of it traded) when it executed 300 units on the BUY side at 14:01:49.635Z. Within 10s it cancelled 1200 units (100.0%) of those SELL orders. Resting quantity was 4.0x the executed quantity. The rule needs at least 3 orders at 3 or more levels, 80% cancelled, and a 4x imbalance. This shape also arises from ordinary cancel-and-replace quoting; it is a lead for review, not a conclusion.
+
+alr-14c9d95e01b6 LAYERING_LIKE v1 LOW
+  accounts E0012-MM in SIMA, 14:01:49.960..14:01:55.599, occurrences 1
+  evidence 9 events (sha256 01388e25d2e9), trigger ord:XSIM:E0012-E153
+  observed   cancel_pct=100 cancelled_qty=1200 imbalance_ratio=4 layered_orders=4 layered_qty=1200 opposite_exec_qty=300 price_levels=4
+  thresholds cancel_within_s=10 high_min_imbalance_ratio=15 lookback_s=30 medium_min_imbalance_ratio=8 min_cancel_pct=80 min_imbalance_ratio=4 min_layer_orders=3 min_price_levels=3
+  E0012-MM had 4 BUY orders in SIMA resting at 4 price levels (1200 units, none of it traded) when it executed 300 units on the SELL side at 14:01:55.115Z. Within 10s it cancelled 1200 units (100.0%) of those BUY orders. Resting quantity was 4.0x the executed quantity. The rule needs at least 3 orders at 3 or more levels, 80% cancelled, and a 4x imbalance. This shape also arises from ordinary cancel-and-replace quoting; it is a lead for review, not a conclusion.
+
+alr-3684cea18bca WASH_TRADE_LIKE v1 MEDIUM
+  accounts E0020-XA,E0020-XB in SIMC, 14:02:24.662..14:03:08.486, occurrences 2
+  evidence 6 events (sha256 495ab49afdaa), trigger trd:XSIM:E0020-T25
+  observed   offset_pct=94.12 pair_trades=6 price_diff_bps=0.21 qty_a_buys=1700 qty_b_buys=1600
+  thresholds high_min_trades=12 lookback_s=300 max_price_diff_bps=10 medium_min_trades=6 min_offset_pct=90 min_pair_trades=4
+  E0020-XA and E0020-XB traded SIMC with each other 6 times between 14:02:24.662Z and 14:03:08.486Z: E0020-XA bought 1700 units from E0020-XB and E0020-XB bought 1600 units back (94.1% offsetting) at average prices 0.21 bps apart. The rule fires at 4 or more trades, 90% offsetting and prices within 10 bps. Two active participants can meet repeatedly by chance; this is a lead for review, not a conclusion.

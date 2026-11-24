@@ -1,0 +1,35 @@
+name: Cross-Exchange Arbitrage Monitor CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Setup & Lint
+        run: |
+          make setup
+          make lint
+
+      - name: Unit, Integration, and Scenario Tests (with Race Detector)
+        run: make test-all
+
+      - name: Deterministic Replay Verification
+        run: make replay
+
+      - name: Build Binaries
+        run: make build
+
+      - name: Benchmarks
+        run: make bench

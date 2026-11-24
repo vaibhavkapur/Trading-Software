@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transaction Cost Analysis</title>
+<style>
+  :root {
+    --ink: #1b1f24; --muted: #5f6b7a; --line: #dfe3e8; --bg: #f6f7f9; --panel: #fff;
+    --spread: #3b6fb6; --drift: #e07b1a; --unsplit: #9aa3ad; --fees: #3f9a52;
+    --bad: #b3261e; --good: #1e7a3c; --warn-bg: #fff4d6; --warn-ink: #7a5200;
+    --err-bg: #fde3e1; --info-bg: #e9edf2;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+         color: var(--ink); background: var(--bg); }
+  header { background: var(--panel); border-bottom: 1px solid var(--line); padding: 14px 24px;
+           display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+  h1 { font-size: 18px; margin: 0; }
+  h2 { font-size: 15px; margin: 0 0 10px; }
+  h3 { font-size: 13px; margin: 16px 0 6px; color: var(--muted); text-transform: uppercase;
+       letter-spacing: .04em; }
+  main { padding: 16px 24px 48px; max-width: 1400px; margin: 0 auto; }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px;
+           font-weight: 600; background: var(--info-bg); color: var(--muted); white-space: nowrap; }
+  .badge.sim { background: #e3ecfb; color: #1d4a94; }
+  .badge.warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .badge.err { background: var(--err-bg); color: var(--bad); }
+  .badge.ok { background: #e1f3e6; color: var(--good); }
+  .meta { color: var(--muted); font-size: 12px; flex-basis: 100%; }
+  .meta code { font-size: 11px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; margin-bottom: 14px; }
+  .controls label { display: flex; flex-direction: column; font-size: 11px; color: var(--muted); gap: 2px; }
+  .controls label.check { flex-direction: row; align-items: center; gap: 6px; font-size: 13px;
+                          color: var(--ink); padding-bottom: 5px; }
+  select, a.button { font: inherit; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px;
+                     background: var(--panel); color: var(--ink); }
+  a.button { text-decoration: none; }
+  a.button:hover { border-color: var(--muted); }
+  .spacer { flex: 1; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;
+          margin-bottom: 14px; }
+  .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .kpi .label { font-size: 11px; color: var(--muted); }
+  .kpi .value { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kpi .sub { font-size: 11px; color: var(--muted); }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+           padding: 14px 16px; margin-bottom: 14px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+  th { font-size: 11px; color: var(--muted); font-weight: 600; position: sticky; top: 0; background: var(--panel); }
+  th.l, td.l { text-align: left; }
+  td.flags { white-space: normal; text-align: left; max-width: 340px; }
+  tbody tr.click { cursor: pointer; }
+  tbody tr.click:hover { background: #f1f4f8; }
+  tbody tr.selected { background: #e3ecfb; }
+  .pos { color: var(--bad); } .neg { color: var(--good); } .na { color: #a0a8b2; }
+  .notes { margin: 8px 0; padding: 8px 12px; background: var(--warn-bg); color: var(--warn-ink);
+           border-radius: 6px; font-size: 12.5px; }
+  .notes ul { margin: 0; padding-left: 18px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--muted); margin: 6px 0; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; }
+  .legend i.line { height: 0; border-top: 2px dashed; border-radius: 0; vertical-align: middle; width: 16px; }
+  .scroll { max-height: 420px; overflow-y: auto; }
+  .error { background: var(--err-bg); color: var(--bad); padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; }
+  .empty { color: var(--muted); padding: 24px; text-align: center; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0 24px; }
+  svg text { font: 11px system-ui, sans-serif; fill: var(--muted); }
+  svg { max-width: 100%; height: auto; }
+  .hint { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Transaction Cost Analysis</h1>
+  <span class="badge sim">Paper / simulated data &middot; no live connectivity</span>
+  <span class="hint">Costs are positive when execution was worse than the benchmark, for buys and sells.</span>
+  <div class="meta" id="meta"></div>
+</header>
+<main>
+  <div id="error" class="error" hidden></div>
+
+  <div class="controls">
+    <label>Benchmark
+      <select id="benchmark">
+        <option value="arrival_mid">Arrival mid</option>
+        <option value="decision_mid">Decision mid</option>
+        <option value="interval_vwap">Interval VWAP</option>
+      </select>
+    </label>
+    <label>Group by
+      <select id="group_by">
+        <option value="strategy">Strategy</option>
+        <option value="broker">Broker</option>
+        <option value="venue">Venue</option>
+        <option value="symbol">Symbol</option>
+        <option value="side">Side</option>
+        <option value="time_bucket">Arrival time (30 min)</option>
+      </select>
+    </label>
+    <label>Symbol <select id="symbol"></select></label>
+    <label>Broker <select id="broker"></select></label>
+    <label>Strategy <select id="strategy"></select></label>
+    <label>Venue <select id="venue"></select></label>
+    <label>Side
+      <select id="side"><option value="">All</option><option>buy</option><option>sell</option></select>
+    </label>
+    <label class="check"><input type="checkbox" id="include_untrusted"> Include untrusted benchmarks</label>
+    <span class="spacer"></span>
+    <a class="button" id="export-orders" href="#">Orders CSV</a>
+    <a class="button" id="export-summary" href="#">Summary CSV</a>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="panel">
+    <h2 id="summary-title">Cost breakdown</h2>
+    <div class="legend" id="chart-legend"></div>
+    <div id="chart"></div>
+    <div id="summary-notes"></div>
+    <table id="summary"></table>
+  </section>
+
+  <section class="panel">
+    <h2>Orders <span class="hint" id="orders-count"></span></h2>
+    <div class="scroll"><table id="orders"></table></div>
+  </section>
+
+  <section class="panel" id="detail" hidden></section>
+</main>
+
+<script>
+"use strict";
+
+const COLORS = { spread: "#3b6fb6", drift: "#e07b1a", unsplit: "#9aa3ad", fees: "#3f9a52", slippage: "#3b6fb6" };
+const BENCHMARK_LABEL = { arrival_mid: "arrival mid", decision_mid: "decision mid", interval_vwap: "interval VWAP" };
+const INFO_FLAGS = new Set(["NO_FILLS", "PARTIAL_FILL"]);
+const INTEGRITY_FLAGS = new Set(["OVERFILLED", "FILL_BEFORE_ARRIVAL"]);
+const state = { selected: null };
+
+// -- DOM helpers: text always goes in through textContent, never innerHTML -----------------
+function h(tag, attrs, ...children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs || {})) {
+    if (value === null || value === undefined || value === false) continue;
+    if (key === "class") node.className = value;
+    else if (key === "onclick") node.addEventListener("click", value);
+    else node.setAttribute(key, value);
+  }
+  node.append(...children.filter((child) => child !== null && child !== undefined));
+  return node;
+}
+function svg(tag, attrs, ...children) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+  node.append(...children.filter((child) => child !== null && child !== undefined));
+  return node;
+}
+const $ = (id) => document.getElementById(id);
+
+// -- formatting ----------------------------------------------------------------------------
+const isNum = (value) => value !== null && value !== undefined && value !== "";
+function fmt(value, places = 2) {
+  if (!isNum(value)) return "—";
+  return Number(value).toLocaleString("en-US", { minimumFractionDigits: places, maximumFractionDigits: places });
+}
+const pct = (value, places = 1) => (isNum(value) ? fmt(Number(value) * 100, places) + "%" : "—");
+const seconds = (ms) => (isNum(ms) ? fmt(Number(ms) / 1000, 1) + " s" : "—");
+function signed(value, places = 2) {
+  if (!isNum(value)) return h("span", { class: "na" }, "—");
+  const number = Number(value);
+  const cls = number > 0 ? "pos" : number < 0 ? "neg" : "";
+  return h("span", { class: cls }, (number > 0 ? "+" : "") + fmt(number, places));
+}
+function parseTs(ts) {  // ISO-8601 with microseconds -> epoch milliseconds (fractional)
+  return Date.parse(ts.slice(0, 23) + "Z") + Number(ts.slice(23, 26) || 0) / 1000;
+}
+const clock = (ms) => new Date(ms).toISOString().slice(11, 19);
+function flagBadge(flag) {
+  const cls = INFO_FLAGS.has(flag) ? "badge" : INTEGRITY_FLAGS.has(flag) ? "badge err" : "badge warn";
+  return h("span", { class: cls }, flag);
+}
+
+// -- data ----------------------------------------------------------------------------------
+function filters() {
+  const out = {};
+  for (const id of ["symbol", "broker", "strategy", "venue", "side"]) {
+    if ($(id).value) out[id] = $(id).value;
+  }
+  return out;
+}
+function query(params) {
+  const search = new URLSearchParams(params).toString();
+  return search ? "?" + search : "";
+}
+async function getJSON(path, params = {}) {
+  const response = await fetch(path + query(params));
+  if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+  return response.json();
+}
+
+async function loadDimensions() {
+  const datasets = await getJSON("/v1/datasets");
+  for (const id of ["symbol", "broker", "strategy", "venue"]) {
+    const current = $(id).value;
+    $(id).replaceChildren(h("option", { value: "" }, "All"),
+      ...datasets.dimensions[id].map((value) => h("option", {}, value)));
+    $(id).value = datasets.dimensions[id].includes(current) ? current : "";
+  }
+  const rows = datasets.rows;
+  $("meta").replaceChildren(
+    "Dataset ", h("code", { title: datasets.version }, datasets.version.slice(0, 19) + "…"),
+    " · methodology ", h("code", {}, datasets.methodology.id),
+    ` · quotes older than ${datasets.methodology.parameters.max_quote_age_ms / 1000}s are stale`,
+    ` · ${rows.orders} orders, ${rows.fills} fills, ${rows.quotes.toLocaleString("en-US")} quotes, ${rows.bars} bars`,
+    datasets.orphan_fills ? ` · ${datasets.orphan_fills} fills match no order` : "");
+  return datasets;
+}
+
+async function refresh() {
+  try {
+    $("error").hidden = true;
+    const benchmark = $("benchmark").value;
+    const options = { benchmark, include_untrusted: $("include_untrusted").checked, ...filters() };
+    const summaryParams = { group_by: $("group_by").value, ...options };
+    const [summary, orders] = await Promise.all([
+      getJSON("/v1/tca/summary", summaryParams),
+      getJSON("/v1/tca/orders", filters()),
+    ]);
+    $("export-orders").href = "/v1/tca/export.csv" + query(filters());
+    $("export-summary").href = "/v1/tca/summary.csv" + query(summaryParams);
+    renderKpis(summary.totals, benchmark);
+    renderSummary(summary);
+    renderOrders(orders.orders, benchmark);
+    if (state.selected && orders.orders.some((order) => order.order_id === state.selected)) {
+      await showOrder(state.selected, false);
+    } else {
+      state.selected = null;
+      $("detail").hidden = true;
+    }
+  } catch (error) {
+    $("error").textContent = "Could not load results: " + error.message;
+    $("error").hidden = false;
+  }
+}
+
+// -- KPI tiles -----------------------------------------------------------------------------
+function renderKpis(totals, benchmark) {
+  if (!totals) {
+    $("kpis").replaceChildren(h("div", { class: "empty" },
+      "No orders loaded. Import CSVs with POST /v1/imports/{orders,child-orders,fills,quotes,bars}, or start with `make run`."));
+    return;
+  }
+  const tile = (label, value, sub) => h("div", { class: "kpi" },
+    h("div", { class: "label" }, label), h("div", { class: "value" }, value), h("div", { class: "sub" }, sub || ""));
+  const excluded = totals.orders_filled - totals.orders_costed;
+  $("kpis").replaceChildren(
+    tile("Orders", String(totals.orders), `${totals.orders_filled} with fills`),
+    tile("Trusted benchmark", pct(totals.trusted_share), `${totals.orders_trusted} of ${totals.orders_filled} filled orders`),
+    tile(`Slippage vs ${BENCHMARK_LABEL[benchmark]}`, signed(totals.slippage_bps), `bps · ${excluded} filled orders excluded`),
+    tile("Fees", signed(totals.fee_bps), `bps · ${fmt(totals.fees)} total`),
+    tile("All-in cost", signed(totals.total_bps), "bps · slippage + fees"),
+    tile("Effective spread", fmt(totals.effective_spread_bps), `bps · quoted ${fmt(totals.avg_quoted_spread_bps)}`),
+    tile("Fill rate", pct(totals.fill_rate), `${totals.filled_qty.toLocaleString("en-US")} shares filled`),
+    tile("Time to first fill", seconds(totals.avg_time_to_first_fill_ms), `last fill ${seconds(totals.avg_time_to_last_fill_ms)}`));
+}
+
+// -- summary chart + table -----------------------------------------------------------------
+function componentsOf(row, split) {
+  if (split) {
+    return [["spread", row.spread_bps], ["drift", row.drift_bps], ["unsplit", row.unsplit_bps], ["fees", row.fee_bps]];
+  }
+  return [["slippage", row.slippage_bps], ["fees", row.fee_bps]];
+}
+
+function renderChart(rows, split) {
+  const usable = rows.filter((row) => isNum(row.total_bps));
+  if (!usable.length) return h("div", { class: "empty" }, "No orders with a usable benchmark in this selection.");
+  const stacks = usable.map((row) => {
+    let positive = 0, negative = 0;
+    const parts = [];
+    for (const [name, raw] of componentsOf(row, split && isNum(row.spread_bps))) {
+      const value = Number(raw || 0);
+      if (value >= 0) { parts.push({ name, value, from: positive, to: positive + value }); positive += value; }
+      else { parts.push({ name, value, from: negative + value, to: negative }); negative += value; }
+    }
+    return { row, parts, positive, negative };
+  });
+  const low = Math.min(0, ...stacks.map((stack) => stack.negative));
+  const high = Math.max(0, ...stacks.map((stack) => stack.positive));
+  const span = high - low || 1;
+  const left = 150, right = 70, barH = 18, gap = 12, top = 8, width = 900;
+  const height = top + stacks.length * (barH + gap) + 24;
+  const x = (value) => left + ((value - low) / span) * (width - left - right);
+  const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img",
+    "aria-label": "Cost breakdown in basis points by group" });
+
+  const step = niceStep(span / 6);
+  for (let tick = Math.ceil(low / step) * step; tick <= high + 1e-9; tick += step) {
+    root.append(svg("line", { x1: x(tick), x2: x(tick), y1: top, y2: height - 20, stroke: tick === 0 ? "#5f6b7a" : "#e7eaee" }),
+      svg("text", { x: x(tick), y: height - 6, "text-anchor": "middle" }, fmt(tick, step < 1 ? 1 : 0)));
+  }
+  root.append(svg("text", { x: width - right + 8, y: height - 6 }, "bps"));
+
+  stacks.forEach((stack, index) => {
+    const y = top + index * (barH + gap);
+    root.append(svg("text", { x: left - 8, y: y + barH - 5, "text-anchor": "end", style: "fill:#1b1f24;font-size:12px" }, stack.row.key));
+    for (const part of stack.parts) {
+      if (part.to - part.from <= 0) continue;
+      root.append(svg("rect", { x: x(part.from), y, width: Math.max(x(part.to) - x(part.from), 0.5), height: barH, fill: COLORS[part.name] },
+        svg("title", {}, `${stack.row.key} · ${part.name}: ${part.value > 0 ? "+" : ""}${fmt(part.value)} bps`)));
+    }
+    const total = Number(stack.row.total_bps);
+    root.append(
+      svg("line", { x1: x(total), x2: x(total), y1: y - 3, y2: y + barH + 3, stroke: "#1b1f24", "stroke-width": 2 }),
+      svg("text", { x: x(Math.max(total, stack.positive)) + 6, y: y + barH - 5, style: "fill:#1b1f24" },
+        (total > 0 ? "+" : "") + fmt(total) + " all-in"));
+  });
+  return root;
+}
+function niceStep(raw) {
+  const power = Math.pow(10, Math.floor(Math.log10(raw)));
+  const scaled = raw / power;
+  return (scaled >= 5 ? 10 : scaled >= 2 ? 5 : scaled >= 1 ? 2 : 1) * power;
+}
+
+function renderSummary(summary) {
+  const split = summary.benchmark === "arrival_mid";
+  const label = $("group_by").selectedOptions[0].textContent;
+  $("summary-title").textContent = `Cost vs ${BENCHMARK_LABEL[summary.benchmark]} by ${label.toLowerCase()}` +
+    (summary.include_untrusted ? " (untrusted benchmarks included)" : " (trusted benchmarks only)");
+  const legend = split
+    ? [["spread", "Spread paid at each fill"], ["drift", "Mid drift, arrival → fill (own impact + market move, not separable)"],
+       ["unsplit", "Not split (fill quotes missing or stale)"], ["fees", "Fees net of rebates"]]
+    : [["slippage", `Slippage vs ${BENCHMARK_LABEL[summary.benchmark]}`], ["fees", "Fees net of rebates"]];
+  $("chart-legend").replaceChildren(
+    ...legend.map(([name, text]) => h("span", {}, h("i", { style: `background:${COLORS[name]}` }), text)),
+    h("span", {}, h("i", { style: "background:#1b1f24;width:2px;height:12px" }), "All-in cost"));
+  $("chart").replaceChildren(renderChart(summary.rows, split));
+  $("summary-notes").replaceChildren(summary.notes.length
+    ? h("div", { class: "notes" }, h("ul", {}, ...summary.notes.map((note) => h("li", {}, note)))) : "");
+
+  const venue = summary.group_by === "venue";
+  const columns = [
+    ["l", label, (row) => row.key],
+    ["", "Orders", (row) => String(row.orders)],
+    ["", "Filled", (row) => String(row.orders_filled)],
+    ["", "Trusted", (row) => pct(row.trusted_share, 0)],
+    ["", venue ? "Fill rate (of routed)" : "Fill rate", (row) => pct(row.fill_rate)],
+    ["", "Slippage bps", (row) => signed(row.slippage_bps)],
+    ...(split ? [["", "Spread", (row) => signed(row.spread_bps)], ["", "Drift", (row) => signed(row.drift_bps)],
+                 ["", "Unsplit", (row) => signed(row.unsplit_bps)]] : []),
+    ["", "Fees bps", (row) => signed(row.fee_bps)],
+    ["", "All-in bps", (row) => signed(row.total_bps)],
+    ["", "Eff. spread bps", (row) => fmt(row.effective_spread_bps)],
+    ["", "Quoted spread bps", (row) => fmt(row.avg_quoted_spread_bps)],
+    ...(venue ? [] : [["", "To first fill", (row) => seconds(row.avg_time_to_first_fill_ms)]]),
+    ["", "Fees", (row) => fmt(row.fees)],
+  ];
+  const body = [...summary.rows, ...(summary.totals && summary.rows.length > 1 && !venue ? [{ ...summary.totals, key: "All" }] : [])];
+  $("summary").replaceChildren(
+    h("thead", {}, h("tr", {}, ...columns.map(([cls, title]) => h("th", { class: cls, scope: "col" }, title)))),
+    h("tbody", {}, ...body.map((row) => h("tr", { style: row.key === "All" ? "font-weight:600" : null },
+      ...columns.map(([cls, , cell]) => h("td", { class: cls }, cell(row)))))));
+}
+
+// -- orders table --------------------------------------------------------------------------
+function renderOrders(orders, benchmark) {
+  $("orders-count").textContent = `${orders.length} · click a row for the drill-down`;
+  const head = ["Order", "Symbol", "Side", "Broker", "Strategy", "Arrival (UTC)", "Qty", "Filled",
+    $("benchmark").selectedOptions[0].textContent, "Slippage bps", "Fees", "Trust", "Flags"];
+  $("orders").replaceChildren(
+    h("thead", {}, h("tr", {}, ...head.map((title, index) =>
+      h("th", { class: index < 6 || index === 12 ? "l" : "", scope: "col" }, title)))),
+    h("tbody", {}, ...orders.map((order) => h("tr", {
+        class: "click" + (order.order_id === state.selected ? " selected" : ""),
+        "data-order": order.order_id, tabindex: "0", onclick: () => showOrder(order.order_id, true) },
+      h("td", { class: "l" }, order.order_id),
+      h("td", { class: "l" }, order.symbol),
+      h("td", { class: "l" }, order.side),
+      h("td", { class: "l" }, order.broker),
+      h("td", { class: "l" }, order.strategy),
+      h("td", { class: "l" }, order.arrival_ts.slice(11, 19)),
+      h("td", {}, order.qty.toLocaleString("en-US")),
+      h("td", {}, pct(order.fill_rate, 0)),
+      h("td", {}, fmt(order[benchmark], 4)),
+      h("td", {}, signed(order[benchmark + "_bps"])),
+      h("td", {}, fmt(order.fees)),
+      h("td", {}, order.fills === 0 ? h("span", { class: "na" }, "n/a")
+        : order[benchmark + "_trusted"] ? h("span", { class: "badge ok" }, "trusted") : h("span", { class: "badge warn" }, "untrusted")),
+      h("td", { class: "flags" }, ...order.flags.flatMap((flag) => [flagBadge(flag), " "]))))));
+}
+
+// -- drill-down ----------------------------------------------------------------------------
+async function showOrder(orderId, scroll) {
+  state.selected = orderId;
+  for (const row of $("orders").querySelectorAll("tbody tr")) {
+    row.classList.toggle("selected", row.dataset.order === orderId);
+  }
+  try {
+    const id = encodeURIComponent(orderId);
+    const [detail, overlay] = await Promise.all([
+      getJSON(`/v1/tca/orders/${id}`, { benchmark: $("benchmark").value }),
+      getJSON(`/v1/tca/orders/${id}/overlay`),
+    ]);
+    renderDetail(detail, overlay);
+    if (scroll) $("detail").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (error) {
+    $("error").textContent = "Could not load order: " + error.message;
+    $("error").hidden = false;
+  }
+}
+
+function renderDetail(detail, overlay) {
+  const s = detail.summary, head = detail.headline;
+  const facts = [
+    ["Executed", `${s.filled_qty.toLocaleString("en-US")} of ${s.qty.toLocaleString("en-US")} (${pct(s.fill_rate, 0)}) in ${s.fills} fills`],
+    ["Average price", fmt(s.avg_price, 4)],
+    [`Slippage vs ${BENCHMARK_LABEL[head.benchmark]}`, signed(head.bps), " bps · ", signed(head.cost), head.trusted ? "" : " (untrusted)"],
+    ["Spread paid", signed(s.spread_bps), " bps · ", signed(s.spread_cost)],
+    ["Drift arrival → fills", signed(s.drift_bps), " bps · ", signed(s.drift_cost)],
+    ["Fees", signed(s.fee_bps), " bps · ", signed(s.fees)],
+    ["All-in vs arrival", signed(s.total_bps), " bps · ", signed(s.total_cost)],
+    ["Effective / quoted spread", `${fmt(s.effective_spread_bps)} / ${fmt(s.arrival_quoted_spread_bps)} bps`],
+    ["Time to first / last fill", `${seconds(s.time_to_first_fill_ms)} / ${seconds(s.time_to_last_fill_ms)}`],
+    ["Share of bar-window volume", pct(s.participation_rate)],
+  ];
+  const benchmarkDetail = (b) => {
+    const d = b.details;
+    if (b.name === "interval_vwap") {
+      return d.window_start_ts ? `${d.bars_found}/${d.bars_expected} bars, ${d.window_start_ts.slice(11, 19)}–${d.window_end_ts.slice(11, 19)}, volume ${d.volume.toLocaleString("en-US")}` : "—";
+    }
+    return d.quote_ts ? `${fmt(d.bid, 2)} (${d.bid_venue}) / ${fmt(d.ask, 2)} (${d.ask_venue}), quote ${fmt(Number(d.quote_age_ms) / 1000, 2)} s old` : "no quote at or before " + d.as_of_ts.slice(11, 23);
+  };
+  const statusBadge = (status) => h("span", { class: "badge " + (status === "ok" ? "ok" : status === "missing" ? "err" : "warn") }, status);
+
+  $("detail").hidden = false;
+  $("detail").replaceChildren(
+    h("h2", {}, `${s.order_id} · ${s.side} ${s.qty.toLocaleString("en-US")} ${s.symbol} · ${s.strategy} via ${s.broker} `,
+      ...detail.flags.flatMap((flag) => [flagBadge(flag), " "])),
+    detail.notes.length ? h("div", { class: "notes" }, h("ul", {}, ...detail.notes.map((note) => h("li", {}, note)))) : null,
+    h("div", { class: "cols" },
+      h("div", {}, h("h3", {}, "Costs"),
+        h("table", {}, h("tbody", {}, ...facts.map(([label, ...value]) => h("tr", {}, h("td", { class: "l" }, label), h("td", {}, ...value)))))),
+      h("div", {}, h("h3", {}, "Benchmarks"),
+        h("table", {}, h("thead", {}, h("tr", {}, h("th", { class: "l" }, "Benchmark"), h("th", {}, "Price"), h("th", { class: "l" }, "Status"), h("th", { class: "l" }, "Taken from"))),
+          h("tbody", {}, ...detail.benchmarks.map((b) => h("tr", {},
+            h("td", { class: "l" }, BENCHMARK_LABEL[b.name]), h("td", {}, fmt(b.value, 4)),
+            h("td", { class: "l" }, statusBadge(b.status)), h("td", { class: "l", style: "white-space:normal" }, benchmarkDetail(b)))))))),
+    h("h3", {}, "Benchmark overlay"),
+    h("div", { class: "legend" },
+      h("span", {}, h("i", { style: "background:#cfe0f5" }), "Bid–ask (trusted quote)"),
+      h("span", {}, h("i", { style: "background:#f6c9c5" }), "Bid–ask (stale, crossed or skewed quote)"),
+      h("span", {}, h("i", { style: "background:#3b6fb6;height:2px" }), "Mid"),
+      h("span", {}, h("i", { style: "background:#e07b1a;border-radius:50%" }), "Fill (area ∝ quantity)"),
+      h("span", {}, h("i", { class: "line", style: "border-color:#1b1f24" }), "Arrival mid"),
+      h("span", {}, h("i", { class: "line", style: "border-color:#8a4fbf" }), "Interval VWAP (bar window)"),
+      h("span", {}, h("i", { class: "line", style: "border-color:#3f9a52" }), "Average fill price")),
+    renderOverlay(overlay),
+    h("h3", {}, "Fills"),
+    detail.fills.length ? h("table", {},
+      h("thead", {}, h("tr", {}, ...["Time (UTC)", "Venue", "Qty", "Price", "Bid", "Ask", "Quote age", "Quote", "Spread cost", "Drift cost", "Fee"]
+        .map((title, index) => h("th", { class: index < 2 || index === 7 ? "l" : "" }, title)))),
+      h("tbody", {}, ...detail.fills.map((f) => h("tr", {},
+        h("td", { class: "l" }, f.ts.slice(11, 23)), h("td", { class: "l" }, f.venue),
+        h("td", {}, f.qty.toLocaleString("en-US")), h("td", {}, fmt(f.price, 2)),
+        h("td", {}, fmt(f.bid, 2)), h("td", {}, fmt(f.ask, 2)),
+        h("td", {}, isNum(f.quote_age_ms) ? fmt(Number(f.quote_age_ms) / 1000, 2) + " s" : "—"),
+        h("td", { class: "l" }, statusBadge(f.quote_status)),
+        h("td", {}, signed(f.spread_cost)), h("td", {}, signed(f.drift_cost)), h("td", {}, signed(f.fee))))))
+      : h("div", { class: "empty" }, "No fills."));
+}
+
+function renderOverlay(o) {
+  const t0 = parseTs(o.start_ts), t1 = parseTs(o.end_ts);
+  const quotes = o.quotes.map((q) => ({ t: parseTs(q.ts), bid: Number(q.bid), ask: Number(q.ask), ok: q.status === "ok" }));
+  const fills = o.fills.map((f) => ({ t: parseTs(f.ts), price: Number(f.price), qty: f.qty, venue: f.venue }));
+  const levels = Object.values(o.levels).filter(isNum).map(Number);
+  const prices = [...quotes.flatMap((q) => [q.bid, q.ask]), ...fills.map((f) => f.price), ...levels];
+  if (!prices.length) return h("div", { class: "empty" }, "No quotes, fills or benchmarks in this window.");
+
+  const width = 960, height = 330, left = 62, right = 16, top = 12, bottom = 28;
+  let low = Math.min(...prices), high = Math.max(...prices);
+  const padY = (high - low || 0.01) * 0.08; low -= padY; high += padY;
+  const x = (t) => left + ((t - t0) / (t1 - t0)) * (width - left - right);
+  const y = (p) => top + ((high - p) / (high - low)) * (height - top - bottom);
+  const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img",
+    "aria-label": `Quotes, fills and benchmarks for order ${o.order_id}` });
+
+  const stepY = niceStep((high - low) / 5);
+  for (let tick = Math.ceil(low / stepY) * stepY; tick <= high; tick += stepY) {
+    root.append(svg("line", { x1: left, x2: width - right, y1: y(tick), y2: y(tick), stroke: "#eef0f3" }),
+      svg("text", { x: left - 6, y: y(tick) + 4, "text-anchor": "end" }, fmt(tick, stepY < 0.01 ? 3 : 2)));
+  }
+  for (let i = 0; i <= 5; i++) {
+    const t = t0 + ((t1 - t0) * i) / 5;
+    root.append(svg("text", { x: x(t), y: height - 8, "text-anchor": i === 0 ? "start" : i === 5 ? "end" : "middle" }, clock(t)));
+  }
+
+  // Each quote stands until the next one: draw a step band and a step mid line.
+  let midPath = "";
+  quotes.forEach((q, index) => {
+    const from = Math.max(q.t, t0), to = index + 1 < quotes.length ? quotes[index + 1].t : t1;
+    root.append(svg("rect", { x: x(from), y: y(q.ask), width: Math.max(x(to) - x(from), 0.5), height: Math.max(y(q.bid) - y(q.ask), 0.5),
+      fill: q.ok ? "#cfe0f5" : "#f6c9c5", "shape-rendering": "crispEdges" }));
+    const mid = y((q.bid + q.ask) / 2);
+    midPath += `${index ? "L" : "M"}${x(from)},${mid}L${x(to)},${mid}`;
+  });
+  if (midPath) root.append(svg("path", { d: midPath, fill: "none", stroke: "#3b6fb6", "stroke-width": 1.3 }));
+
+  const vline = (ts, color, dash, label, side) => {
+    const t = parseTs(ts);
+    if (t < t0 || t > t1) return;
+    root.append(svg("line", { x1: x(t), x2: x(t), y1: top, y2: height - bottom, stroke: color, "stroke-dasharray": dash }),
+      svg("text", { x: x(t) + 4 * side, y: top + 10, "text-anchor": side < 0 ? "end" : "start" }, label));
+  };
+  vline(o.decision_ts, "#9aa3ad", "2 3", "decision", -1);
+  vline(o.arrival_ts, "#1b1f24", "", "arrival", 1);
+
+  const hline = (value, fromTs, toTs, color) => {
+    if (!isNum(value) || !fromTs || !toTs) return;
+    const a = Math.max(parseTs(fromTs), t0), b = Math.min(parseTs(toTs), t1);
+    root.append(svg("line", { x1: x(a), x2: x(b), y1: y(Number(value)), y2: y(Number(value)), stroke: color,
+      "stroke-width": 1.6, "stroke-dasharray": "6 4" }));
+  };
+  hline(o.levels.arrival_mid, o.arrival_ts, o.end_ts, "#1b1f24");
+  hline(o.levels.interval_vwap, o.vwap_window.start_ts, o.vwap_window.end_ts, "#8a4fbf");
+  hline(o.levels.avg_price, o.arrival_ts, o.last_fill_ts || o.arrival_ts, "#3f9a52");
+
+  const maxQty = Math.max(1, ...fills.map((f) => f.qty));
+  for (const f of fills) {
+    root.append(svg("circle", { cx: x(f.t), cy: y(f.price), r: 3 + 6 * Math.sqrt(f.qty / maxQty), fill: "#e07b1a",
+      "fill-opacity": 0.8, stroke: "#8a4a0b" }, svg("title", {}, `${clock(f.t)} ${f.venue}: ${f.qty} @ ${fmt(f.price, 2)}`)));
+  }
+  return root;
+}
+
+// -- wiring --------------------------------------------------------------------------------
+for (const id of ["benchmark", "group_by", "symbol", "broker", "strategy", "venue", "side", "include_untrusted"]) {
+  $(id).addEventListener("change", refresh);
+}
+$("orders").addEventListener("keydown", (event) => {
+  const row = event.target.closest("tr[data-order]");
+  if (row && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); showOrder(row.dataset.order, true); }
+});
+loadDimensions().then(refresh).catch((error) => {
+  $("error").textContent = "Could not load datasets: " + error.message;
+  $("error").hidden = false;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "version": "v1.0.0",
+  "description": "Paper/simulated baseline policy: exact quantity, 0.0001 price tolerance, 0.01 fee/cash tolerance, 30s late fill threshold, 300s staleness threshold.",
+  "price_tolerance": "0.0001",
+  "fee_tolerance": "0.01",
+  "qty_tolerance": "0",
+  "cash_tolerance": "0.01",
+  "pending_cash_tolerance": "0.01",
+  "late_fill_threshold_sec": 30,
+  "stale_snapshot_threshold_sec": 300,
+  "clock_skew_tolerance_sec": 5
+}

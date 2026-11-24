@@ -1,0 +1,43 @@
+[
+  {
+    "canonical": "BTC/USDT",
+    "base": "BTC",
+    "quote": "USDT",
+    "tick_size": "0.01",
+    "lot_size": "0.001",
+    "min_notional": "100",
+    "max_depth": 10,
+    "venue_symbols": {
+      "binance": "BTCUSDT",
+      "coinbase": "BTC-USDT",
+      "kraken": "XBT/USDT"
+    }
+  },
+  {
+    "canonical": "BTC/USD",
+    "base": "BTC",
+    "quote": "USD",
+    "tick_size": "0.01",
+    "lot_size": "0.001",
+    "min_notional": "100",
+    "max_depth": 10,
+    "venue_symbols": {
+      "coinbase": "BTC-USD",
+      "kraken": "XBT/USD"
+    }
+  },
+  {
+    "canonical": "ETH/USDT",
+    "base": "ETH",
+    "quote": "USDT",
+    "tick_size": "0.01",
+    "lot_size": "0.01",
+    "min_notional": "50",
+    "max_depth": 10,
+    "venue_symbols": {
+      "binance": "ETHUSDT",
+      "coinbase": "ETH-USDT",
+      "kraken": "ETH/USDT"
+    }
+  }
+]

@@ -1,0 +1,40 @@
+# Optional local infrastructure stack for running arb-monitor alongside
+# Redis, PostgreSQL, Prometheus, and Grafana.
+# Default local tests, replay, and demo do not require Docker.
+services:
+  arb-monitor:
+    image: golang:1.27
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    command: >
+      go run ./src/cmd/arb-monitor
+      -addr :8080
+      -feed examples/fixtures/recorded_books.jsonl
+      -archive /workspace/data/alerts.jsonl
+    ports:
+      - "8080:8080"
+    environment:
+      - ARB_MODE=paper_readonly
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: arbmonitor
+      POSTGRES_USER: arb
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-localdevonly}
+    ports:
+      - "5432:5432"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-localdevonly}

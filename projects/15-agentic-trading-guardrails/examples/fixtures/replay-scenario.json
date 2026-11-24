@@ -1,0 +1,78 @@
+{
+  "fixture_version": "1.0.0",
+  "seed_utc": "2026-06-15T15:00:00Z",
+  "cases": [
+    {
+      "name": "allow-spy-limit-propose",
+      "agent_id": "agent-1",
+      "action": "order:propose",
+      "account": "a-1",
+      "symbol": "SPY",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "quantity": 1,
+      "limit_price_ticks": 5100000,
+      "expected_result": "ALLOW"
+    },
+    {
+      "name": "deny-market-order-explicit",
+      "agent_id": "agent-1",
+      "action": "order:propose",
+      "account": "a-1",
+      "symbol": "SPY",
+      "side": "BUY",
+      "order_type": "MARKET",
+      "quantity": 1,
+      "limit_price_ticks": 5100000,
+      "expected_result": "DENY"
+    },
+    {
+      "name": "deny-team-notional-cap",
+      "agent_id": "agent-1",
+      "action": "order:propose",
+      "account": "a-1",
+      "symbol": "SPY",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "quantity": 3,
+      "limit_price_ticks": 5100000,
+      "expected_result": "DENY"
+    },
+    {
+      "name": "deny-meme-symbol",
+      "agent_id": "agent-1",
+      "action": "order:propose",
+      "account": "a-1",
+      "symbol": "MEME",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "quantity": 1,
+      "limit_price_ticks": 125000,
+      "expected_result": "DENY"
+    },
+    {
+      "name": "deny-readonly-agent-propose",
+      "agent_id": "agent-readonly",
+      "action": "order:propose",
+      "account": "a-1",
+      "symbol": "SPY",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "quantity": 1,
+      "limit_price_ticks": 5100000,
+      "expected_result": "DENY"
+    },
+    {
+      "name": "deny-wrong-account-a2",
+      "agent_id": "agent-1",
+      "action": "order:propose",
+      "account": "a-2",
+      "symbol": "SPY",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "quantity": 1,
+      "limit_price_ticks": 5100000,
+      "expected_result": "DENY"
+    }
+  ]
+}

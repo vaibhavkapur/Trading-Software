@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 8cdbd38c72ff119fb5c16359dcce62ef26f09f4c8672045bdb65a6e9f10712de # shrinks to cmds = [New(NewOrder { order_id: 4, account_id: 0, symbol: Symbol(XYZ), side: Buy, ord_type: Limit, qty: 1, price_ticks: Some(95) }), New(NewOrder { order_id: 33, account_id: 0, symbol: Symbol(XYZ), side: Buy, ord_type: Limit, qty: 1, price_ticks: Some(103) }), Replace { order_id: 33, qty: 2, price_ticks: 103 }, New(NewOrder { order_id: 1, account_id: 0, symbol: Symbol(XYZ), side: Sell, ord_type: Limit, qty: 1, price_ticks: Some(95) })]
+cc 845f04fc5ddca4113651cfcb4621c27f29e0a376a7b5ad263e13779ca6a63fa8 # shrinks to cmds = [New(NewOrder { order_id: 1, account_id: 0, symbol: Symbol(XYZ), side: Sell, ord_type: Limit, qty: 1, price_ticks: Some(95) }), New(NewOrder { order_id: 27, account_id: 0, symbol: Symbol(XYZ), side: Buy, ord_type: Limit, qty: 2, price_ticks: Some(102) }), Replace { order_id: 27, qty: 2, price_ticks: 102 }]

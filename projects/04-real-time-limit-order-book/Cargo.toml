@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = ["src/book-core", "src/analytics", "src/feed-adapter", "src/stream-api", "tests"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+publish = false
+
+[workspace.dependencies]
+book-core = { path = "src/book-core" }
+analytics = { path = "src/analytics" }
+feed-adapter = { path = "src/feed-adapter" }
+stream-api = { path = "src/stream-api" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "net", "signal", "fs", "io-util"] }
+axum = { version = "0.8", features = ["ws"] }
+tower-http = { version = "0.6", features = ["fs"] }
+futures-util = "0.3"
+clap = { version = "4", features = ["derive", "env"] }
+reqwest = { version = "0.12", default-features = false }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1"
+tokio-tungstenite = "0.26"
+
+[profile.release]
+debug = 1

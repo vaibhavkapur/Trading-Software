@@ -1,0 +1,11 @@
+.git
+.github
+.cache
+.local
+.env
+.env.*
+bin
+docs
+tests
+scripts
+*.log

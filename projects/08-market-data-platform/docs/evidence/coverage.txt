@@ -1,0 +1,48 @@
+# Statement coverage of src/ by the unit and scenario suites
+# captured 2026-11-24T07:02:40Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: go test -count=1 -coverpkg=./src/... -coverprofile=cover.out ./tests/unit/... ./tests/scenarios/... && go tool cover -func=cover.out
+
+ok  	mdp/tests/unit	1.770s	coverage: 56.8% of statements in ./src/...
+ok  	mdp/tests/scenarios	6.441s	coverage: 74.4% of statements in ./src/...
+
+Per file: mean of the per-function percentages. The Kafka and ClickHouse adapters show 0 here
+because only the integration suite runs them. The last line is the exact statement total.
+
+mdp/src/app/app.go                    90.9%  (8 functions)
+mdp/src/app/replay.go                 95.5%  (2 functions)
+mdp/src/domain/domain.go              84.4%  (8 functions)
+mdp/src/fixed/fixed.go                99.4%  (8 functions)
+mdp/src/gateway/entitlements.go      100.0%  (6 functions)
+mdp/src/gateway/hub.go                90.3%  (19 functions)
+mdp/src/gateway/server.go             90.6%  (18 functions)
+mdp/src/ingestors/alpha.go            97.8%  (9 functions)
+mdp/src/ingestors/beta.go             96.6%  (11 functions)
+mdp/src/ingestors/event.go           100.0%  (4 functions)
+mdp/src/ingestors/replay.go           84.4%  (13 functions)
+mdp/src/ingestors/runner.go           92.6%  (16 functions)
+mdp/src/metrics/metrics.go            40.0%  (5 functions)
+mdp/src/normalizer/normalize.go       89.1%  (10 functions)
+mdp/src/normalizer/service.go         88.8%  (12 functions)
+mdp/src/refdata/refdata.go            97.0%  (9 functions)
+mdp/src/seqtrack/seqtrack.go          88.9%  (9 functions)
+mdp/src/simulator/fixture.go          96.5%  (2 functions)
+mdp/src/simulator/market.go           65.3%  (3 functions)
+mdp/src/simulator/servers.go          90.0%  (5 functions)
+mdp/src/simulator/sim.go              58.7%  (9 functions)
+mdp/src/simulator/venue.go            88.5%  (25 functions)
+mdp/src/storage/archive.go            89.9%  (4 functions)
+mdp/src/storage/clickhouse.go          0.0%  (28 functions)
+mdp/src/storage/memstore.go           95.4%  (25 functions)
+mdp/src/storage/sink.go               85.8%  (10 functions)
+mdp/src/storage/storage.go            88.9%  (9 functions)
+mdp/src/stream/checkpoint.go          97.1%  (4 functions)
+mdp/src/stream/kafka.go                0.0%  (16 functions)
+mdp/src/stream/lag.go                100.0%  (1 functions)
+mdp/src/stream/membus.go              97.5%  (18 functions)
+mdp/src/stream/progress.go            95.8%  (4 functions)
+mdp/src/stream/stream.go              98.8%  (5 functions)
+
+total:					(statements)		79.6%
+
+exit status: 0

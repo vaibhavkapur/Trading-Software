@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Broker Reliability &amp; Reconciliation — Operator Queue</title>
+  <style>
+    :root {
+      --bg: #0b101b;
+      --surface: #131b2c;
+      --surface-2: #19243a;
+      --border: #253452;
+      --text: #e6edf7;
+      --muted: #8ea1c2;
+      --accent: #3b82f6;
+      --critical: #ef4444;
+      --high: #f97316;
+      --medium: #eab308;
+      --low: #38bdf8;
+      --ok: #22c55e;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.45;
+    }
+    .paper-banner {
+      background: linear-gradient(90deg, #7c2d12, #9a3412);
+      color: #ffedd5;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 6px 12px;
+      border-bottom: 1px solid #c2410c;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    header .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 24px 48px;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-top: 4px;
+      font-family: var(--mono);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    input, select, textarea, button {
+      font-family: inherit;
+      font-size: 13px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 7px 10px;
+    }
+    button {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    button.primary:hover { filter: brightness(1.08); }
+    button.success {
+      background: #15803d;
+      border-color: #16a34a;
+      color: #fff;
+    }
+    button.ghost:hover { border-color: var(--accent); }
+    .layout {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 1024px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+    tr.selectable:hover { background: var(--surface-2); cursor: pointer; }
+    tr.selected { background: rgba(59, 130, 246, 0.16); }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .sev-critical { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid var(--critical); }
+    .sev-high { background: rgba(249, 115, 22, 0.2); color: #fdba74; border: 1px solid var(--high); }
+    .sev-medium { background: rgba(234, 179, 8, 0.2); color: #fde047; border: 1px solid var(--medium); }
+    .sev-low { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; border: 1px solid var(--low); }
+    .state-open { color: #fca5a5; }
+    .state-investigating { color: #fde047; }
+    .state-escalated { color: #fdba74; }
+    .state-resolved { color: #86efac; }
+    .state-waived { color: #cbd5e1; }
+    .mono { font-family: var(--mono); font-size: 12px; }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .kv-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+    }
+    .kv-box h4 {
+      margin: 0 0 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .kv-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 2px 0;
+      border-bottom: 1px dashed #1e293b;
+    }
+    .kv-row:last-child { border-bottom: none; }
+    .history-item {
+      border-left: 2px solid var(--accent);
+      padding-left: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+    .immutable-note {
+      font-size: 11px;
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e293b;
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="paper-banner">
+    PAPER / SIMULATED RECONCILIATION ENVIRONMENT — READ-ONLY CONNECTORS — NO LIVE EXECUTION OR LEDGER MUTATION
+  </div>
+  <header>
+    <div>
+      <h1>Broker Reliability &amp; Reconciliation</h1>
+      <div class="subtitle">Exception Work Queue, Immutable Evidence Inspector &amp; Controlled Operator Resolution</div>
+    </div>
+    <div class="group">
+      <a href="/metrics" target="_blank" style="color:#93c5fd;font-size:12px;text-decoration:none;">Prometheus /metrics</a>
+      <button class="ghost" onclick="refreshAll()">Refresh</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="kpis">
+      <div class="card"><div class="kpi-label">Open Issues</div><div id="kpi-open" class="kpi-value">-</div></div>
+      <div class="card"><div class="kpi-label">Critical Breaks</div><div id="kpi-critical" class="kpi-value" style="color:var(--critical)">-</div></div>
+      <div class="card"><div class="kpi-label">Open Exposure (USD)</div><div id="kpi-exposure" class="kpi-value">-</div></div>
+      <div class="card"><div class="kpi-label">Position Drift (Qty)</div><div id="kpi-drift" class="kpi-value">-</div></div>
+      <div class="card"><div class="kpi-label">Total Runs</div><div id="kpi-runs" class="kpi-value">-</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <div class="toolbar" style="margin-bottom:0;">
+        <div class="group">
+          <span class="section-title" style="margin:0 8px 0 0;">Trigger Run</span>
+          <input id="run-account" value="a-1" placeholder="Account ID" style="width:100px;" />
+          <input id="run-asof" value="2026-01-31T16:00:00Z" placeholder="As-Of Cutoff (RFC3339 UTC)" style="width:210px;" />
+          <button class="primary" onclick="triggerRun()">Run Reconciliation</button>
+        </div>
+        <div class="group">
+          <select id="filter-status" onchange="loadIssues()">
+            <option value="">All States</option>
+            <option value="open" selected>Open</option>
+            <option value="investigating">Investigating</option>
+            <option value="escalated">Escalated</option>
+            <option value="resolved">Resolved</option>
+            <option value="waived">Waived</option>
+          </select>
+          <select id="filter-severity" onchange="loadIssues()">
+            <option value="">All Severities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="card">
+        <div class="section-title">Exception Work Queue (<span id="issue-count">0</span>)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Kind</th>
+              <th>Symbol / Ccy</th>
+              <th>Exposure</th>
+              <th>State</th>
+              <th>Owner</th>
+            </tr>
+          </thead>
+          <tbody id="issues-tbody">
+            <tr><td colspan="6" style="color:var(--muted);">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" id="detail-panel">
+        <div class="section-title">Evidence &amp; Resolution</div>
+        <div style="color:var(--muted);font-size:13px;">Select an issue from the work queue to inspect immutable original evidence, assign an owner, or record an approved resolution.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <div class="section-title">Recent Reconciliation Runs</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Run ID</th>
+            <th>Account</th>
+            <th>Cutoff (UTC)</th>
+            <th>Policy</th>
+            <th>Input Digest</th>
+            <th>Status</th>
+            <th>Issues</th>
+          </tr>
+        </thead>
+        <tbody id="runs-tbody">
+          <tr><td colspan="7" style="color:var(--muted);">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let allIssues = [];
+    let selectedIssueId = null;
+
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    async function triggerRun() {
+      const account_id = document.getElementById('run-account').value.trim();
+      const asof = document.getElementById('run-asof').value.trim();
+      const resp = await fetch('/v1/reconciliation/runs', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({account_id, asof})
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        toast('Run failed: ' + (data.error || resp.statusText));
+      } else {
+        toast(`Run ${data.run.id} completed (${data.run.summary.total_issues} issues)`);
+      }
+      await refreshAll();
+    }
+
+    async function loadRuns() {
+      const resp = await fetch('/v1/reconciliation/runs');
+      const data = await resp.json();
+      const runs = data.runs || [];
+      document.getElementById('kpi-runs').textContent = runs.length;
+      const tb = document.getElementById('runs-tbody');
+      if (runs.length === 0) {
+        tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted);">No runs yet. Click "Run Reconciliation" above.</td></tr>';
+        return;
+      }
+      tb.innerHTML = runs.map(r => `
+        <tr>
+          <td class="mono">${esc(r.id)}</td>
+          <td>${esc(r.account_id)}</td>
+          <td class="mono">${esc(r.cutoff)}</td>
+          <td class="mono">${esc(r.policy_version)}</td>
+          <td class="mono">${esc(r.input_digest || '-')}</td>
+          <td>${esc(r.status)}</td>
+          <td class="mono">${r.summary ? r.summary.total_issues : 0}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadIssues() {
+      const status = document.getElementById('filter-status').value;
+      const severity = document.getElementById('filter-severity').value;
+      const params = new URLSearchParams();
+      if (status) params.set('status', status);
+      if (severity) params.set('severity', severity);
+
+      const [filteredResp, allResp] = await Promise.all([
+        fetch('/v1/reconciliation/issues?' + params.toString()),
+        fetch('/v1/reconciliation/issues')
+      ]);
+      const filteredData = await filteredResp.json();
+      const allData = await allResp.json();
+      allIssues = allData.issues || [];
+      const rows = filteredData.issues || [];
+
+      // Update KPIs from all open/active issues
+      let openCnt = 0, critCnt = 0, exp = 0, drift = 0;
+      for (const iss of allIssues) {
+        if (iss.state !== 'resolved' && iss.state !== 'waived') {
+          openCnt++;
+          if (iss.severity === 'critical') critCnt++;
+          exp += parseFloat(iss.monetary_exposure || '0') || 0;
+          drift += parseFloat(iss.position_drift || '0') || 0;
+        }
+      }
+      document.getElementById('kpi-open').textContent = openCnt;
+      document.getElementById('kpi-critical').textContent = critCnt;
+      document.getElementById('kpi-exposure').textContent = '$' + exp.toFixed(2);
+      document.getElementById('kpi-drift').textContent = drift.toFixed(2);
+      document.getElementById('issue-count').textContent = rows.length;
+
+      const tb = document.getElementById('issues-tbody');
+      if (rows.length === 0) {
+        tb.innerHTML = '<tr><td colspan="6" style="color:var(--muted);">No matching issues.</td></tr>';
+        return;
+      }
+      tb.innerHTML = rows.map(iss => `
+        <tr class="selectable ${iss.id === selectedIssueId ? 'selected' : ''}" onclick="selectIssue('${esc(iss.id)}')">
+          <td><span class="badge sev-${esc(iss.severity)}">${esc(iss.severity)}</span></td>
+          <td class="mono">${esc(iss.kind)}</td>
+          <td class="mono">${esc(iss.symbol || iss.currency || '-')}</td>
+          <td class="mono">${esc(iss.monetary_exposure)}</td>
+          <td class="state-${esc(iss.state)}">${esc(iss.state)}</td>
+          <td>${esc(iss.owner || 'unassigned')}</td>
+        </tr>
+      `).join('');
+
+      if (selectedIssueId) {
+        const cur = allIssues.find(x => x.id === selectedIssueId);
+        if (cur) renderDetail(cur);
+      }
+    }
+
+    function selectIssue(id) {
+      selectedIssueId = id;
+      const iss = allIssues.find(x => x.id === id);
+      if (iss) renderDetail(iss);
+      loadIssues();
+    }
+
+    function renderKV(title, mapObj) {
+      const entries = Object.entries(mapObj || {});
+      const body = entries.length === 0
+        ? '<div style="color:var(--muted);">None</div>'
+        : entries.map(([k, v]) => `<div class="kv-row"><span style="color:var(--muted);">${esc(k)}</span><span class="mono">${esc(v)}</span></div>`).join('');
+      return `<div class="kv-box"><h4>${esc(title)}</h4>${body}</div>`;
+    }
+
+    function renderDetail(iss) {
+      const panel = document.getElementById('detail-panel');
+      const resHtml = iss.resolution ? `
+        <div class="kv-box" style="margin:10px 0;border-color:#16a34a;">
+          <h4 style="color:#86efac;">Recorded Resolution</h4>
+          <div class="kv-row"><span>Code</span><span class="mono">${esc(iss.resolution.code)}</span></div>
+          <div class="kv-row"><span>Actor</span><span>${esc(iss.resolution.actor)}</span></div>
+          <div class="kv-row"><span>Resolved At</span><span class="mono">${esc(iss.resolution.resolved_at)}</span></div>
+          <div style="margin-top:6px;">${esc(iss.resolution.evidence)}</div>
+        </div>
+      ` : '';
+
+      const canResolve = iss.state !== 'resolved' && iss.state !== 'waived';
+      const actionControls = `
+        <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+          <div class="group" style="margin-bottom:10px;">
+            <input id="assign-owner" value="${esc(iss.owner || 'ops-alice')}" placeholder="Owner" style="flex:1;" />
+            <button class="ghost" onclick="assignOwner('${esc(iss.id)}')">Assign Owner</button>
+          </div>
+          ${canResolve ? `
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <select id="res-code">
+                <option value="late_broker_event">late_broker_event</option>
+                <option value="duplicate_ignored">duplicate_ignored</option>
+                <option value="journal_adjustment_proposed">journal_adjustment_proposed</option>
+                <option value="broker_ops_ticket_opened">broker_ops_ticket_opened</option>
+                <option value="timing_settlement_pending">timing_settlement_pending</option>
+              </select>
+              <textarea id="res-evidence" rows="2" placeholder="Operator resolution evidence / ticket ID (original evidence remains immutable)"></textarea>
+              <button class="success" onclick="resolveIssue('${esc(iss.id)}')">Resolve Issue</button>
+            </div>
+          ` : `
+            <button class="ghost" onclick="reopenIssue('${esc(iss.id)}')">Reopen Issue</button>
+          `}
+        </div>
+      `;
+
+      const histHtml = (iss.history || []).map(h => `
+        <div class="history-item">
+          <div class="mono" style="color:var(--muted);">${esc(h.timestamp)} · ${esc(h.actor)} · <b>${esc(h.action)}</b></div>
+          <div>${esc(h.note || '')}</div>
+        </div>
+      `).join('');
+
+      panel.innerHTML = `
+        <div class="section-title">Issue ${esc(iss.id)}</div>
+        <div class="immutable-note">Original evidence captured at detection is immutable and never overwritten by resolution actions.</div>
+        <div style="margin-bottom:8px;">
+          <span class="badge sev-${esc(iss.severity)}">${esc(iss.severity)}</span>
+          <span class="mono" style="margin-left:8px;">${esc(iss.kind)}</span>
+          <span class="state-${esc(iss.state)}" style="float:right;font-weight:700;">${esc(iss.state)}</span>
+        </div>
+        <div style="font-size:13px;margin-bottom:10px;">${esc(iss.evidence.summary)}</div>
+        <div class="evidence-grid">
+          ${renderKV('Internal Evidence', iss.evidence.internal_data)}
+          ${renderKV('Broker Evidence', iss.evidence.broker_data)}
+        </div>
+        ${renderKV('Detected Deltas (Policy ' + iss.evidence.policy_version + ')', iss.evidence.deltas)}
+        ${resHtml}
+        ${actionControls}
+        <div style="margin-top:14px;">
+          <div class="section-title">Audit History (${(iss.history || []).length})</div>
+          ${histHtml}
+        </div>
+      `;
+    }
+
+    async function assignOwner(id) {
+      const owner = document.getElementById('assign-owner').value.trim();
+      const resp = await fetch(`/v1/reconciliation/issues/${id}/assign`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({owner})
+      });
+      if (!resp.ok) {
+        const d = await resp.json();
+        toast('Assign failed: ' + d.error);
+        return;
+      }
+      toast('Assigned to ' + owner);
+      await loadIssues();
+    }
+
+    async function resolveIssue(id) {
+      const resolution = document.getElementById('res-code').value;
+      const evidence = document.getElementById('res-evidence').value.trim();
+      if (!evidence) {
+        toast('Please enter resolution evidence.');
+        return;
+      }
+      const resp = await fetch(`/v1/reconciliation/issues/${id}/resolve`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({resolution, evidence})
+      });
+      if (!resp.ok) {
+        const d = await resp.json();
+        toast('Resolve failed: ' + d.error);
+        return;
+      }
+      toast('Issue resolved (original evidence preserved)');
+      await loadIssues();
+    }
+
+    async function reopenIssue(id) {
+      const resp = await fetch(`/v1/reconciliation/issues/${id}/state`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({state: 'open', note: 'Reopened from Operator UI'})
+      });
+      if (!resp.ok) {
+        const d = await resp.json();
+        toast('Reopen failed: ' + d.error);
+        return;
+      }
+      toast('Issue reopened');
+      await loadIssues();
+    }
+
+    async function refreshAll() {
+      await Promise.all([loadRuns(), loadIssues()]);
+    }
+
+    refreshAll();
+  </script>
+</body>
+</html>

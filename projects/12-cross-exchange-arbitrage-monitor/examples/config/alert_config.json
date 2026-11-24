@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "instruments": ["BTC/USDT", "BTC/USD", "ETH/USDT"],
+  "min_net_bps": "5",
+  "max_quote_age_ms": 750,
+  "max_leg_skew_ms": 500,
+  "max_clock_skew_ms": 1500,
+  "cooldown_ms": 1000,
+  "alert_ttl_ms": 5000,
+  "max_depth_levels": 10,
+  "modeled_slippage_bps": "1.5",
+  "enforce_inventory": true
+}

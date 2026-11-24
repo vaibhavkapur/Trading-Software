@@ -1,0 +1,23 @@
+services:
+  guardrails-gateway:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      GATEWAY_ADDR: ":8080"
+      GUARDRAILS_DATA_DIR: "/data"
+      GUARDRAILS_POLICY_FILE: "/app/examples/policies/default-policy.json"
+      BROKER_MODE: "PAPER"
+      PAPER_BROKER_API_KEY: "${PAPER_BROKER_API_KEY:-paper-sim-local-key}"
+      PAPER_BROKER_API_SECRET: "${PAPER_BROKER_API_SECRET:-paper-sim-local-secret}"
+    volumes:
+      - guardrails_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  guardrails_data:

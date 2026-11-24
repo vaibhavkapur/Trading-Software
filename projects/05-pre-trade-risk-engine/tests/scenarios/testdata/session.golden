@@ -1,0 +1,36 @@
+03 evaluate  "r-001" ALLOW []
+04 commit    r-001 COMMITTED remaining=100
+06 fill      r-001/f1 position=60 realized_pnl=0.0000 unreserved=false
+07 evaluate  "r-001" ALLOW [] (replayed)
+08 evaluate  "r-001" REJECT [DUPLICATE_ORDER_ID]
+09 evaluate  "r-002" REJECT [PRICE_COLLAR]
+10 evaluate  "r-003" REJECT [LOT_SIZE_VIOLATION]
+11 evaluate  "r-004" REVIEW [REVIEW_ORDER_NOTIONAL]
+12 commit    r-004 error: reservation is pending review and must be approved first
+13 approve   r-004 RESERVED remaining=700
+14 commit    r-004 COMMITTED remaining=700
+16 fill      r-004/f1 position=760 realized_pnl=0.0000 unreserved=false
+17 fill      r-001/f2 position=800 realized_pnl=0.0000 unreserved=false
+18 evaluate  "r-005" REJECT [MAX_SYMBOL_EXPOSURE]
+19 evaluate  "r-006" REJECT [MAX_ORDER_QTY]
+20 evaluate  "r-007" ALLOW []
+21 evaluate  "r-008" REJECT [UNKNOWN_ACCOUNT]
+22 evaluate  "r-009" REJECT [INSTRUMENT_NOT_TRADABLE NO_MARKET_DATA]
+23 evaluate  "" REJECT [INVALID_ORDER_ID INVALID_SIDE INVALID_QTY INVALID_PRICE]
+26 evaluate  "r-010" REVIEW [REVIEW_ORDER_NOTIONAL]
+27 approve   r-010 RESERVED remaining=800
+28 fill      r-010/f1 position=0 realized_pnl=-5039.4000 unreserved=false
+30 evaluate  "r-011" REJECT [MAX_DAILY_LOSS]
+31 evaluate  "r-012" ALLOW []
+32 restart   replayed 23 audit records
+33 evaluate  "r-013" REJECT [NO_MARKET_DATA]
+35 evaluate  "r-014" ALLOW []
+36 kill      symbol:ABC enabled=true err=<nil>
+37 commit    r-014 error: kill switch active; reservation released, do not send the order
+38 evaluate  "r-015" REJECT [KILL_SWITCH_SYMBOL]
+39 kill      symbol:ABC enabled=false err=<nil>
+40 evaluate  "r-016" ALLOW []
+42 sweep     released 3 expired
+43 evaluate  "r-017" REJECT [STALE_QUOTE]
+44 reconcile a-1 abs_drift=25 map[ABC:25]
+audit records=36 head=fd26513acdaa6bef4515f55fa278f6dc743da27aa35e5b46d06d3d3fd916165e

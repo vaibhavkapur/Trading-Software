@@ -1,0 +1,20 @@
+{
+  "description": "Illustrative leaky experiment payload that MUST be rejected by ExperimentValidator.",
+  "dataset_version_id": "sim_us_liquid_equities_v1",
+  "universe": ["AAPL_SIM", "MSFT_SIM", "NVDA_SIM", "AMZN_SIM"],
+  "signal_def": {
+    "signal_type": "abnormal_volume_reversal",
+    "lookback_days": 20,
+    "short_window": 5,
+    "zscore_threshold": 1.5,
+    "lag_bars": 1,
+    "feature_shift": -1,
+    "custom_expression": "close.shift(-1) / close - 1"
+  },
+  "horizon_days": 5,
+  "train_range": {"start": "2021-01-04", "end": "2023-02-01"},
+  "val_range": {"start": "2023-01-16", "end": "2023-12-29"},
+  "test_range": {"start": "2024-01-15", "end": "2024-12-31"},
+  "purge_days": 5,
+  "embargo_days": 2
+}

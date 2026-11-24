@@ -1,0 +1,413 @@
+{
+  "label": "PAPER / SIMULATED — End-of-Day Reconciliation Fixture",
+  "description": "Deterministic simulated trading day for account a-1 containing clean matches alongside known injected breaks (missing broker fill, missing ledger fill, duplicate broker fill, late fill, fill fee/price mismatch, missing broker order, position drift, settled cash break, and pending cash divergence).",
+  "account_id": "a-1",
+  "default_asof": "2026-01-31T16:00:00Z",
+  "symbol_aliases": {
+    "BRKB": "BRK.B"
+  },
+  "ledger_orders": [
+    {
+      "id": "lo-1001",
+      "account_id": "a-1",
+      "client_order_id": "cl-1001",
+      "broker_order_id": "bo-9001",
+      "symbol": "AAPL",
+      "side": "BUY",
+      "qty": "100",
+      "filled_qty": "100",
+      "limit_price": "185.50",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T14:30:01Z",
+      "receive_time": "2026-01-31T14:30:02Z"
+    },
+    {
+      "id": "lo-1002",
+      "account_id": "a-1",
+      "client_order_id": "cl-1002",
+      "broker_order_id": "bo-9002",
+      "symbol": "MSFT",
+      "side": "BUY",
+      "qty": "50",
+      "filled_qty": "50",
+      "limit_price": "410.00",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T14:45:00Z",
+      "receive_time": "2026-01-31T14:45:01Z"
+    },
+    {
+      "id": "lo-1003",
+      "account_id": "a-1",
+      "client_order_id": "cl-1003",
+      "broker_order_id": "bo-9003",
+      "symbol": "BRK-B",
+      "side": "BUY",
+      "qty": "25",
+      "filled_qty": "25",
+      "limit_price": "420.10",
+      "currency": "usd",
+      "status": "FILLED",
+      "event_time": "2026-01-31T15:00:00Z",
+      "receive_time": "2026-01-31T15:00:01Z"
+    },
+    {
+      "id": "lo-1004",
+      "account_id": "a-1",
+      "client_order_id": "cl-1004",
+      "broker_order_id": "",
+      "symbol": "NVDA",
+      "side": "SELL",
+      "qty": "20",
+      "filled_qty": "0",
+      "limit_price": "132.00",
+      "currency": "USD",
+      "status": "NEW",
+      "event_time": "2026-01-31T15:10:00Z",
+      "receive_time": "2026-01-31T15:10:01Z"
+    },
+    {
+      "id": "lo-1005",
+      "account_id": "a-1",
+      "client_order_id": "cl-1005",
+      "broker_order_id": "bo-9005",
+      "symbol": "SPY",
+      "side": "BUY",
+      "qty": "40",
+      "filled_qty": "40",
+      "limit_price": "512.25",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T15:40:00Z",
+      "receive_time": "2026-01-31T15:40:01Z"
+    }
+  ],
+  "broker_orders": [
+    {
+      "broker_order_id": "bo-9001",
+      "account_id": "a-1",
+      "client_order_id": "cl-1001",
+      "symbol": "AAPL.US",
+      "side": "BUY",
+      "qty": "100",
+      "filled_qty": "100",
+      "limit_price": "185.50",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T14:30:01Z",
+      "receive_time": "2026-01-31T14:30:02Z"
+    },
+    {
+      "broker_order_id": "bo-9002",
+      "account_id": "a-1",
+      "client_order_id": "cl-1002",
+      "symbol": "MSFT",
+      "side": "BUY",
+      "qty": "50",
+      "filled_qty": "50",
+      "limit_price": "410.00",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T14:45:00Z",
+      "receive_time": "2026-01-31T14:45:02Z"
+    },
+    {
+      "broker_order_id": "bo-9003",
+      "account_id": "a-1",
+      "client_order_id": "cl-1003",
+      "symbol": "BRKB",
+      "side": "BUY",
+      "qty": "25",
+      "filled_qty": "25",
+      "limit_price": "420.10",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T15:00:00Z",
+      "receive_time": "2026-01-31T15:00:02Z"
+    },
+    {
+      "broker_order_id": "bo-9005",
+      "account_id": "a-1",
+      "client_order_id": "cl-1005",
+      "symbol": "SPY",
+      "side": "BUY",
+      "qty": "40",
+      "filled_qty": "40",
+      "limit_price": "512.25",
+      "currency": "USD",
+      "status": "FILLED",
+      "event_time": "2026-01-31T15:40:00Z",
+      "receive_time": "2026-01-31T15:40:02Z"
+    }
+  ],
+  "ledger_fills": [
+    {
+      "id": "lf-1",
+      "account_id": "a-1",
+      "client_order_id": "cl-1001",
+      "broker_order_id": "bo-9001",
+      "broker_exec_id": "exec-aapl-1",
+      "symbol": "AAPL",
+      "side": "BUY",
+      "qty": "100",
+      "price": "185.40",
+      "fee": "1.00",
+      "currency": "USD",
+      "event_time": "2026-01-31T14:30:05Z",
+      "receive_time": "2026-01-31T14:30:06Z"
+    },
+    {
+      "id": "lf-2",
+      "account_id": "a-1",
+      "client_order_id": "cl-1002",
+      "broker_order_id": "bo-9002",
+      "broker_exec_id": "exec-msft-1",
+      "symbol": "MSFT",
+      "side": "BUY",
+      "qty": "50",
+      "price": "409.90",
+      "fee": "1.25",
+      "currency": "USD",
+      "event_time": "2026-01-31T14:45:10Z",
+      "receive_time": "2026-01-31T14:45:11Z"
+    },
+    {
+      "id": "lf-3",
+      "account_id": "a-1",
+      "client_order_id": "cl-1003",
+      "broker_order_id": "bo-9003",
+      "broker_exec_id": "exec-brkb-1",
+      "symbol": "BRK-B",
+      "side": "BUY",
+      "qty": "25",
+      "price": "420.00",
+      "fee": "0.75",
+      "currency": "usd",
+      "event_time": "2026-01-31T15:00:05Z",
+      "receive_time": "2026-01-31T15:00:06Z"
+    },
+    {
+      "id": "lf-4",
+      "account_id": "a-1",
+      "client_order_id": "cl-1005",
+      "broker_order_id": "bo-9005",
+      "broker_exec_id": "exec-spy-ghost",
+      "symbol": "SPY",
+      "side": "BUY",
+      "qty": "10",
+      "price": "512.00",
+      "fee": "0.50",
+      "currency": "USD",
+      "event_time": "2026-01-31T15:40:10Z",
+      "receive_time": "2026-01-31T15:40:11Z"
+    },
+    {
+      "id": "lf-5",
+      "account_id": "a-1",
+      "client_order_id": "cl-1005",
+      "broker_order_id": "bo-9005",
+      "broker_exec_id": "exec-spy-late",
+      "symbol": "SPY",
+      "side": "BUY",
+      "qty": "30",
+      "price": "512.10",
+      "fee": "0.90",
+      "currency": "USD",
+      "event_time": "2026-01-31T15:58:00Z",
+      "receive_time": "2026-01-31T15:58:02Z"
+    }
+  ],
+  "broker_fills": [
+    {
+      "broker_exec_id": "exec-aapl-1",
+      "broker_order_id": "bo-9001",
+      "client_order_id": "cl-1001",
+      "account_id": "a-1",
+      "symbol": "AAPL.US",
+      "side": "BUY",
+      "qty": "100",
+      "price": "185.40",
+      "fee": "1.00",
+      "currency": "USD",
+      "event_time": "2026-01-31T14:30:05Z",
+      "receive_time": "2026-01-31T14:30:06Z"
+    },
+    {
+      "broker_exec_id": "exec-msft-1",
+      "broker_order_id": "bo-9002",
+      "client_order_id": "cl-1002",
+      "account_id": "a-1",
+      "symbol": "MSFT",
+      "side": "BUY",
+      "qty": "50",
+      "price": "409.95",
+      "fee": "2.50",
+      "currency": "USD",
+      "event_time": "2026-01-31T14:45:10Z",
+      "receive_time": "2026-01-31T14:45:12Z"
+    },
+    {
+      "broker_exec_id": "exec-brkb-1",
+      "broker_order_id": "bo-9003",
+      "client_order_id": "cl-1003",
+      "account_id": "a-1",
+      "symbol": "BRKB",
+      "side": "BUY",
+      "qty": "25",
+      "price": "420.00",
+      "fee": "0.75",
+      "currency": "USD",
+      "event_time": "2026-01-31T15:00:05Z",
+      "receive_time": "2026-01-31T15:00:07Z"
+    },
+    {
+      "broker_exec_id": "exec-brkb-1",
+      "broker_order_id": "bo-9003",
+      "client_order_id": "cl-1003",
+      "account_id": "a-1",
+      "symbol": "BRKB",
+      "side": "BUY",
+      "qty": "25",
+      "price": "420.00",
+      "fee": "0.75",
+      "currency": "USD",
+      "event_time": "2026-01-31T15:00:05Z",
+      "receive_time": "2026-01-31T15:00:09Z"
+    },
+    {
+      "broker_exec_id": "exec-spy-extra",
+      "broker_order_id": "bo-9005",
+      "client_order_id": "cl-1005",
+      "account_id": "a-1",
+      "symbol": "SPY",
+      "side": "BUY",
+      "qty": "15",
+      "price": "512.20",
+      "fee": "0.60",
+      "currency": "USD",
+      "event_time": "2026-01-31T15:42:00Z",
+      "receive_time": "2026-01-31T15:42:03Z"
+    },
+    {
+      "broker_exec_id": "exec-spy-late",
+      "broker_order_id": "bo-9005",
+      "client_order_id": "cl-1005",
+      "account_id": "a-1",
+      "symbol": "SPY",
+      "side": "BUY",
+      "qty": "30",
+      "price": "512.10",
+      "fee": "0.90",
+      "currency": "USD",
+      "event_time": "2026-01-31T15:58:00Z",
+      "receive_time": "2026-01-31T16:00:45Z"
+    }
+  ],
+  "internal_positions": [
+    {
+      "source": "internal",
+      "account_id": "a-1",
+      "symbol": "AAPL",
+      "qty": "100",
+      "avg_price": "185.40",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:01Z"
+    },
+    {
+      "source": "internal",
+      "account_id": "a-1",
+      "symbol": "MSFT",
+      "qty": "50",
+      "avg_price": "409.90",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:01Z"
+    },
+    {
+      "source": "internal",
+      "account_id": "a-1",
+      "symbol": "BRK-B",
+      "qty": "25",
+      "avg_price": "420.00",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:01Z"
+    },
+    {
+      "source": "internal",
+      "account_id": "a-1",
+      "symbol": "SPY",
+      "qty": "40",
+      "avg_price": "512.075",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:01Z"
+    }
+  ],
+  "broker_positions": [
+    {
+      "source": "broker",
+      "account_id": "a-1",
+      "symbol": "AAPL.US",
+      "qty": "100",
+      "avg_price": "185.40",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:02Z"
+    },
+    {
+      "source": "broker",
+      "account_id": "a-1",
+      "symbol": "MSFT",
+      "qty": "50",
+      "avg_price": "409.95",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:02Z"
+    },
+    {
+      "source": "broker",
+      "account_id": "a-1",
+      "symbol": "BRKB",
+      "qty": "25",
+      "avg_price": "420.00",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:02Z"
+    },
+    {
+      "source": "broker",
+      "account_id": "a-1",
+      "symbol": "SPY",
+      "qty": "45",
+      "avg_price": "512.1333",
+      "currency": "USD",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:02Z"
+    }
+  ],
+  "internal_cash": [
+    {
+      "source": "internal",
+      "account_id": "a-1",
+      "currency": "USD",
+      "settled_cash": "125000.00",
+      "pending_cash": "-70020.40",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:01Z"
+    }
+  ],
+  "broker_cash": [
+    {
+      "source": "broker",
+      "account_id": "a-1",
+      "currency": "USD",
+      "settled_cash": "124950.00",
+      "pending_cash": "-72586.75",
+      "asof": "2026-01-31T16:00:00Z",
+      "receive_time": "2026-01-31T16:00:02Z"
+    }
+  ]
+}

@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Trading Platform (PAPER)</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #fff; --ink: #16191d; --muted: #667085; --line: #e3e6ea;
+    --accent: #1f5fd1; --ok: #14804a; --bad: #b42318; --warn: #b54708; --chip: #eef1f5;
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1216; --panel: #171b21; --ink: #e8eaed; --muted: #98a2b3; --line: #2a3038;
+      --accent: #6ea0ff; --ok: #4cc38a; --bad: #ff7a70; --warn: #f5b25c; --chip: #222830; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 12px 20px;
+    border-bottom: 1px solid var(--line); background: var(--panel); }
+  h1 { font-size: 16px; margin: 0; }
+  h2 { font-size: 12px; margin: 0 0 10px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .06em; }
+  .banner { background: var(--warn); color: #fff; font-weight: 700; font-size: 11px;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: .05em; }
+  .spacer { flex: 1; }
+  main { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px;
+    padding: 16px 20px; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px; margin-bottom: 16px; }
+  input, textarea, button { font: inherit; color: inherit; }
+  input[type=password], input[type=text], textarea { width: 100%; padding: 8px 10px;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+  textarea { resize: vertical; min-height: 56px; }
+  button { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--panel); cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.danger { color: var(--bad); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+  .examples button { font-size: 12px; padding: 3px 8px; background: var(--chip); border: 0; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0; }
+  dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; }
+  .mono { font-family: var(--mono); font-size: 12px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .chip { display: inline-block; padding: 1px 8px; border-radius: 10px; background: var(--chip);
+    font-size: 12px; font-weight: 600; }
+  .chip.ok { color: var(--ok); } .chip.bad { color: var(--bad); } .chip.warn { color: var(--warn); }
+  ul.checks { list-style: none; margin: 8px 0 0; padding: 0; }
+  ul.checks li { display: grid; grid-template-columns: 18px 190px 1fr; gap: 6px; padding: 3px 0;
+    border-top: 1px solid var(--line); font-size: 12px; }
+  ul.checks .pass { color: var(--ok); } ul.checks .fail { color: var(--bad); font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 4px 6px; border-top: 1px solid var(--line);
+    vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; border-top: 0; }
+  td.r, th.r { text-align: right; }
+  #message { min-height: 20px; margin-top: 8px; font-size: 13px; }
+  #message.bad { color: var(--bad); } #message.ok { color: var(--ok); }
+  label.toggle { display: flex; gap: 6px; align-items: center; font-size: 13px; }
+  .hint { color: var(--muted); font-size: 12px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Agentic Trading Platform</h1>
+  <span class="banner">PAPER TRADING · SIMULATED DATA</span>
+  <span class="spacer"></span>
+  <label class="hint" for="key">API key</label>
+  <input id="key" type="password" placeholder="paste API key" style="width: 200px" autocomplete="off">
+</header>
+
+<main>
+  <div>
+    <section>
+      <h2>1 · Intent</h2>
+      <textarea id="text" placeholder="e.g. Buy $500 of SPY using a limit order"></textarea>
+      <div class="row examples" id="examples"></div>
+      <div class="row">
+        <button class="primary" id="propose">Propose trade</button>
+        <span class="hint">The planner only proposes. Nothing executes without risk checks and your approval.</span>
+      </div>
+      <div id="message" role="status"></div>
+    </section>
+
+    <section id="proposal-card" class="hidden">
+      <h2>2 · Proposal <span id="p-status" class="chip"></span></h2>
+      <dl id="p-fields"></dl>
+      <div class="row">
+        <button id="evaluate">Run risk checks</button>
+        <button class="primary" id="approve" disabled>Approve exactly this order</button>
+        <button class="danger" id="reject">Reject</button>
+      </div>
+      <ul class="checks" id="checks"></ul>
+    </section>
+
+    <section id="order-card" class="hidden">
+      <h2>3 · Order <span id="o-status" class="chip"></span></h2>
+      <dl id="o-fields"></dl>
+      <div class="row">
+        <button class="primary" id="submit">Submit to paper broker</button>
+        <button id="refresh">Refresh</button>
+        <button class="danger" id="cancel">Cancel</button>
+      </div>
+    </section>
+
+    <section id="audit-card" class="hidden">
+      <h2>Audit trail <span class="mono" id="cid"></span></h2>
+      <table><thead><tr><th>#</th><th>Time (UTC)</th><th>Actor</th><th>Event</th><th>Detail</th></tr></thead>
+        <tbody id="audit"></tbody></table>
+    </section>
+  </div>
+
+  <div>
+    <section>
+      <h2>Paper portfolio</h2>
+      <dl><dt>Cash</dt><dd class="num" id="cash">–</dd></dl>
+      <table style="margin-top: 8px"><thead><tr><th>Symbol</th><th class="r">Qty</th><th class="r">Avg cost</th></tr></thead>
+        <tbody id="positions"></tbody></table>
+      <p class="hint" id="open-orders"></p>
+    </section>
+    <section id="faults-card">
+      <h2>Simulator faults</h2>
+      <p class="hint">Break a dependency, then try to submit an approved order.</p>
+      <label class="toggle"><input type="checkbox" data-fault="quotes_stalled"> Stall quotes (go stale after 5s)</label>
+      <label class="toggle"><input type="checkbox" data-fault="quotes_down"> Market data feed down</label>
+      <label class="toggle"><input type="checkbox" data-fault="broker_order_entry_down"> Broker order entry down</label>
+      <label class="toggle"><input type="checkbox" data-fault="broker_disconnected"> Broker fully disconnected</label>
+      <label class="toggle"><input type="checkbox" data-fault="broker_drop_next_ack"> Drop next broker acknowledgement</label>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const state = { proposal: null, orderId: null, cid: null };
+
+const keyInput = $("key");
+try { keyInput.value = sessionStorage.getItem("atp_key") || ""; } catch {}
+keyInput.addEventListener("change", () => {
+  try { sessionStorage.setItem("atp_key", keyInput.value); } catch {}
+  refreshSide();
+});
+
+async function api(method, path, body) {
+  const res = await fetch(path, {
+    method,
+    headers: { "Authorization": "Bearer " + keyInput.value, "Content-Type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  let data = null;
+  try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+
+function say(text, kind) { const m = $("message"); m.textContent = text; m.className = kind || ""; }
+function explain(r) {
+  if (r.status === 401) return "Enter a valid API key (top right).";
+  const e = r.data && r.data.error;
+  if (e) return e.code + ": " + e.message;
+  return "Request failed (" + r.status + ")";
+}
+function fill(dl, pairs) {
+  dl.replaceChildren();
+  for (const [k, v, mono] of pairs) {
+    if (v === null || v === undefined || v === "") continue;
+    const dt = document.createElement("dt"); dt.textContent = k;
+    const dd = document.createElement("dd"); dd.textContent = v; if (mono) dd.className = "mono";
+    dl.append(dt, dd);
+  }
+}
+function chip(el, text) {
+  el.textContent = text.replaceAll("_", " ");
+  const ok = ["risk_passed", "approved", "executed", "filled", "accepted"].includes(text);
+  const bad = ["risk_rejected", "rejected", "failed", "canceled"].includes(text);
+  el.className = "chip " + (ok ? "ok" : bad ? "bad" : "warn");
+}
+function row(tbody, cells) {
+  const tr = document.createElement("tr");
+  for (const [text, cls] of cells) {
+    const td = document.createElement("td"); td.textContent = text; if (cls) td.className = cls;
+    tr.append(td);
+  }
+  tbody.append(tr);
+}
+
+function renderProposal(p, intent) {
+  state.proposal = p;
+  $("proposal-card").classList.remove("hidden");
+  chip($("p-status"), p.status);
+  const price = p.order_type === "limit" ? "limit " + p.limit_price : "market";
+  const pairs = [
+    ["Order", p.side.toUpperCase() + " " + p.quantity + " " + p.symbol + " @ " + price + " (day)"],
+    ["Quote used", p.reference_price + " as of " + p.quote_asof],
+    ["Binding hash", p.proposal_hash, true],
+  ];
+  if (intent) pairs.push(["Rationale", intent.rationale], ["Planner", intent.planner]);
+  fill($("p-fields"), pairs);
+  const open = ["draft", "risk_passed", "risk_rejected"].includes(p.status);
+  $("evaluate").disabled = !open;
+  $("approve").disabled = p.status !== "risk_passed";
+  $("reject").disabled = !open;
+}
+
+function renderChecks(decision) {
+  const ul = $("checks"); ul.replaceChildren();
+  for (const c of decision.checks) {
+    const li = document.createElement("li");
+    const mark = document.createElement("span"); mark.textContent = c.passed ? "✓" : "✗";
+    const code = document.createElement("span"); code.textContent = c.code; code.className = "mono";
+    const detail = document.createElement("span"); detail.textContent = c.detail;
+    mark.className = code.className += c.passed ? " pass" : " fail";
+    li.append(mark, code, detail); ul.append(li);
+  }
+}
+
+function renderOrder(o, fills) {
+  state.orderId = o.client_order_id;
+  $("order-card").classList.remove("hidden");
+  chip($("o-status"), o.state);
+  fill($("o-fields"), [
+    ["Order ID", o.client_order_id, true],
+    ["Broker ID", o.broker_order_id, true],
+    ["Filled", o.filled_qty + " / " + o.quantity + (o.avg_fill_price ? " @ avg " + o.avg_fill_price : "")],
+    ["Fills", (fills || []).map((f) => f.quantity + " @ " + f.price).join(", ")],
+    ["Dispatch attempts", String(o.submit_attempts)],
+    ["Reject reason", o.reject_reason],
+  ]);
+  const done = ["filled", "canceled", "rejected"].includes(o.state);
+  $("submit").disabled = !["created", "submitting"].includes(o.state);
+  $("cancel").disabled = done;
+  $("refresh").disabled = done;
+}
+
+async function refreshAudit() {
+  if (!state.cid) return;
+  const r = await api("GET", "/v1/audit?correlation_id=" + encodeURIComponent(state.cid));
+  if (!r.ok) return;
+  $("audit-card").classList.remove("hidden");
+  $("cid").textContent = state.cid;
+  const tbody = $("audit"); tbody.replaceChildren();
+  for (const e of r.data.events) {
+    const p = e.payload;
+    const detail = p.tool ? p.tool : p.violations && p.violations.length ? p.violations.join(", ")
+      : p.reason || p.to || p.broker_state || (p.quantity && p.price ? p.quantity + " @ " + p.price : "")
+      || (p.passed === true ? "passed (" + p.stage + ")" : "");
+    row(tbody, [[String(e.seq)], [e.ts.slice(11, 23), "mono"], [e.actor], [e.event_type, "mono"], [detail]]);
+  }
+}
+
+async function refreshSide() {
+  if (!keyInput.value) return;
+  const r = await api("GET", "/v1/portfolio");
+  if (r.ok) {
+    $("cash").textContent = "$" + r.data.cash;
+    const tbody = $("positions"); tbody.replaceChildren();
+    for (const p of r.data.positions) row(tbody, [[p.symbol], [String(p.quantity), "r num"], [p.avg_cost, "r num"]]);
+    if (!r.data.positions.length) row(tbody, [["No positions"], [""], [""]]);
+    $("open-orders").textContent = r.data.open_orders.length + " working order(s)";
+  } else {
+    $("cash").textContent = r.status === 401 ? "enter API key" : "unavailable";
+  }
+  const f = await api("GET", "/v1/sim/faults");
+  $("faults-card").classList.toggle("hidden", f.status === 404);
+  if (f.ok) for (const box of document.querySelectorAll("[data-fault]")) box.checked = !!f.data[box.dataset.fault];
+}
+
+async function after() { await Promise.all([refreshAudit(), refreshSide()]); }
+
+$("propose").onclick = async () => {
+  say("");
+  const r = await api("POST", "/v1/intents", { text: $("text").value, mode: "paper" });
+  if (!r.ok) return say(explain(r), "bad");
+  state.cid = r.data.correlation_id; state.orderId = null;
+  $("order-card").classList.add("hidden"); $("checks").replaceChildren();
+  renderProposal(r.data.proposal, r.data.intent);
+  say("Proposal drafted. Run the risk checks next.", "ok");
+  after();
+};
+
+$("evaluate").onclick = async () => {
+  const r = await api("POST", "/v1/proposals/" + state.proposal.id + "/evaluate");
+  if (!r.ok) return say(explain(r), "bad");
+  renderProposal(r.data.proposal); renderChecks(r.data.risk_decision);
+  say(r.data.risk_decision.passed ? "Risk checks passed. Review and approve."
+    : "Blocked by policy: " + r.data.risk_decision.violations.map((v) => v.code).join(", "),
+    r.data.risk_decision.passed ? "ok" : "bad");
+  after();
+};
+
+async function decide(decision) {
+  const p = state.proposal;
+  const r = await api("POST", "/v1/proposals/" + p.id + "/approve", { proposal_hash: p.proposal_hash, decision });
+  if (!r.ok) return say(explain(r), "bad");
+  const view = await api("GET", "/v1/proposals/" + p.id);
+  if (view.ok) renderProposal(view.data.proposal);
+  if (r.data.order_id) {
+    const o = await api("GET", "/v1/orders/" + r.data.order_id);
+    if (o.ok) renderOrder(o.data.order, o.data.fills);
+    say("Approved until " + r.data.approval.expires_at.slice(11, 19) + " UTC. Submit before it expires.", "ok");
+  } else say("Proposal rejected. Nothing will execute.", "ok");
+  after();
+}
+$("approve").onclick = () => decide("approve");
+$("reject").onclick = () => decide("reject");
+
+async function orderAction(method, suffix) {
+  const r = await api(method, "/v1/orders/" + state.orderId + suffix);
+  const order = r.data && r.data.order;
+  if (order) renderOrder(order, r.data.fills);
+  if (!r.ok) say(explain(r), "bad");
+  else if (order.state === "rejected") say("Safely rejected: " + order.reject_reason, "bad");
+  else say("Order is " + order.state.replaceAll("_", " ") + ".", "ok");
+  const view = await api("GET", "/v1/proposals/" + state.proposal.id);
+  if (view.ok) renderProposal(view.data.proposal);
+  after();
+}
+$("submit").onclick = () => orderAction("POST", "/submit");
+$("refresh").onclick = () => orderAction("GET", "");
+$("cancel").onclick = () => orderAction("POST", "/cancel");
+
+for (const box of document.querySelectorAll("[data-fault]")) {
+  box.onchange = async () => {
+    const r = await api("POST", "/v1/sim/faults", { [box.dataset.fault]: box.checked });
+    if (!r.ok) say(explain(r), "bad");
+    refreshSide();
+  };
+}
+
+for (const example of ["Buy $500 of SPY using a limit order", "Sell 2 shares of SPY at market",
+  "Buy 4 shares of QQQ at 105.00", "Buy 5000 shares of NVDA"]) {
+  const b = document.createElement("button"); b.textContent = example;
+  b.onclick = () => { $("text").value = example; };
+  $("examples").append(b);
+}
+refreshSide();
+</script>
+</body>
+</html>

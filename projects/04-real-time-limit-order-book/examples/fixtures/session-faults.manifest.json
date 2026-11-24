@@ -1,0 +1,298 @@
+{
+  "manifest_version": 1,
+  "wire_schema": "simvenue.v1",
+  "data_origin": "simulated",
+  "instruments": [
+    {
+      "symbol": "XYZ",
+      "tick_size": "0.01",
+      "lot_size": "1"
+    },
+    {
+      "symbol": "ABC",
+      "tick_size": "0.01",
+      "lot_size": "1"
+    }
+  ],
+  "seed": 42,
+  "events": 20000,
+  "faults": "drop@2000:3,dup@5000,reorder@8000,cross@11000,garbage@14000,skew@17000",
+  "frames": 20002,
+  "output_digest": "ce4360cf6f4d7fa9",
+  "checkpoint_depth": 10,
+  "checkpoints": [
+    {
+      "symbol": "ABC",
+      "seq": 500,
+      "checksum": "54439b8ad776b33b",
+      "best_bid": 12498,
+      "best_ask": 12500
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 500,
+      "checksum": "a59a340cb4d45a2e",
+      "best_bid": 10000,
+      "best_ask": 10001
+    },
+    {
+      "symbol": "ABC",
+      "seq": 1000,
+      "checksum": "63e4e55d982f241a",
+      "best_bid": 12505,
+      "best_ask": 12507
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 1000,
+      "checksum": "ec13e37a3f96c1e4",
+      "best_bid": 10007,
+      "best_ask": 10009
+    },
+    {
+      "symbol": "ABC",
+      "seq": 1500,
+      "checksum": "1c6e0d18d236c44c",
+      "best_bid": 12500,
+      "best_ask": 12501
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 1500,
+      "checksum": "e6d0431626690f5a",
+      "best_bid": 10006,
+      "best_ask": 10008
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 2000,
+      "checksum": "f8a051b5e8a9abd8",
+      "best_bid": 10001,
+      "best_ask": 10003
+    },
+    {
+      "symbol": "ABC",
+      "seq": 2000,
+      "checksum": "0c437d8fcebead93",
+      "best_bid": 12508,
+      "best_ask": 12510
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 2500,
+      "checksum": "b3f28de12dfcd2a0",
+      "best_bid": 10001,
+      "best_ask": 10005
+    },
+    {
+      "symbol": "ABC",
+      "seq": 2500,
+      "checksum": "1a28ede49e88c412",
+      "best_bid": 12504,
+      "best_ask": 12506
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 3000,
+      "checksum": "6befa2dc6a8d1f8b",
+      "best_bid": 10011,
+      "best_ask": 10013
+    },
+    {
+      "symbol": "ABC",
+      "seq": 3000,
+      "checksum": "dec8ec8ecd8e51de",
+      "best_bid": 12503,
+      "best_ask": 12506
+    },
+    {
+      "symbol": "ABC",
+      "seq": 3500,
+      "checksum": "6ac66f9a7c2cf217",
+      "best_bid": 12490,
+      "best_ask": 12491
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 3500,
+      "checksum": "32a773f0cdbf0b1b",
+      "best_bid": 10011,
+      "best_ask": 10015
+    },
+    {
+      "symbol": "ABC",
+      "seq": 4000,
+      "checksum": "0653f6231f2c372c",
+      "best_bid": 12481,
+      "best_ask": 12485
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 4000,
+      "checksum": "c6c3cfac30529c7e",
+      "best_bid": 10008,
+      "best_ask": 10009
+    },
+    {
+      "symbol": "ABC",
+      "seq": 4500,
+      "checksum": "26f3a6665b19ce5f",
+      "best_bid": 12489,
+      "best_ask": 12491
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 4500,
+      "checksum": "51a08cd41fe839fc",
+      "best_bid": 10015,
+      "best_ask": 10016
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 5000,
+      "checksum": "42a54248bcd164fe",
+      "best_bid": 10008,
+      "best_ask": 10010
+    },
+    {
+      "symbol": "ABC",
+      "seq": 5000,
+      "checksum": "aab695eceb2252b1",
+      "best_bid": 12483,
+      "best_ask": 12485
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 5500,
+      "checksum": "e6d618643164fc0e",
+      "best_bid": 10005,
+      "best_ask": 10008
+    },
+    {
+      "symbol": "ABC",
+      "seq": 5500,
+      "checksum": "e00359c37d15e6b0",
+      "best_bid": 12488,
+      "best_ask": 12487
+    },
+    {
+      "symbol": "ABC",
+      "seq": 6000,
+      "checksum": "5df26c6dea3068eb",
+      "best_bid": 12481,
+      "best_ask": 12482
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 6000,
+      "checksum": "98f42d4e56cbe6cd",
+      "best_bid": 9997,
+      "best_ask": 9998
+    },
+    {
+      "symbol": "ABC",
+      "seq": 6500,
+      "checksum": "dd4700ddf70e9312",
+      "best_bid": 12476,
+      "best_ask": 12478
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 6500,
+      "checksum": "f9b3e756ba3f2722",
+      "best_bid": 10003,
+      "best_ask": 10006
+    },
+    {
+      "symbol": "ABC",
+      "seq": 7000,
+      "checksum": "0a63c27bd60592a8",
+      "best_bid": 12472,
+      "best_ask": 12473
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 7000,
+      "checksum": "8d1d57ca01ace6fd",
+      "best_bid": 10009,
+      "best_ask": 10012
+    },
+    {
+      "symbol": "ABC",
+      "seq": 7500,
+      "checksum": "cb9238e010a43eab",
+      "best_bid": 12467,
+      "best_ask": 12468
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 7500,
+      "checksum": "b6cf1b5288d57dba",
+      "best_bid": 10003,
+      "best_ask": 10005
+    },
+    {
+      "symbol": "ABC",
+      "seq": 8000,
+      "checksum": "c16ad34ce90a47c3",
+      "best_bid": 12459,
+      "best_ask": 12460
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 8000,
+      "checksum": "f95f0ea208dacc37",
+      "best_bid": 9994,
+      "best_ask": 9998
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 8500,
+      "checksum": "17c5ae331f60243b",
+      "best_bid": 9995,
+      "best_ask": 9997
+    },
+    {
+      "symbol": "ABC",
+      "seq": 8500,
+      "checksum": "eb99cc5a10c8769f",
+      "best_bid": 12456,
+      "best_ask": 12458
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 9000,
+      "checksum": "f3f090b62b951cad",
+      "best_bid": 9988,
+      "best_ask": 9991
+    },
+    {
+      "symbol": "ABC",
+      "seq": 9000,
+      "checksum": "e96f35c34ffb5296",
+      "best_bid": 12449,
+      "best_ask": 12452
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 9500,
+      "checksum": "8fac6022250d92dc",
+      "best_bid": 9980,
+      "best_ask": 9982
+    },
+    {
+      "symbol": "ABC",
+      "seq": 9500,
+      "checksum": "5b58cb3258a50b89",
+      "best_bid": 12455,
+      "best_ask": 12456
+    },
+    {
+      "symbol": "XYZ",
+      "seq": 10000,
+      "checksum": "aa6d293d99336eb0",
+      "best_bid": 9975,
+      "best_ask": 9977
+    }
+  ]
+}

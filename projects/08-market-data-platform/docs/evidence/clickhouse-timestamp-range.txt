@@ -1,0 +1,45 @@
+# ClickHouse and timestamps outside its 32-bit DateTime / 16-bit Date ranges
+# captured 2026-11-24T07:03:35Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: see below; throwaway database mdp_tmp_probe   [rpk version: v26.2.7; ClickHouse 26.8.45.6]
+
+Six rows go into two tables that differ only in the TTL expression. Both have the
+platform engine, partitioning and a 90-day retention. Every INSERT is accepted.
+
+## A. TTL through a 32-bit DateTime (the schema this project first used)
+
+CREATE DATABASE IF NOT EXISTS mdp_tmp_probe;
+CREATE TABLE mdp_tmp_probe.a (id String, event_ts DateTime64(9, 'UTC')) ENGINE = ReplacingMergeTree PARTITION BY toDate(event_ts) ORDER BY (id, event_ts) TTL toDateTime(event_ts) + INTERVAL 90 DAY;
+INSERT INTO mdp_tmp_probe.a SETTINGS async_insert=0 VALUES ('now', now64(9)), ('old-200d', now64(9) - INTERVAL 200 DAY), ('year-1969', '1969-12-31 23:59:59'), ('year-2099', '2099-12-31 23:59:59'), ('year-2107', '2107-01-01 00:00:00'), ('year-2150', '2150-06-01 00:00:00');
+OPTIMIZE TABLE mdp_tmp_probe.a FINAL;
+SELECT 'A, after a merge' AS table_, id, event_ts FROM mdp_tmp_probe.a ORDER BY id FORMAT PrettyCompactMonoBlock;
+   ┌─table_───────────┬─id────────┬──────────────────────event_ts─┐
+1. │ A, after a merge │ now       │ 2026-11-24 07:03:35.859501751 │
+2. │ A, after a merge │ year-2099 │ 2099-12-31 23:59:59.000000000 │
+   └──────────────────┴───────────┴───────────────────────────────┘
+
+## B. TTL on the 64-bit column (the schema in src/storage/clickhouse.go)
+
+CREATE TABLE mdp_tmp_probe.b (id String, event_ts DateTime64(9, 'UTC')) ENGINE = ReplacingMergeTree PARTITION BY toDate(event_ts) ORDER BY (id, event_ts) TTL event_ts + INTERVAL 90 DAY;
+INSERT INTO mdp_tmp_probe.b SETTINGS async_insert=0 VALUES ('now', now64(9)), ('old-200d', now64(9) - INTERVAL 200 DAY), ('year-1969', '1969-12-31 23:59:59'), ('year-2099', '2099-12-31 23:59:59'), ('year-2107', '2107-01-01 00:00:00'), ('year-2150', '2150-06-01 00:00:00');
+OPTIMIZE TABLE mdp_tmp_probe.b FINAL;
+SELECT 'B, after a merge' AS table_, id, event_ts, toDate(event_ts) AS partition FROM mdp_tmp_probe.b ORDER BY id FORMAT PrettyCompactMonoBlock;
+   ┌─table_───────────┬─id────────┬──────────────────────event_ts─┬──partition─┐
+1. │ B, after a merge │ now       │ 2026-11-24 07:03:36.002295584 │ 2026-11-24 │
+2. │ B, after a merge │ year-2099 │ 2099-12-31 23:59:59.000000000 │ 2099-12-31 │
+3. │ B, after a merge │ year-2107 │ 2107-01-01 00:00:00.000000000 │ 2107-01-01 │
+4. │ B, after a merge │ year-2150 │ 2150-06-01 00:00:00.000000000 │ 1970-12-26 │
+   └──────────────────┴───────────┴───────────────────────────────┴────────────┘
+
+## C. What the two conversions return for these values
+
+SELECT ts, toDateTime(ts) AS as_32bit_datetime, toDate(ts) AS as_16bit_date FROM (SELECT arrayJoin([toDateTime64('1969-12-31 23:59:59', 9, 'UTC'), toDateTime64('2099-12-31 23:59:59', 9, 'UTC'), toDateTime64('2107-01-01 00:00:00', 9, 'UTC'), toDateTime64('2150-06-01 00:00:00', 9, 'UTC')]) AS ts) FORMAT PrettyCompactMonoBlock;
+   ┌────────────────────────────ts─┬───as_32bit_datetime─┬─as_16bit_date─┐
+1. │ 1969-12-31 23:59:59.000000000 │ 2106-02-07 06:28:15 │    2149-06-06 │
+2. │ 2099-12-31 23:59:59.000000000 │ 2099-12-31 23:59:59 │    2099-12-31 │
+3. │ 2107-01-01 00:00:00.000000000 │ 1970-11-24 17:31:44 │    2107-01-01 │
+4. │ 2150-06-01 00:00:00.000000000 │ 2014-04-24 17:31:44 │    1970-12-26 │
+   └───────────────────────────────┴─────────────────────┴───────────────┘
+DROP DATABASE mdp_tmp_probe;
+
+exit status: 0

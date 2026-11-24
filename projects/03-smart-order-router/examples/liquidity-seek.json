@@ -1,0 +1,8 @@
+{
+  "name": "liquidity-seek",
+  "description": "LIQUIDITY strategy: every second, take a participation-capped share of top-of-book size on every healthy venue until done.",
+  "seed": 3,
+  "parents": [
+    {"at_ms": 1000, "symbol": "XYZ", "side": "BUY", "qty": 20000, "strategy": "LIQUIDITY", "duration_seconds": 300}
+  ]
+}

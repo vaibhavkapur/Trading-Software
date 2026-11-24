@@ -1,0 +1,34 @@
+[
+  {
+    "venue": "binance",
+    "instrument": "BTC/USDT",
+    "taker_bps": "7.5",
+    "min_fee": "0",
+    "tier": "VIP1",
+    "version": "fees-2026-11"
+  },
+  {
+    "venue": "binance",
+    "instrument": "ETH/USDT",
+    "taker_bps": "7.5",
+    "min_fee": "0",
+    "tier": "VIP1",
+    "version": "fees-2026-11"
+  },
+  {
+    "venue": "coinbase",
+    "instrument": "*",
+    "taker_bps": "10",
+    "min_fee": "0.10",
+    "tier": "AdvTier2",
+    "version": "fees-2026-11"
+  },
+  {
+    "venue": "kraken",
+    "instrument": "*",
+    "taker_bps": "12",
+    "min_fee": "0.50",
+    "tier": "Pro1",
+    "version": "fees-2026-11"
+  }
+]

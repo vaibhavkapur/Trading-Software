@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: make lint
+
+  test:
+    name: unit, scenario and replay tests (no Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Unit and scenario tests with the race detector
+        run: make test
+      - name: Replay the committed capture and verify its digest
+        run: make replay
+      - name: The committed capture is what the generator produces
+        run: |
+          make fixtures
+          git diff --exit-code -- examples/fixtures
+      - name: Scripted walkthrough (fails on any failed check)
+        run: make demo
+      - name: Fuzz the decimal converter and the feed parsers briefly
+        run: |
+          go test -run '^$' -fuzz '^FuzzUnitsNeverRounds$' -fuzztime 20s ./tests/unit/
+          go test -run '^$' -fuzz '^FuzzParsersNeverPanic$' -fuzztime 20s ./tests/unit/
+
+  integration:
+    name: Redpanda and ClickHouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      # Writes .env with a random ClickHouse password for this run only.
+      # Nothing here needs a repository secret.
+      - run: make setup
+      - name: Adapters and the whole pipeline against real services
+        run: make integration-test
+      - name: Start the full stack in containers
+        run: make stack-up
+      - name: Inject failures and audit the store after each one
+        run: make failure-demo
+      - name: Service logs
+        if: failure()
+        run: docker compose --profile app logs --no-color --tail=200
+      - name: Tear down
+        if: always()
+        run: make clean

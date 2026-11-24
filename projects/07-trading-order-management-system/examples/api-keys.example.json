@@ -1,0 +1,5 @@
+[
+  { "principal": "alice",  "role": "trader",   "accounts": ["ACC-1", "ACC-2"], "token": "CHANGE_ME" },
+  { "principal": "vera",   "role": "viewer",   "accounts": ["ACC-1"],          "token": "CHANGE_ME_TOO" },
+  { "principal": "olivia", "role": "operator", "accounts": ["*"],              "token": "CHANGE_ME_AS_WELL" }
+]

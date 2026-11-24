@@ -1,0 +1,10 @@
+# Simulated / paper trading only. The router is a single self-contained
+# process: no database, broker or message bus is required.
+services:
+  sor:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    command: ["serve", "-addr", "0.0.0.0:8080", "-speed", "20"]
+    read_only: true
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+{"type":"book_raw","venue":"binance","received_at":"2026-11-24T05:00:00.100Z","raw_payload":{"s":"BTCUSDT","E":1795496400080,"u":10,"snapshot":true,"b":[["64980.00","1.00"]],"a":[["65000.00","0.80"]]}}
+{"type":"book_raw","venue":"kraken","received_at":"2026-11-24T05:00:00.120Z","raw_payload":{"pair":"XBT/USDT","timestamp_ms":1795496400100,"seq":20,"snapshot":true,"bids":[],"asks":[["65300.00","1.00"]]}}
+{"type":"book_raw","venue":"kraken","received_at":"2026-11-24T05:00:01.200Z","raw_payload":{"pair":"XBT/USDT","timestamp_ms":1795496401180,"seq":21,"snapshot":true,"bids":[["65300.00","0.80"]],"asks":[["65320.00","1.00"]]}}
+{"type":"book_raw","venue":"binance","received_at":"2026-11-24T05:00:01.250Z","raw_payload":{"s":"BTCUSDT","E":1795496398000,"u":11,"snapshot":true,"b":[["64980.00","1.00"]],"a":[["65000.00","0.80"]]}}
+{"type":"book_raw","venue":"binance","received_at":"2026-11-24T05:00:01.260Z","raw_payload":{"s":"BTCUSDT","E":1795496398000,"u":11,"snapshot":true,"b":[["64980.00","1.00"]],"a":[["65000.00","0.80"]]}}
+{"type":"book_raw","venue":"binance","received_at":"2026-11-24T05:00:01.300Z","raw_payload":{"s":"BTCUSDT","E":1795496401280,"u":15,"snapshot":false,"b":[["64980.00","1.00"]],"a":[["65000.00","0.80"]]}}
+{"type":"disconnect","venue":"kraken","received_at":"2026-11-24T05:00:01.400Z","reason":"websocket_eof"}
+{"type":"book_raw","venue":"binance","received_at":"2026-11-24T05:00:01.450Z","raw_payload":{"s":"BTCUSDT","E":1795496401430,"u":16,"snapshot":true,"b":[["64980.00","1.00"]],"a":[["65000.00","0.80"]]}}
+{"type":"reconnect","venue":"kraken","received_at":"2026-11-24T05:00:01.600Z","reason":"backoff_recovered"}
+{"type":"book_raw","venue":"kraken","received_at":"2026-11-24T05:00:01.650Z","raw_payload":{"pair":"XBT/USDT","timestamp_ms":1795496401630,"seq":30,"snapshot":true,"bids":[["65280.00","0.75"]],"asks":[["65310.00","1.00"]]}}

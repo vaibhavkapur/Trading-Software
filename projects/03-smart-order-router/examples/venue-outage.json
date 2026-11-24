@@ -1,0 +1,14 @@
+{
+  "name": "venue-outage",
+  "description": "Failure demo: ALPHA (the baseline venue) loses its link from t=120s to t=300s, then BRAVO turns slow and flaky (700ms extra latency, 50% rejects) from t=360s to t=480s.",
+  "seed": 7,
+  "parents": [
+    {"at_ms": 1000, "symbol": "XYZ", "side": "BUY", "qty": 10000, "strategy": "TWAP", "duration_seconds": 600}
+  ],
+  "faults": [
+    {"at_ms": 120000, "venue": "ALPHA", "fault": {"down": true}},
+    {"at_ms": 300000, "venue": "ALPHA", "fault": {}},
+    {"at_ms": 360000, "venue": "BRAVO", "fault": {"latency_ms": 700, "reject_rate": 0.5}},
+    {"at_ms": 480000, "venue": "BRAVO", "fault": {}}
+  ]
+}

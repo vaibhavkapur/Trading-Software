@@ -1,0 +1,9 @@
+# Lint: gofmt, go vet, staticcheck
+# captured 2026-11-24T07:01:17Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: make lint
+
+go vet ./...
+go run honnef.co/go/tools/cmd/staticcheck@v0.8.2 ./...
+
+exit status: 0

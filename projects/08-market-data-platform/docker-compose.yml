@@ -1,0 +1,117 @@
+# Market data platform: local stack. Everything it ingests is SIMULATED.
+#
+#   make deps-up     Redpanda + ClickHouse only (what the integration tests need)
+#   make stack-up    the above plus simulator, services, gateway and Prometheus
+#
+# Every port is published on 127.0.0.1 only. The ClickHouse password comes
+# from .env (created by `make setup`, never committed).
+name: mdp
+
+x-service: &service
+  build: .
+  image: mdp:local
+  restart: unless-stopped
+  profiles: [app]
+
+x-bus-env: &bus-env
+  MDP_KAFKA_BROKERS: redpanda:9092
+  MDP_METRICS_ADDR: 0.0.0.0:9090
+
+x-store-env: &store-env
+  <<: *bus-env
+  MDP_CLICKHOUSE_URL: http://clickhouse:8123
+  MDP_CLICKHOUSE_USER: mdp
+  MDP_CLICKHOUSE_DB: mdp
+  MDP_CLICKHOUSE_PASSWORD: ${MDP_CLICKHOUSE_PASSWORD:?run "make setup" to create .env}
+
+services:
+  redpanda:
+    image: redpandadata/redpanda:v26.2.7
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://127.0.0.1:${MDP_KAFKA_PORT:-19092}
+    ports:
+      - "127.0.0.1:${MDP_KAFKA_PORT:-19092}:19092"
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -q 'Healthy:.*true'"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:26.8.45.6
+    environment:
+      CLICKHOUSE_USER: mdp
+      CLICKHOUSE_DB: mdp
+      CLICKHOUSE_PASSWORD: ${MDP_CLICKHOUSE_PASSWORD:?run "make setup" to create .env}
+    ports:
+      - "127.0.0.1:${MDP_CLICKHOUSE_PORT:-8123}:8123"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    ulimits:
+      nofile: { soft: 262144, hard: 262144 }
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:8123/ping"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  sim:
+    <<: *service
+    command: ["sim", "--alpha-addr=0.0.0.0:9101", "--beta-addr=0.0.0.0:9102", "--admin-addr=0.0.0.0:9103", "--rate=200"]
+    ports:
+      - "127.0.0.1:${MDP_SIM_ADMIN_PORT:-9103}:9103" # fault injection
+
+  ingest:
+    <<: *service
+    command: ["ingest"]
+    environment:
+      <<: *bus-env
+      MDP_ALPHA_URL: ws://sim:9101/feed
+      MDP_BETA_ADDR: sim:9102
+    depends_on:
+      redpanda: { condition: service_healthy }
+      sim: { condition: service_started }
+
+  normalize:
+    <<: *service
+    command: ["normalize"]
+    environment: *bus-env
+    depends_on:
+      redpanda: { condition: service_healthy }
+
+  sink:
+    <<: *service
+    command: ["sink"]
+    environment: *store-env
+    depends_on:
+      redpanda: { condition: service_healthy }
+      clickhouse: { condition: service_healthy }
+
+  gateway:
+    <<: *service
+    command: ["gateway", "--addr=0.0.0.0:8080"]
+    environment: *store-env
+    ports:
+      - "127.0.0.1:${MDP_GATEWAY_PORT:-8080}:8080"
+    depends_on:
+      redpanda: { condition: service_healthy }
+      clickhouse: { condition: service_healthy }
+
+  prometheus:
+    image: prom/prometheus:v3.16.0
+    profiles: [app]
+    volumes:
+      - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:${MDP_PROMETHEUS_PORT:-9091}:9090"
+
+volumes:
+  redpanda-data:
+  clickhouse-data:

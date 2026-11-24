@@ -1,0 +1,16 @@
+# Local, simulated gateway. The port is published on loopback only: the
+# protocol has no authentication or TLS.
+services:
+  gateway:
+    build: .
+    command: ["serve", "--addr", "0.0.0.0:9001", "--data-dir", "/data", "--snapshot-every", "100000"]
+    ports:
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - engine-data:/data
+    stop_signal: SIGTERM
+    stop_grace_period: 10s
+    restart: "no"
+
+volumes:
+  engine-data:

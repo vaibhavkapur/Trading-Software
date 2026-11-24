@@ -1,0 +1,29 @@
+# SIMULATED session - wire commands, one JSON object per line.
+# Run with:  cargo run -- run examples/session.jsonl
+#
+# 1) The example from the README: 40 lots trade at 10025, 60 remain, then cancel.
+{"type":"NEW","order_id":1,"symbol":"XYZ","side":"BUY","qty":100,"price_ticks":10025}
+{"type":"NEW","order_id":2,"symbol":"XYZ","side":"SELL","qty":40,"price_ticks":10025}
+{"type":"CANCEL","order_id":1}
+# 2) Build a small book: bids 10020/10010, asks 10030/10040.
+{"type":"NEW","order_id":10,"account_id":1,"symbol":"XYZ","side":"BUY","qty":50,"price_ticks":10020}
+{"type":"NEW","order_id":11,"account_id":2,"symbol":"XYZ","side":"BUY","qty":30,"price_ticks":10020}
+{"type":"NEW","order_id":12,"account_id":1,"symbol":"XYZ","side":"BUY","qty":70,"price_ticks":10010}
+{"type":"NEW","order_id":13,"account_id":3,"symbol":"XYZ","side":"SELL","qty":25,"price_ticks":10030}
+{"type":"NEW","order_id":14,"account_id":3,"symbol":"XYZ","side":"SELL","qty":60,"price_ticks":10040}
+# 3) Time priority: 60 lots hit the 10020 bids; order 10 fills first, then 11.
+{"type":"NEW","order_id":15,"account_id":4,"symbol":"XYZ","side":"SELL","qty":60,"price_ticks":10020}
+# 4) Market order sweeps both ask levels; the unfilled remainder is canceled.
+{"type":"NEW","order_id":16,"account_id":4,"symbol":"XYZ","side":"BUY","ord_type":"MARKET","qty":100}
+# 5) Replace: size down keeps priority; a price change re-queues (and here, crosses).
+{"type":"NEW","order_id":17,"account_id":2,"symbol":"XYZ","side":"SELL","qty":40,"price_ticks":10030}
+{"type":"REPLACE","order_id":17,"qty":25,"price_ticks":10030}
+{"type":"REPLACE","order_id":12,"qty":70,"price_ticks":10030}
+# 6) Rejects: duplicate live id, unknown order, zero quantity, market order with a price.
+{"type":"NEW","order_id":12,"symbol":"XYZ","side":"BUY","qty":5,"price_ticks":10000}
+{"type":"CANCEL","order_id":999}
+{"type":"NEW","order_id":18,"symbol":"XYZ","side":"BUY","qty":0,"price_ticks":10000}
+{"type":"NEW","order_id":19,"symbol":"XYZ","side":"BUY","ord_type":"MARKET","qty":5,"price_ticks":10000}
+# 7) A second symbol has its own, independent book.
+{"type":"NEW","order_id":20,"symbol":"ABC","side":"SELL","qty":10,"price_ticks":500}
+{"type":"NEW","order_id":21,"symbol":"ABC","side":"BUY","qty":10,"price_ticks":500}

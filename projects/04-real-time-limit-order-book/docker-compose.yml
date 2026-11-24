@@ -1,0 +1,41 @@
+# Optional stack: the book service with ClickHouse storage and Prometheus.
+# The service itself needs none of this (`make demo` runs it standalone).
+# Simulated data only. Ports are published on localhost only.
+services:
+  lob:
+    build: .
+    command: ["serve", "--addr", "0.0.0.0:8080", "--ui-dir", "/app/ui", "--admin", "--store-deltas"]
+    environment:
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: lob
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:?set CLICKHOUSE_PASSWORD in your environment or .env}
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    environment:
+      CLICKHOUSE_DB: lob
+      CLICKHOUSE_USER: lob
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:?set CLICKHOUSE_PASSWORD in your environment or .env}
+    volumes:
+      - ./scripts/clickhouse-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - clickhouse-data:/var/lib/clickhouse
+    ports: ["127.0.0.1:8123:8123"]
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--user", "lob", "--password", "${CLICKHOUSE_PASSWORD}", "--query", "SELECT 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports: ["127.0.0.1:9090:9090"]
+    depends_on: [lob]
+
+volumes:
+  clickhouse-data:

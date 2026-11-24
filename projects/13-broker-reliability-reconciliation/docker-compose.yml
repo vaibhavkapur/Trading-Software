@@ -1,0 +1,31 @@
+services:
+  recon-service:
+    build: .
+    container_name: broker-recon-paper
+    ports:
+      - "8080:8080"
+    environment:
+      # Optional: inject via secret manager or .env (never commit real keys)
+      RECON_OPERATOR_API_KEY: "${RECON_OPERATOR_API_KEY:-}"
+      RECON_VIEWER_API_KEY: "${RECON_VIEWER_API_KEY:-}"
+    volumes:
+      - recon_state:/data/recon-state
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: broker-recon-prometheus
+    profiles: ["observability"]
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - recon-service
+
+volumes:
+  recon_state:

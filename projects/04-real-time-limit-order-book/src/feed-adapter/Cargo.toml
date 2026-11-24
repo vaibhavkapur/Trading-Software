@@ -1,0 +1,13 @@
+[package]
+name = "feed-adapter"
+description = "Capture, decoding, normalization, simulation and replay of level-2 feeds"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+book-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true

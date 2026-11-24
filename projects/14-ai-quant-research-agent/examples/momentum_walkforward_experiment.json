@@ -1,0 +1,7 @@
+{
+  "question": "Does cross-sectional momentum outperform in simulated sector ETFs with weekly rebalancing?",
+  "dataset_id": "sim_sector_etfs_v1",
+  "horizon_days": 5,
+  "walk_forward": true,
+  "seed": 20260215
+}

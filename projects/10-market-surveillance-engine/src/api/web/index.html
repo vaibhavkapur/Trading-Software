@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Surveillance (simulated)</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Market Surveillance</h1>
+    <span class="badge sim">Simulated data</span>
+  </div>
+  <form id="login" class="login" autocomplete="off">
+    <label for="token">Analyst token</label>
+    <input id="token" type="password" placeholder="paste your token" autocomplete="off" spellcheck="false">
+    <button type="submit">Connect</button>
+    <span id="who" class="who"></span>
+  </form>
+</header>
+
+<p class="lead">
+  Alerts are <strong>investigation leads</strong> produced by explicit rules. They are not findings,
+  and not proof of manipulation or misconduct by anyone.
+</p>
+
+<div id="error" class="error" hidden></div>
+
+<main id="app" hidden>
+  <section id="stats" class="stats" aria-label="Summary"></section>
+
+  <nav class="tabs" role="tablist">
+    <button id="tab-alerts" role="tab" aria-selected="true">Alerts</button>
+    <button id="tab-cases" role="tab" aria-selected="false">Cases</button>
+  </nav>
+
+  <section id="view-alerts" class="split">
+    <div class="list">
+      <div class="filters">
+        <label>Status
+          <select id="f-status">
+            <option value="">All</option>
+            <option value="OPEN" selected>Open</option>
+            <option value="IN_CASE">In a case</option>
+            <option value="CLOSED">Closed</option>
+          </select>
+        </label>
+        <label>Rule
+          <select id="f-rule">
+            <option value="">All</option>
+            <option>HIGH_CANCEL_RATE</option>
+            <option>HIGH_ORDER_TRADE_RATIO</option>
+            <option>LAYERING_LIKE</option>
+            <option>WASH_TRADE_LIKE</option>
+          </select>
+        </label>
+        <label>Symbol <input id="f-symbol" type="text" size="8" placeholder="any"></label>
+      </div>
+      <table id="alerts">
+        <thead><tr><th>Severity</th><th>Rule</th><th>Accounts</th><th>Symbol</th><th>Evidence window (UTC)</th><th>Seen</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p id="alerts-empty" class="empty" hidden>No alerts match.</p>
+    </div>
+    <aside id="alert-detail" class="detail"><p class="empty">Select an alert to see why it fired and the events behind it.</p></aside>
+  </section>
+
+  <section id="view-cases" class="split" hidden>
+    <div class="list">
+      <div class="filters">
+        <label>Status
+          <select id="c-status">
+            <option value="">All</option>
+            <option>OPEN</option>
+            <option>IN_REVIEW</option>
+            <option>ESCALATED</option>
+            <option>RESOLVED</option>
+          </select>
+        </label>
+        <button id="verify" type="button" class="quiet">Verify audit chain</button>
+        <span id="verify-result" class="hint"></span>
+      </div>
+      <table id="cases">
+        <thead><tr><th>Case</th><th>Title</th><th>Status</th><th>Priority</th><th>Assignee</th><th>Alerts</th><th>Updated (UTC)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p id="cases-empty" class="empty" hidden>No cases yet. Open one from an alert.</p>
+    </div>
+    <aside id="case-detail" class="detail"><p class="empty">Select a case to work it.</p></aside>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

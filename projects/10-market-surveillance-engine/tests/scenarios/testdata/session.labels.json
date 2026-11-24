@@ -1,0 +1,393 @@
+[
+  {
+    "name": "layering_like",
+    "label": "positive",
+    "intensity": "clear",
+    "expected_rules": [
+      "LAYERING_LIKE"
+    ],
+    "tolerated_rules": [
+      "HIGH_CANCEL_RATE",
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "accounts": [
+      "E0000-LAY",
+      "E0000-CP"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:00:00Z",
+    "end": "2026-01-05T14:00:37.152Z",
+    "seed": 7000021
+  },
+  {
+    "name": "wash_trade_like",
+    "label": "positive",
+    "intensity": "clear",
+    "variant": "self",
+    "expected_rules": [
+      "WASH_TRADE_LIKE"
+    ],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0001-WSH"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:00:07Z",
+    "end": "2026-01-05T14:00:13.506Z",
+    "seed": 7000022
+  },
+  {
+    "name": "high_cancel_rate",
+    "label": "positive",
+    "intensity": "clear",
+    "expected_rules": [
+      "HIGH_CANCEL_RATE"
+    ],
+    "tolerated_rules": [
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "accounts": [
+      "E0002-QS",
+      "E0002-CP"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:00:14Z",
+    "end": "2026-01-05T14:00:26.591Z",
+    "seed": 7000023
+  },
+  {
+    "name": "quote_flicker_like",
+    "label": "positive",
+    "intensity": "clear",
+    "expected_rules": [
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0003-FLK",
+      "E0003-CP"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:00:21Z",
+    "end": "2026-01-05T14:00:39.789Z",
+    "seed": 7000024
+  },
+  {
+    "name": "normal_flow",
+    "label": "negative",
+    "intensity": "ordinary",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0004-N1",
+      "E0004-N2",
+      "E0004-N3",
+      "E0004-N4",
+      "E0004-N5",
+      "E0004-N6",
+      "E0004-N7",
+      "E0004-N8",
+      "E0004-N9",
+      "E0004-N10"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:00:28Z",
+    "end": "2026-01-05T14:00:59.426Z",
+    "seed": 7000025
+  },
+  {
+    "name": "benign_market_maker",
+    "label": "negative",
+    "intensity": "ordinary",
+    "variant": "amend",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0005-MM",
+      "E0005-T1",
+      "E0005-T2",
+      "E0005-T3"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:00:35Z",
+    "end": "2026-01-05T14:01:02.526Z",
+    "seed": 7000026
+  },
+  {
+    "name": "benign_cross_trades",
+    "label": "negative",
+    "intensity": "hard",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0006-XA",
+      "E0006-XB"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:00:42Z",
+    "end": "2026-01-05T14:01:27.66Z",
+    "seed": 7000027
+  },
+  {
+    "name": "layering_like",
+    "label": "positive",
+    "intensity": "clear",
+    "expected_rules": [
+      "LAYERING_LIKE"
+    ],
+    "tolerated_rules": [
+      "HIGH_CANCEL_RATE",
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "accounts": [
+      "E0007-LAY",
+      "E0007-CP"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:00:49Z",
+    "end": "2026-01-05T14:01:37.365Z",
+    "seed": 7000028
+  },
+  {
+    "name": "wash_trade_like",
+    "label": "positive",
+    "intensity": "clear",
+    "variant": "self",
+    "expected_rules": [
+      "WASH_TRADE_LIKE"
+    ],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0008-WSH"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:00:56Z",
+    "end": "2026-01-05T14:01:08.586Z",
+    "seed": 7000029
+  },
+  {
+    "name": "high_cancel_rate",
+    "label": "positive",
+    "intensity": "clear",
+    "expected_rules": [
+      "HIGH_CANCEL_RATE"
+    ],
+    "tolerated_rules": [
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "accounts": [
+      "E0009-QS",
+      "E0009-CP"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:01:03Z",
+    "end": "2026-01-05T14:01:13.847Z",
+    "seed": 7000030
+  },
+  {
+    "name": "quote_flicker_like",
+    "label": "positive",
+    "intensity": "clear",
+    "expected_rules": [
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0010-FLK",
+      "E0010-CP"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:01:10Z",
+    "end": "2026-01-05T14:01:37.565Z",
+    "seed": 7000031
+  },
+  {
+    "name": "normal_flow",
+    "label": "negative",
+    "intensity": "ordinary",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0011-N1",
+      "E0011-N2",
+      "E0011-N3",
+      "E0011-N4",
+      "E0011-N5",
+      "E0011-N6",
+      "E0011-N7",
+      "E0011-N8",
+      "E0011-N9",
+      "E0011-N10",
+      "E0011-N11"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:01:17Z",
+    "end": "2026-01-05T14:02:02.037Z",
+    "seed": 7000032
+  },
+  {
+    "name": "benign_market_maker",
+    "label": "negative",
+    "intensity": "hard",
+    "variant": "cancel_replace",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0012-MM",
+      "E0012-T1",
+      "E0012-T2",
+      "E0012-T3"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:01:24Z",
+    "end": "2026-01-05T14:01:58.29Z",
+    "seed": 7000033
+  },
+  {
+    "name": "benign_cross_trades",
+    "label": "negative",
+    "intensity": "hard",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0013-XA",
+      "E0013-XB"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:01:31Z",
+    "end": "2026-01-05T14:02:29.274Z",
+    "seed": 7000034
+  },
+  {
+    "name": "layering_like",
+    "label": "positive",
+    "intensity": "borderline",
+    "expected_rules": [
+      "LAYERING_LIKE"
+    ],
+    "tolerated_rules": [
+      "HIGH_CANCEL_RATE",
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "accounts": [
+      "E0014-LAY",
+      "E0014-CP"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:01:38Z",
+    "end": "2026-01-05T14:02:09.2Z",
+    "seed": 7000035
+  },
+  {
+    "name": "wash_trade_like",
+    "label": "positive",
+    "intensity": "borderline",
+    "variant": "paired",
+    "expected_rules": [
+      "WASH_TRADE_LIKE"
+    ],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0015-WA",
+      "E0015-WB"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:01:45Z",
+    "end": "2026-01-05T14:01:51.643Z",
+    "seed": 7000036
+  },
+  {
+    "name": "high_cancel_rate",
+    "label": "positive",
+    "intensity": "borderline",
+    "expected_rules": [
+      "HIGH_CANCEL_RATE"
+    ],
+    "tolerated_rules": [
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "accounts": [
+      "E0016-QS",
+      "E0016-CP"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:01:52Z",
+    "end": "2026-01-05T14:01:56.454Z",
+    "seed": 7000037
+  },
+  {
+    "name": "quote_flicker_like",
+    "label": "positive",
+    "intensity": "borderline",
+    "expected_rules": [
+      "HIGH_ORDER_TRADE_RATIO"
+    ],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0017-FLK",
+      "E0017-CP"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:01:59Z",
+    "end": "2026-01-05T14:02:03.041Z",
+    "seed": 7000038
+  },
+  {
+    "name": "normal_flow",
+    "label": "negative",
+    "intensity": "ordinary",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0018-N1",
+      "E0018-N2",
+      "E0018-N3",
+      "E0018-N4",
+      "E0018-N5",
+      "E0018-N6",
+      "E0018-N7",
+      "E0018-N8",
+      "E0018-N9",
+      "E0018-N10",
+      "E0018-N11",
+      "E0018-N12"
+    ],
+    "symbol": "SIMA",
+    "start": "2026-01-05T14:02:06Z",
+    "end": "2026-01-05T14:02:40.149Z",
+    "seed": 7000039
+  },
+  {
+    "name": "benign_market_maker",
+    "label": "negative",
+    "intensity": "ordinary",
+    "variant": "amend",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0019-MM",
+      "E0019-T1",
+      "E0019-T2",
+      "E0019-T3"
+    ],
+    "symbol": "SIMB",
+    "start": "2026-01-05T14:02:13Z",
+    "end": "2026-01-05T14:02:59.859Z",
+    "seed": 7000040
+  },
+  {
+    "name": "benign_cross_trades",
+    "label": "negative",
+    "intensity": "hard",
+    "expected_rules": [],
+    "tolerated_rules": [],
+    "accounts": [
+      "E0020-XA",
+      "E0020-XB"
+    ],
+    "symbol": "SIMC",
+    "start": "2026-01-05T14:02:20Z",
+    "end": "2026-01-05T14:03:11.566Z",
+    "seed": 7000041
+  }
+]

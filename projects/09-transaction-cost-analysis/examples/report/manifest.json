@@ -1,0 +1,124 @@
+{
+  "report_id": "db3de65628a10cec",
+  "tool": {
+    "name": "tca",
+    "version": "0.1.0"
+  },
+  "methodology": {
+    "id": "tca-1.0+a9b35f3f",
+    "version": "tca-1.0",
+    "parameters": {
+      "version": "tca-1.0",
+      "max_quote_age_ms": 5000,
+      "max_clock_skew_ms": 250,
+      "quote_clock": "event"
+    },
+    "sign_convention": "Costs are positive when the execution was worse than the benchmark, for buys and sells alike: cost = side_sign * (execution price - benchmark price) * quantity, with side_sign +1 for buys and -1 for sells.",
+    "bps_denominator": "filled quantity * benchmark price",
+    "benchmarks": {
+      "arrival_mid": "Mid of the consolidated best bid and offer in force at arrival_ts, using only quotes stamped at or before it.",
+      "decision_mid": "The same consolidated mid, taken at decision_ts.",
+      "interval_vwap": "Volume-weighted price of every trade bar touching [arrival_ts, last fill], using whole bars."
+    },
+    "rounding": {
+      "bps_decimals": 4,
+      "money_decimals": 4,
+      "price_decimals": 6,
+      "ratio_decimals": 6,
+      "mode": "half-even"
+    },
+    "documentation": "docs/methodology.md"
+  },
+  "dataset": {
+    "version": "sha256:a04778d0535bfe76b9b5d9cb412195a5f2922978988f9579486aa31100b32865",
+    "versions": {
+      "orders": "sha256:033efad2bb91a6a86fff14b75f53a131b576b953bf0d5c61d2afe0d65c5de56a",
+      "child_orders": "sha256:b557101bfe09e878873fcbda8f0ab4575a70917c526f91b90360fdda34c15ecb",
+      "fills": "sha256:d45dd049b827b7d1f94394f6a739945dfbba790e44189850a4045f90b850fe5f",
+      "quotes": "sha256:876a544ae871cce8073c37b386ed8aae87908847dd166e7fdc5043827a508ec9",
+      "bars": "sha256:8ac01dcafc2934191fa1033add06eb15b58152b72ea7f35e3e6003f23e385a26"
+    },
+    "rows": {
+      "orders": 61,
+      "child_orders": 405,
+      "fills": 310,
+      "quotes": 14451,
+      "bars": 266
+    }
+  },
+  "options": {
+    "benchmark": "arrival_mid",
+    "include_untrusted": false,
+    "bucket_minutes": 30
+  },
+  "quality": {
+    "orders": 61,
+    "orders_filled": 57,
+    "orders_trusted": {
+      "arrival_mid": 50,
+      "decision_mid": 50,
+      "interval_vwap": 34
+    },
+    "orphan_fills": 0,
+    "flag_counts": {
+      "ARRIVAL_CLOCK_SKEW": 2,
+      "ARRIVAL_QUOTE_MISSING": 2,
+      "ARRIVAL_QUOTE_STALE": 3,
+      "DECISION_CLOCK_SKEW": 2,
+      "DECISION_QUOTE_MISSING": 2,
+      "DECISION_QUOTE_STALE": 3,
+      "FILL_CLOCK_SKEW": 6,
+      "FILL_QUOTE_MISSING": 1,
+      "FILL_QUOTE_STALE": 3,
+      "NO_FILLS": 4,
+      "PARTIAL_FILL": 17,
+      "VWAP_BARS_COARSE": 21,
+      "VWAP_BARS_PARTIAL": 2
+    }
+  },
+  "notes": [
+    "Rows are not normalised for order difficulty (size, spread, volatility, urgency). A venue or broker that receives the harder orders will look worse here without executing worse, so do not rank rows on these figures alone."
+  ],
+  "files": {
+    "orders.csv": {
+      "sha256": "sha256:86904097b2b17647bee8def60d7ccaec7829a5be6098f5868351ff870ab8d35c",
+      "rows": 61
+    },
+    "fills.csv": {
+      "sha256": "sha256:14117f0a15d585a3e115e4df147114158b7a8c2ae19635de82dfa993495f7ee6",
+      "rows": 310
+    },
+    "benchmarks.csv": {
+      "sha256": "sha256:fbc7ace475581a5f4b40167e117711e1b197fcfb69759743e7412c6bd4babb4f",
+      "rows": 183
+    },
+    "summary_by_all.csv": {
+      "sha256": "sha256:4da31ada6236aed1a1bb86267c1a9cee93f056166426abca9300579988c2139c",
+      "rows": 1
+    },
+    "summary_by_broker.csv": {
+      "sha256": "sha256:20a9d37c31a4276b398f38195f4296a896c32a9182ad3160e9c95479591495eb",
+      "rows": 2
+    },
+    "summary_by_symbol.csv": {
+      "sha256": "sha256:961efdf7649800765a8c9120af99eacfed4c207596216cb7023d3dafeebcca19",
+      "rows": 3
+    },
+    "summary_by_strategy.csv": {
+      "sha256": "sha256:77ce4a5e20cf789e64464fca3a62214bd1e128f508d3dd454bd499c7739948d7",
+      "rows": 4
+    },
+    "summary_by_side.csv": {
+      "sha256": "sha256:eb158cef7143a2ec2bd086bff1c162b8289774296d408ca00c0f07782e264b00",
+      "rows": 2
+    },
+    "summary_by_venue.csv": {
+      "sha256": "sha256:7f69647cda47ccbaf295242fcff760e94bb0e67fd054f2c78b768c6c5492665e",
+      "rows": 3
+    },
+    "summary_by_time_bucket.csv": {
+      "sha256": "sha256:450f7d2ae9f0b845f63a480db93bc068eb14a072ba28ce5884119b8779b3cfa4",
+      "rows": 3
+    }
+  }
+}

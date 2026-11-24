@@ -1,0 +1,3 @@
+order_id,symbol,side,qty,decision_ts,arrival_ts,broker,strategy
+W-BUY,XYZ,buy,1000,2026-03-02T14:59:58Z,2026-03-02T15:00:00Z,DEMO,WORKED
+W-SELL,XYZ,sell,1000,2026-03-02T14:59:58Z,2026-03-02T15:00:00Z,DEMO,WORKED

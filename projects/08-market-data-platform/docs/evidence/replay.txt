@@ -1,0 +1,48 @@
+# Replay of the committed capture, twice, then regeneration of the fixtures
+# captured 2026-11-24T07:02:48Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: make replay; make replay; make fixtures
+
+{
+  "raw_events": 7989,
+  "trades": 2403,
+  "quotes": 5167,
+  "depth": 417,
+  "gaps": 4,
+  "missing_seq": 11,
+  "duplicates": 5,
+  "rejects": {
+    "PRICE_NOT_ON_TICK": 2,
+    "UNPARSEABLE_FRAME": 2
+  },
+  "digest": "47604a35c79b9455d63561b5d1129976318334523bea6c2825162c30113c7c71"
+}
+stored rows: trades=2403 quotes=5167 depth=417 gaps=4
+replayed in 259ms
+OK: capture and output match the manifest
+
+## second run
+{
+  "raw_events": 7989,
+  "trades": 2403,
+  "quotes": 5167,
+  "depth": 417,
+  "gaps": 4,
+  "missing_seq": 11,
+  "duplicates": 5,
+  "rejects": {
+    "PRICE_NOT_ON_TICK": 2,
+    "UNPARSEABLE_FRAME": 2
+  },
+  "digest": "47604a35c79b9455d63561b5d1129976318334523bea6c2825162c30113c7c71"
+}
+stored rows: trades=2403 quotes=5167 depth=417 gaps=4
+replayed in 263ms
+OK: capture and output match the manifest
+
+## regenerating the fixtures
+wrote examples/fixtures/session.ndjson (7998 frames, sha256 b77e5fd3d56a2c5c65556e9b0449ce5d755bf6fed6ee485c2b6a08a62622ef9f)
+wrote examples/fixtures/session.manifest.json (output digest 47604a35c79b9455d63561b5d1129976318334523bea6c2825162c30113c7c71)
+fixtures are byte-identical after regeneration
+
+exit status: 0

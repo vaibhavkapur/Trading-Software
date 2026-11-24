@@ -1,0 +1,17 @@
+{
+  "venues": {
+    "XSIM": {"aliases": ["SIM", "XSIM-1"]},
+    "XALT": {"aliases": ["ALT"]}
+  },
+  "allow_unknown_venues": false,
+  "accounts": {
+    "ACC-1001": {"aliases": ["1001"], "owner": "OWNER-A"},
+    "ACC-1002": {"aliases": ["1002"], "owner": "OWNER-A"},
+    "ACC-2001": {"aliases": ["2001"], "owner": ""}
+  },
+  "symbols": {
+    "SIMA": {"aliases": ["SIMA.XSIM"]},
+    "SIMB": {"aliases": ["SIMB.XSIM"]},
+    "SIMC": {"aliases": ["SIMC.XSIM"]}
+  }
+}

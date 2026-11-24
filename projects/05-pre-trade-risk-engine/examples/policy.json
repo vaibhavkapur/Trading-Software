@@ -1,0 +1,26 @@
+{
+  "version": "2026-01",
+  "defaults": {
+    "max_order_qty": 1000,
+    "max_order_notional": "100000.00",
+    "review_order_notional": "50000.00",
+    "max_symbol_exposure": "150000.00",
+    "max_gross_exposure": "250000.00",
+    "max_daily_loss": "5000.00",
+    "rate_limit": {"max_orders": 20, "window_ms": 1000},
+    "quote_max_age_ms": 2000,
+    "max_clock_skew_ms": 500,
+    "price_collar_bps": 500,
+    "reservation_ttl_ms": 30000,
+    "review_ttl_ms": 300000
+  },
+  "accounts": {
+    "a-1": {},
+    "a-2": {"max_order_qty": 200, "max_symbol_exposure": "40000.00", "rate_limit": {"max_orders": 5, "window_ms": 1000}}
+  },
+  "symbols": {
+    "XYZ": {"tradable": true, "lot_size": 1, "tick_size": "0.01"},
+    "ABC": {"tradable": true, "lot_size": 10, "tick_size": "0.05", "price_collar_bps": 200},
+    "HALT": {"tradable": false, "lot_size": 1, "tick_size": "0.01"}
+  }
+}

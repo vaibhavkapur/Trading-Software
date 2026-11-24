@@ -1,0 +1,81 @@
+{
+  "description": "Golden replay cases. Synthetic prices from a seeded random walk, not market data. Regenerate with scripts/update_golden.py.",
+  "data": {
+    "generator": {
+      "function": "backtester.fixtures.demo_dataset",
+      "seed": 21,
+      "days": 320
+    },
+    "data_version": "sha256:95b3970de9bfa911151253166217b402b9872b07e2127f10459b87b97f1718a3"
+  },
+  "cases": [
+    {
+      "name": "momentum with fees, slippage, spread and fixed latency",
+      "strategy": "examples/momentum.py",
+      "params": {
+        "lookback": 20
+      },
+      "config": {
+        "seed": 42,
+        "execution": {
+          "fee_bps": "1",
+          "slippage_bps": "3",
+          "spread_bps": "2",
+          "latency_ns": 250000000
+        }
+      },
+      "expected": {
+        "result_hash": "sha256:a9e74faf592c6767d5384674dbc37e25864e43ec8c364e0779ad401a3d0e35a1",
+        "orders": 67,
+        "fills": 66,
+        "ledger_entries": 133,
+        "final_equity": "1041041.7790",
+        "fees": "2049.0219"
+      }
+    },
+    {
+      "name": "mean reversion with partial fills, jittered latency and seeded touch fills",
+      "strategy": "examples/mean_reversion.py",
+      "params": {
+        "window": 10,
+        "entry_bps": 150
+      },
+      "config": {
+        "seed": 7,
+        "execution": {
+          "fee_bps": "1.5",
+          "fee_per_unit": 25,
+          "slippage_bps": "2",
+          "latency_ns": 40000000,
+          "latency_jitter_ns": 20000000,
+          "participation_rate": "0.0005",
+          "touch_fill_probability": "0.5"
+        }
+      },
+      "expected": {
+        "result_hash": "sha256:e3e57aa5df4034e6c310265da9e0a0ac410e3f3248ec10b753a28b7d4502af95",
+        "orders": 127,
+        "fills": 233,
+        "ledger_entries": 469,
+        "final_equity": "955078.5302",
+        "fees": "1873.6302"
+      }
+    },
+    {
+      "name": "buy and hold through a split and a dividend, no frictions",
+      "strategy": "examples/buy_and_hold.py",
+      "params": {},
+      "config": {
+        "seed": 0
+      },
+      "expected": {
+        "result_hash": "sha256:407cd54019cc58d21d6002c5bd7d1f5e1fc21cc935e26af8457d292b5d23d48f",
+        "orders": 3,
+        "fills": 3,
+        "ledger_entries": 6,
+        "final_equity": "950579.6486",
+        "fees": "0.0000"
+      }
+    }
+  ]
+}

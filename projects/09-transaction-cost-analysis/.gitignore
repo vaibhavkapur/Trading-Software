@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+# Anchored to the project root: examples/data and examples/report are committed.
+/data/
+/reports/
+.env

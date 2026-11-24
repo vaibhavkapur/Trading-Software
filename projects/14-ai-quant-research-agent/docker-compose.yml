@@ -1,0 +1,22 @@
+services:
+  quant-research-agent:
+    build: .
+    container_name: ai-quant-research-agent
+    ports:
+      - "8014:8014"
+    environment:
+      QUANT_AGENT_DATA_DIR: /app/data
+      QUANT_AGENT_MODE: PAPER_SIMULATED
+      QUANT_AGENT_MAX_WORKERS: "2"
+      QUANT_AGENT_RESEARCHER_TOKEN: "${QUANT_AGENT_RESEARCHER_TOKEN:-dev-researcher-token}"
+      QUANT_AGENT_REVIEWER_TOKEN: "${QUANT_AGENT_REVIEWER_TOKEN:-dev-reviewer-token}"
+    volumes:
+      - quant_agent_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8014/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  quant_agent_data:

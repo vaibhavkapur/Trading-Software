@@ -1,0 +1,19 @@
+# Fuzzing, 30 s per target
+# captured 2026-11-24T07:01:33Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: go test -run '^$' -fuzz <target> -fuzztime 30s ./tests/unit/
+
+fuzz: elapsed: 0s, gathering baseline coverage: 0/157 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 157/157 completed, now fuzzing with 10 workers
+fuzz: elapsed: 30s, execs: 2523894 (78085/sec), new interesting: 31 (total: 188)
+fuzz: elapsed: 30s, execs: 2523894 (0/sec), new interesting: 31 (total: 188)
+PASS
+ok  	mdp/tests/unit	30.796s
+fuzz: elapsed: 0s, gathering baseline coverage: 0/458 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 458/458 completed, now fuzzing with 10 workers
+fuzz: elapsed: 30s, execs: 2011465 (72659/sec), new interesting: 102 (total: 560)
+fuzz: elapsed: 31s, execs: 2011465 (0/sec), new interesting: 102 (total: 560)
+PASS
+ok  	mdp/tests/unit	31.351s
+
+exit status: 0

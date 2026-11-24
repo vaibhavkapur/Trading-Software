@@ -1,0 +1,4 @@
+{
+  "action": "ACKNOWLEDGE",
+  "note": "Broker confirmed by phone that the report was sent in error; nothing to book."
+}

@@ -1,0 +1,8 @@
+{
+  "name": "calm-twap",
+  "description": "Healthy venues. BUY 10,000 XYZ by TWAP over 10 minutes across three venues with different fees, depth and latency.",
+  "seed": 7,
+  "parents": [
+    {"at_ms": 1000, "symbol": "XYZ", "side": "BUY", "qty": 10000, "strategy": "TWAP", "duration_seconds": 600}
+  ]
+}

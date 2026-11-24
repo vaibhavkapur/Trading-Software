@@ -1,0 +1,6 @@
+bin/
+data/
+/data-walk/
+*.key
+*.log
+.env

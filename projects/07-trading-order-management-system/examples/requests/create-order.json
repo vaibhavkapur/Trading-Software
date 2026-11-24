@@ -1,0 +1,10 @@
+{
+  "account_id": "ACC-1",
+  "client_order_id": "my-strategy-2026-01-05-0001",
+  "symbol": "AAPL",
+  "side": "BUY",
+  "type": "LIMIT",
+  "time_in_force": "DAY",
+  "qty": 100,
+  "limit_price": "150.00"
+}

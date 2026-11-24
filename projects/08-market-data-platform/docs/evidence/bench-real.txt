@@ -1,0 +1,31 @@
+# Load test through Redpanda and ClickHouse in Docker on the same machine
+# captured 2026-11-24T07:03:36Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: make bench-real   (mdp bench --infra real --rate 2000 --duration 10s --backlog 50000)   [rpk version: v26.2.7; ClickHouse 26.8.45.6]
+
+docker compose up -d --wait redpanda clickhouse
+ Container mdp-clickhouse-1 Running 
+ Container mdp-redpanda-1 Running 
+ Container mdp-redpanda-1 Waiting 
+ Container mdp-clickhouse-1 Waiting 
+ Container mdp-redpanda-1 Healthy 
+ Container mdp-clickhouse-1 Healthy 
+mdp bench: SIMULATED load. Measured on one run on one machine; not a capacity claim.
+  infra  Kafka-protocol broker at 127.0.0.1:19092 and ClickHouse at http://127.0.0.1:8123 (single-node development containers unless you pointed it elsewhere)
+  host   darwin/arm64, 10 CPUs, go1.27.1
+
+Phase 1: paced feed, 2 venues x 2000 events/s for 10s
+  published                39992 events
+  ingested                 39992 events, 3655768 bytes in 10.00s = 3998 events/s, 0.37 MB/s
+  stored                   39992 rows   (gaps 0, duplicates dropped 0, reconnects 0, rejects 0)
+  receive -> normalized    p50 <= 6.40 ms, p99 <= 25.60 ms   (histogram bucket upper bounds, n=39992)
+  receive -> stored        p50 <= 204.80 ms, p99 <= 409.60 ms   (histogram bucket upper bounds, n=39992)
+  receive -> WS client     p50 4.10 ms, p99 16.99 ms, max 31.52 ms   (exact, n=39992, dropped for slow consumer: 0)
+  max consumer lag seen    normalizer 54 records, sink 1031 records   (sampled every 100 ms)
+
+Phase 2: catch-up. Normalizer and sink are stopped while 50000 events arrive, then restarted
+  ingest (unpaced)         50000 events in 0.19s = 266803 events/s   (reconnects 0)
+  catch-up                 50000 raw events normalized and stored in 0.69s = 72208 events/s
+  store                    89992 rows, expected 89992
+
+exit status: 0

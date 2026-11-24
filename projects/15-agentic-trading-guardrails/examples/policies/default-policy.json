@@ -1,0 +1,74 @@
+{
+  "id": "guardrails-default",
+  "version": "v1.0.0",
+  "description": "Fail-closed paper trading guardrails with instrument allowlist, notional caps, LIMIT-only orders, and mandatory signed approval for execution.",
+  "kill_switch_active": false,
+  "max_quote_age_seconds": 30,
+  "max_clock_skew_seconds": 30,
+  "org": {
+    "allowed_symbols": ["AAPL", "MSFT", "NVDA", "QQQ", "SPY", "TLT"],
+    "denied_symbols": ["MEME", "PENNY", "UNLISTED"],
+    "allowed_order_types": ["LIMIT"],
+    "allowed_sides": ["BUY", "SELL"],
+    "max_order_notional_cents": 250000,
+    "max_daily_notional_cents": 1000000,
+    "max_order_quantity": 100,
+    "require_approval_above_cents": 0,
+    "trading_window": {
+      "start_minute_utc": 0,
+      "end_minute_utc": 1439,
+      "allowed_weekdays": [0, 1, 2, 3, 4, 5, 6]
+    }
+  },
+  "teams": {
+    "equities-research": {
+      "allowed_symbols": ["SPY", "QQQ", "AAPL", "MSFT"],
+      "max_order_notional_cents": 100000,
+      "max_daily_notional_cents": 500000
+    }
+  },
+  "rules": [
+    {
+      "id": "allow-market-read",
+      "scope": "market:read",
+      "effect": "ALLOW",
+      "expression": "true",
+      "reason": "allow read-only market data"
+    },
+    {
+      "id": "allow-portfolio-read",
+      "scope": "portfolio:read",
+      "effect": "ALLOW",
+      "expression": "true",
+      "reason": "allow read-only portfolio state"
+    },
+    {
+      "id": "allow-order-propose",
+      "scope": "order:propose",
+      "effect": "ALLOW",
+      "expression": "order_type == \"LIMIT\"",
+      "reason": "allow LIMIT order proposals subject to hierarchy limits"
+    },
+    {
+      "id": "allow-order-submit",
+      "scope": "order:submit",
+      "effect": "ALLOW",
+      "expression": "order_type == \"LIMIT\"",
+      "reason": "allow approved LIMIT order submission subject to hierarchy limits"
+    },
+    {
+      "id": "deny-market-orders",
+      "scope": "order:submit",
+      "effect": "DENY",
+      "expression": "order_type == \"MARKET\"",
+      "reason": "explicit deny: MARKET orders are prohibited for autonomous agents"
+    },
+    {
+      "id": "deny-market-propose",
+      "scope": "order:propose",
+      "effect": "DENY",
+      "expression": "order_type == \"MARKET\"",
+      "reason": "explicit deny: MARKET orders cannot be proposed"
+    }
+  ]
+}

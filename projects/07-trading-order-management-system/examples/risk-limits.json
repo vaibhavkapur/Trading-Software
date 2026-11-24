@@ -1,0 +1,7 @@
+{
+  "version": "example-1",
+  "allowed_symbols": ["AAPL", "MSFT", "TSLA", "NVDA"],
+  "max_order_qty": 10000,
+  "max_order_notional": "5000000.00",
+  "allow_market_orders": true
+}

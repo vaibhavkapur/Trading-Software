@@ -1,0 +1,17 @@
+# Binaries and build outputs
+bin/
+dist/
+*.exe
+*.out
+coverage.out
+
+# Local runtime state & temp files
+data/
+.recon-state/
+*.tmp
+*.log
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/

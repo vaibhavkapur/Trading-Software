@@ -1,0 +1,11 @@
+[package]
+name = "analytics"
+description = "Market-microstructure metrics: spread, depth, imbalance, microprice, OFI"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+book-core.workspace = true
+serde.workspace = true

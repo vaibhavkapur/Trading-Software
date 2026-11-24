@@ -1,0 +1,15 @@
+{
+  "name": "stale-data",
+  "description": "Data-quality demo: BRAVO's market data goes silent from t=60s to t=240s, CHARLIE's clock runs 5s ahead from t=120s to t=300s, and ALPHA double-delivers 30% of its execution reports throughout. SELL order.",
+  "seed": 11,
+  "parents": [
+    {"at_ms": 1000, "symbol": "XYZ", "side": "SELL", "qty": 8000, "strategy": "TWAP", "duration_seconds": 400}
+  ],
+  "faults": [
+    {"at_ms": 0, "venue": "ALPHA", "fault": {"duplicate_rate": 0.3}},
+    {"at_ms": 60000, "venue": "BRAVO", "fault": {"stop_quotes": true}},
+    {"at_ms": 120000, "venue": "CHARLIE", "fault": {"clock_skew_ms": 5000}},
+    {"at_ms": 240000, "venue": "BRAVO", "fault": {}},
+    {"at_ms": 300000, "venue": "CHARLIE", "fault": {}}
+  ]
+}

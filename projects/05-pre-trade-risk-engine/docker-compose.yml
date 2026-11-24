@@ -1,0 +1,15 @@
+# Paper/simulated use only. Tokens are injected from the environment and
+# must be set by the caller: `RISK_ADMIN_TOKEN=... RISK_FEED_TOKEN=... docker compose up`.
+services:
+  riskd:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      RISK_ADMIN_TOKEN: ${RISK_ADMIN_TOKEN:?set RISK_ADMIN_TOKEN}
+      RISK_FEED_TOKEN: ${RISK_FEED_TOKEN:?set RISK_FEED_TOKEN}
+      RISK_OMS_WEBHOOKS: ${RISK_OMS_WEBHOOKS:-}
+    volumes:
+      - risk-data:/data
+volumes:
+  risk-data:

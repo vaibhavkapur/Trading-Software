@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Options Trading Infrastructure — PAPER / SIMULATED</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #131b31;
+      --panel-alt: #1a2442;
+      --border: #2a375e;
+      --text: #e8eefc;
+      --muted: #93a4cc;
+      --accent: #4f9cff;
+      --green: #22c55e;
+      --red: #ef4444;
+      --amber: #f59e0b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+    header {
+      background: linear-gradient(90deg, #101830, #172347);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand h1 { margin: 0; font-size: 1.2rem; letter-spacing: 0.02em; }
+    .brand p { margin: 2px 0 0; font-size: 0.82rem; color: var(--muted); }
+    .paper-badge {
+      background: rgba(245, 158, 11, 0.16);
+      border: 1px solid var(--amber);
+      color: #fcd34d;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+    }
+    main { max-width: 1360px; margin: 0 auto; padding: 18px 20px 40px; display: grid; gap: 18px; }
+    .grid-2 { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 12px; }
+    label { display: flex; flex-direction: column; gap: 4px; font-size: 0.78rem; color: var(--muted); }
+    select, input, button {
+      background: var(--panel-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+    }
+    button {
+      background: var(--accent);
+      color: #061024;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
+    button.secondary { background: var(--panel-alt); color: var(--text); border: 1px solid var(--border); }
+    button:hover { opacity: 0.92; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th, td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    th:first-child, td:first-child { text-align: left; }
+    th { color: var(--muted); font-weight: 600; background: rgba(255,255,255,0.02); }
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .stat {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 11px;
+    }
+    .stat .k { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
+    .stat .v { font-size: 1.04rem; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .pos { color: var(--green); }
+    .neg { color: var(--red); }
+    .warn-box {
+      background: rgba(245, 158, 11, 0.10);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    .warn-box ul { margin: 6px 0 0 18px; padding: 0; }
+    .assumptions-box {
+      background: rgba(79, 156, 255, 0.08);
+      border: 1px solid rgba(79, 156, 255, 0.35);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    svg.chart { width: 100%; height: 240px; background: #0c1327; border-radius: 8px; border: 1px solid var(--border); }
+    .heat-pos { background: rgba(34, 197, 94, 0.22); color: #bbf7d0; }
+    .heat-neg { background: rgba(239, 68, 68, 0.22); color: #fecaca; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Options Trading Infrastructure</h1>
+      <p>Black–Scholes–Merton Analytics · IV Solver · Portfolio Scenarios · Defined-Risk Multi-Leg Paper Preview</p>
+    </div>
+    <div class="paper-badge">PAPER / SIMULATED ONLY — NO LIVE EXECUTION</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>
+        <span>Option Chain Explorer</span>
+        <span id="chain-meta" class="mono" style="color: var(--muted);">Loading simulated feed...</span>
+      </h2>
+      <div class="controls">
+        <label>Symbol <select id="symbol-select"></select></label>
+        <label>Expiry <select id="expiry-select"></select></label>
+        <button id="load-chain-btn">Refresh Chain</button>
+      </div>
+      <div style="overflow-x: auto;">
+        <table id="chain-table">
+          <thead>
+            <tr>
+              <th>Contract</th><th>Style</th><th>Right</th><th>Strike</th>
+              <th>Bid</th><th>Ask</th><th>Mid</th><th>IV</th>
+              <th>Delta</th><th>Gamma</th><th>Vega/1%</th><th>Theta/d</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="chain-warnings"></div>
+    </section>
+
+    <div class="grid-2">
+      <section class="card">
+        <h2>Defined-Risk Vertical Spread Builder &amp; Payoff</h2>
+        <div class="controls">
+          <label>Long Leg <select id="long-leg"></select></label>
+          <label>Short Leg <select id="short-leg"></select></label>
+          <label>Spreads <input id="spread-qty" type="number" value="2" min="1" max="100" style="width:76px;" /></label>
+          <label>Mode
+            <select id="pricing-mode">
+              <option value="MID">MID</option>
+              <option value="NATURAL">NATURAL (Ask/Bid)</option>
+            </select>
+          </label>
+          <button id="preview-spread-btn">Preview Spread</button>
+          <button id="submit-paper-btn" class="secondary">Submit Paper Order</button>
+        </div>
+
+        <div class="metrics-row" id="spread-stats"></div>
+        <svg id="payoff-svg" class="chart" viewBox="0 0 640 240" aria-label="Vertical spread payoff diagram"></svg>
+        <div id="spread-assumptions" class="assumptions-box"></div>
+        <div id="spread-warnings"></div>
+        <div id="order-feedback" class="mono" style="margin-top:8px;"></div>
+      </section>
+
+      <section class="card">
+        <h2>BSM / Binomial CRR Pricer &amp; IV Solver</h2>
+        <div class="controls">
+          <label>Right <select id="p-right"><option value="CALL">CALL</option><option value="PUT">PUT</option></select></label>
+          <label>Model <select id="p-model"><option value="BLACK_SCHOLES_MERTON">BSM (European)</option><option value="BINOMIAL_CRR">Binomial CRR</option></select></label>
+          <label>Style <select id="p-style"><option value="EUROPEAN">EUROPEAN</option><option value="AMERICAN">AMERICAN</option></select></label>
+          <label>Spot <input id="p-spot" type="number" step="0.5" value="100" style="width:78px;" /></label>
+          <label>Strike <input id="p-strike" type="number" step="0.5" value="105" style="width:78px;" /></label>
+          <label>Years <input id="p-years" type="number" step="0.05" value="0.25" style="width:74px;" /></label>
+          <label>Rate <input id="p-rate" type="number" step="0.005" value="0.04" style="width:72px;" /></label>
+          <label>Div q <input id="p-div" type="number" step="0.005" value="0.00" style="width:72px;" /></label>
+          <label>Vol <input id="p-vol" type="number" step="0.01" value="0.30" style="width:72px;" /></label>
+          <button id="price-btn">Price Option</button>
+        </div>
+        <div class="metrics-row" id="pricer-stats"></div>
+        <div id="pricer-warnings"></div>
+      </section>
+    </div>
+
+    <div class="grid-2">
+      <section class="card">
+        <h2>
+          <span>Portfolio Aggregated Greeks &amp; 2D Scenario P&amp;L</span>
+          <button id="refresh-portfolio-btn" class="secondary">Recalculate Risk</button>
+        </h2>
+        <div class="metrics-row" id="portfolio-stats"></div>
+        <div style="overflow-x:auto;">
+          <table id="scenario-table"></table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Paper Multi-Leg Orders Blotter</h2>
+        <div style="overflow-x:auto;">
+          <table id="orders-table">
+            <thead>
+              <tr><th>Order ID</th><th>Status</th><th>Strategy</th><th>Qty</th><th>Net Debit/Credit</th><th>Max Loss</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    let symbolsMap = {};
+    let currentChain = [];
+    let lastPreview = null;
+
+    const fmt = (n, d = 2) => (n === null || n === undefined ? "—" : Number(n).toFixed(d));
+
+    async function api(path, opts = {}) {
+      const res = await fetch(path, {
+        headers: { "Content-Type": "application/json" },
+        ...opts,
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }));
+        throw new Error(err.detail || res.statusText);
+      }
+      return res.json();
+    }
+
+    function renderWarnings(containerId, warnings) {
+      const el = document.getElementById(containerId);
+      if (!warnings || warnings.length === 0) { el.innerHTML = ""; return; }
+      el.innerHTML = `<div class="warn-box"><strong>Model &amp; Risk Warnings</strong><ul>` +
+        warnings.map(w => `<li><strong>[${w.severity}] ${w.code}:</strong> ${w.message}</li>`).join("") +
+        `</ul></div>`;
+    }
+
+    async function loadSymbols() {
+      symbolsMap = await api("/v1/options/symbols");
+      const symSel = document.getElementById("symbol-select");
+      symSel.innerHTML = Object.keys(symbolsMap).map(s => `<option value="${s}">${s}</option>`).join("");
+      if (symbolsMap["XYZ"]) symSel.value = "XYZ";
+      populateExpiries();
+    }
+
+    function populateExpiries() {
+      const sym = document.getElementById("symbol-select").value;
+      const expSel = document.getElementById("expiry-select");
+      const exps = symbolsMap[sym] || [];
+      expSel.innerHTML = exps.map(e => `<option value="${e}">${e}</option>`).join("");
+    }
+
+    async function loadChain() {
+      const sym = document.getElementById("symbol-select").value;
+      const exp = document.getElementById("expiry-select").value;
+      const data = await api(`/v1/options/chain?symbol=${sym}&expiry=${exp}`);
+      currentChain = data.rows;
+      document.getElementById("chain-meta").textContent =
+        `Spot: ${data.underlying_px} | Venue asof: ${data.asof || "—"} | Recv: ${data.received_at || "—"}`;
+
+      const tbody = document.querySelector("#chain-table tbody");
+      tbody.innerHTML = data.rows.map(r => `
+        <tr>
+          <td class="mono">${r.contract.id}</td>
+          <td>${r.contract.style}</td>
+          <td>${r.contract.right}</td>
+          <td>${fmt(r.contract.strike, 2)}</td>
+          <td>${r.quote ? fmt(r.quote.bid, 2) : "—"}</td>
+          <td>${r.quote ? fmt(r.quote.ask, 2) : "—"}</td>
+          <td>${r.quote ? fmt((Number(r.quote.bid)+Number(r.quote.ask))/2, 2) : "—"}</td>
+          <td>${r.greeks && r.greeks.iv !== null ? fmt(r.greeks.iv * 100, 2) + "%" : "—"}</td>
+          <td>${r.greeks ? fmt(r.greeks.delta, 4) : "—"}</td>
+          <td>${r.greeks ? fmt(r.greeks.gamma, 5) : "—"}</td>
+          <td>${r.greeks ? fmt(r.greeks.vega_per_1pct, 4) : "—"}</td>
+          <td>${r.greeks ? fmt(r.greeks.theta_per_day, 4) : "—"}</td>
+        </tr>
+      `).join("");
+      renderWarnings("chain-warnings", data.warnings);
+
+      const opts = data.rows.map(r => `<option value="${r.contract.id}">${r.contract.id} (${r.contract.right} ${r.contract.strike})</option>`).join("");
+      const longSel = document.getElementById("long-leg");
+      const shortSel = document.getElementById("short-leg");
+      longSel.innerHTML = opts;
+      shortSel.innerHTML = opts;
+      const calls = data.rows.filter(r => r.contract.right === "CALL");
+      if (calls.length >= 5) {
+        longSel.value = calls[3].contract.id;
+        shortSel.value = calls[4].contract.id;
+      }
+      await previewSpread();
+    }
+
+    function drawPayoffSvg(preview) {
+      const svg = document.getElementById("payoff-svg");
+      const pts = preview.payoff_curve;
+      if (!pts || pts.length < 2) return;
+      const W = 640, H = 240, padL = 58, padR = 18, padT = 18, padB = 30;
+      const xs = pts.map(p => Number(p.spot));
+      const ys = pts.flatMap(p => [Number(p.expiry_pnl), Number(p.t0_theoretical_pnl), 0]);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys) - 50, maxY = Math.max(...ys) + 50;
+      const sx = x => padL + ((x - minX) / (maxX - minX || 1)) * (W - padL - padR);
+      const sy = y => H - padB - ((y - minY) / (maxY - minY || 1)) * (H - padT - padB);
+
+      const expPath = pts.map((p, i) => `${i === 0 ? "M" : "L"}${sx(Number(p.spot)).toFixed(1)},${sy(Number(p.expiry_pnl)).toFixed(1)}`).join(" ");
+      const t0Path = pts.map((p, i) => `${i === 0 ? "M" : "L"}${sx(Number(p.spot)).toFixed(1)},${sy(Number(p.t0_theoretical_pnl)).toFixed(1)}`).join(" ");
+      const zeroY = sy(0).toFixed(1);
+      const spotX = sx(Number(preview.spot)).toFixed(1);
+      const beX = sx(Number(preview.breakeven_spot)).toFixed(1);
+
+      svg.innerHTML = `
+        <line x1="${padL}" y1="${zeroY}" x2="${W - padR}" y2="${zeroY}" stroke="#475569" stroke-dasharray="4 4"/>
+        <line x1="${spotX}" y1="${padT}" x2="${spotX}" y2="${H - padB}" stroke="#4f9cff" stroke-dasharray="3 3"/>
+        <line x1="${beX}" y1="${padT}" x2="${beX}" y2="${H - padB}" stroke="#f59e0b" stroke-dasharray="2 3"/>
+        <path d="${expPath}" fill="none" stroke="#22c55e" stroke-width="2.4"/>
+        <path d="${t0Path}" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="6 3"/>
+        <text x="${padL + 6}" y="${padT + 12}" fill="#22c55e" font-size="11">■ Expiration Payoff</text>
+        <text x="${padL + 130}" y="${padT + 12}" fill="#60a5fa" font-size="11">--- T+0 BSM Theoretical</text>
+        <text x="${spotX}" y="${H - 10}" fill="#60a5fa" font-size="10" text-anchor="middle">Spot ${preview.spot}</text>
+        <text x="${beX}" y="${padT + 26}" fill="#fcd34d" font-size="10" text-anchor="middle">BE ${preview.breakeven_spot}</text>
+        <text x="6" y="${zeroY}" fill="#94a3b8" font-size="10">$0</text>
+        <text x="6" y="${padT + 10}" fill="#94a3b8" font-size="10">$${Math.round(maxY)}</text>
+        <text x="6" y="${H - padB}" fill="#94a3b8" font-size="10">$${Math.round(minY)}</text>
+      `;
+    }
+
+    async function previewSpread() {
+      const longId = document.getElementById("long-leg").value;
+      const shortId = document.getElementById("short-leg").value;
+      const qty = Number(document.getElementById("spread-qty").value || 1);
+      const mode = document.getElementById("pricing-mode").value;
+      try {
+        const p = await api("/v1/strategies/vertical-spread/preview", {
+          method: "POST",
+          body: JSON.stringify({ long_contract_id: longId, short_contract_id: shortId, quantity: qty, pricing_mode: mode }),
+        });
+        lastPreview = p;
+        document.getElementById("spread-stats").innerHTML = `
+          <div class="stat"><div class="k">Structure</div><div class="v">${p.spread_type}</div></div>
+          <div class="stat"><div class="k">Net Debit/Credit</div><div class="v">$${fmt(p.net_debit_credit)}</div></div>
+          <div class="stat"><div class="k">Max Gain</div><div class="v pos">$${fmt(p.max_gain_estimate)}</div></div>
+          <div class="stat"><div class="k">Max Loss</div><div class="v neg">$${fmt(p.max_loss_estimate)}</div></div>
+          <div class="stat"><div class="k">Breakeven</div><div class="v">${fmt(p.breakeven_spot)}</div></div>
+          <div class="stat"><div class="k">Net Delta / Theta(d)</div><div class="v">${fmt(p.net_delta, 1)} / ${fmt(p.net_theta_per_day, 2)}</div></div>
+        `;
+        drawPayoffSvg(p);
+        document.getElementById("spread-assumptions").innerHTML =
+          `<strong>Pricing Assumptions &amp; Limitations (${p.assumptions.model} · ${p.assumptions.day_count_convention}):</strong><br/>` +
+          p.limitations.map(l => `• ${l}`).join("<br/>") +
+          `<br/>• ${p.assumptions.early_exercise_limitation}`;
+        renderWarnings("spread-warnings", p.warnings);
+      } catch (err) {
+        document.getElementById("spread-warnings").innerHTML = `<div class="warn-box">${err.message}</div>`;
+      }
+    }
+
+    async function submitPaperOrder() {
+      if (!lastPreview) return;
+      const out = await api("/v1/paper/orders", {
+        method: "POST",
+        body: JSON.stringify({
+          legs: lastPreview.legs,
+          quantity: lastPreview.quantity,
+          strategy_type: lastPreview.spread_type,
+          pricing_mode: lastPreview.pricing_mode,
+          idempotency_key: `ui-${Date.now()}`,
+        }),
+      });
+      document.getElementById("order-feedback").textContent =
+        `[PAPER_SIMULATED] Order ${out.order.id} -> ${out.order.status} (Net: $${out.order.net_debit_credit}, Max Loss: $${out.order.max_loss_estimate})`;
+      await loadOrdersAndPortfolio();
+    }
+
+    async function priceSingle() {
+      const payload = {
+        right: document.getElementById("p-right").value,
+        model: document.getElementById("p-model").value,
+        style: document.getElementById("p-style").value,
+        spot: Number(document.getElementById("p-spot").value),
+        strike: Number(document.getElementById("p-strike").value),
+        years: Number(document.getElementById("p-years").value),
+        rate: Number(document.getElementById("p-rate").value),
+        dividend_yield: Number(document.getElementById("p-div").value),
+        volatility: Number(document.getElementById("p-vol").value),
+      };
+      const r = await api("/v1/options/price", { method: "POST", body: JSON.stringify(payload) });
+      document.getElementById("pricer-stats").innerHTML = `
+        <div class="stat"><div class="k">Price</div><div class="v">$${fmt(r.price, 4)}</div></div>
+        <div class="stat"><div class="k">Delta</div><div class="v">${fmt(r.delta, 4)}</div></div>
+        <div class="stat"><div class="k">Gamma</div><div class="v">${fmt(r.gamma, 5)}</div></div>
+        <div class="stat"><div class="k">Vega / 1%</div><div class="v">${fmt(r.vega_per_1pct, 4)}</div></div>
+        <div class="stat"><div class="k">Theta / day</div><div class="v">${fmt(r.theta_per_day, 4)}</div></div>
+        <div class="stat"><div class="k">Early Ex. Prem</div><div class="v">${fmt(r.early_exercise_premium, 4)}</div></div>
+      `;
+      renderWarnings("pricer-warnings", r.warnings);
+    }
+
+    async function loadOrdersAndPortfolio() {
+      const orders = await api("/v1/paper/orders");
+      document.querySelector("#orders-table tbody").innerHTML = orders.length
+        ? orders.map(o => `
+          <tr>
+            <td class="mono">${o.id}</td>
+            <td>${o.status}</td>
+            <td>${o.strategy_type}</td>
+            <td>${o.quantity}</td>
+            <td>$${fmt(o.net_debit_credit)}</td>
+            <td>$${fmt(o.max_loss_estimate)}</td>
+          </tr>`).join("")
+        : `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No paper orders submitted yet — preview a spread and click Submit Paper Order.</td></tr>`;
+
+      let positions = await api("/v1/paper/positions");
+      if (!positions.length && currentChain.length >= 5) {
+        // Default illustrative sample paper book until user submits paper orders
+        const calls = currentChain.filter(r => r.contract.right === "CALL");
+        if (calls.length >= 5) {
+          positions = [
+            { contract_id: calls[3].contract.id, quantity: 2, avg_price: calls[3].quote.ask },
+            { contract_id: calls[4].contract.id, quantity: -2, avg_price: calls[4].quote.bid },
+          ];
+        }
+      }
+      if (!positions.length) return;
+
+      const risk = await api("/v1/portfolio/greeks", {
+        method: "POST",
+        body: JSON.stringify({ positions, include_scenarios: true }),
+      });
+      const s = risk.summary;
+      document.getElementById("portfolio-stats").innerHTML = `
+        <div class="stat"><div class="k">Net Delta</div><div class="v">${fmt(s.net_delta, 2)}</div></div>
+        <div class="stat"><div class="k">Net Gamma</div><div class="v">${fmt(s.net_gamma, 4)}</div></div>
+        <div class="stat"><div class="k">Vega / 1%</div><div class="v">$${fmt(s.net_vega_per_1pct, 2)}</div></div>
+        <div class="stat"><div class="k">Theta / day</div><div class="v">$${fmt(s.net_theta_per_day, 2)}</div></div>
+        <div class="stat"><div class="k">Recalc Latency</div><div class="v">${fmt(risk.recalc_latency_ms, 2)} ms</div></div>
+      `;
+
+      const sc = risk.scenarios;
+      if (sc) {
+        const hdr = `<thead><tr><th>Vol \\ Spot</th>` +
+          sc.spot_shocks_pct.map(sp => `<th>${(sp * 100).toFixed(0)}%</th>`).join("") + `</tr></thead>`;
+        const rows = sc.vol_shocks_abs.map(vs => {
+          const tds = sc.spot_shocks_pct.map(sp => {
+            const cell = sc.cells.find(c => c.vol_shock_abs === vs && c.spot_shock_pct === sp);
+            const val = cell ? cell.scenario_pnl : 0;
+            const cls = val >= 0 ? "heat-pos" : "heat-neg";
+            return `<td class="${cls}">$${val.toFixed(0)}</td>`;
+          }).join("");
+          return `<tr><th>${vs >= 0 ? "+" : ""}${(vs * 100).toFixed(0)}% vol</th>${tds}</tr>`;
+        }).join("");
+        document.getElementById("scenario-table").innerHTML = hdr + `<tbody>${rows}</tbody>`;
+      }
+    }
+
+    document.getElementById("symbol-select").addEventListener("change", () => { populateExpiries(); loadChain(); });
+    document.getElementById("expiry-select").addEventListener("change", loadChain);
+    document.getElementById("load-chain-btn").addEventListener("click", loadChain);
+    document.getElementById("preview-spread-btn").addEventListener("click", previewSpread);
+    document.getElementById("submit-paper-btn").addEventListener("click", submitPaperOrder);
+    document.getElementById("price-btn").addEventListener("click", priceSingle);
+    document.getElementById("refresh-portfolio-btn").addEventListener("click", loadOrdersAndPortfolio);
+
+    (async () => {
+      await loadSymbols();
+      await loadChain();
+      await priceSingle();
+      await loadOrdersAndPortfolio();
+    })();
+  </script>
+</body>
+</html>

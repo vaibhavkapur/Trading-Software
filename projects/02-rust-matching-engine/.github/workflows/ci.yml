@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      # rust-toolchain.toml pins the compiler and components.
+      - run: rustup show active-toolchain || rustup toolchain install
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+      - run: make lint
+      - run: make test
+      - run: make integration-test
+      - run: make replay-check
+      - name: Benchmark smoke run (numbers from shared CI runners are not meaningful)
+        run: cargo run --locked --release --bin me-bench -- --commands 200000 --warmup 20000

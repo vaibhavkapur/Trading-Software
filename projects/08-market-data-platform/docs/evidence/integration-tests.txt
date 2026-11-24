@@ -1,0 +1,38 @@
+# Integration tests against Redpanda and ClickHouse, race detector on
+# captured 2026-11-24T07:03:15Z on darwin/arm64, go1.27.1
+# machine: Apple M5, 10 logical CPUs, 16 GiB RAM
+# command: make integration-test   [rpk version: v26.2.7; ClickHouse 26.8.45.6]
+
+--- PASS: TestKafkaBusHonoursTheBusContract (3.06s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/creating_topics_is_idempotent_and_partition_counts_are_enforced (0.26s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/records_keep_order,_key_and_value_within_a_partition (0.59s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/a_consumer_starts_from_explicit,_then_committed,_then_configured_position (0.45s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/a_consumer_from_latest_sees_only_later_records (0.66s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/end_offsets_and_lag_follow_the_log (0.26s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/one_produce_call_can_span_topics (0.52s)
+    --- PASS: TestKafkaBusHonoursTheBusContract/checkpoints_keep_the_latest_value_of_each_key (0.27s)
+--- PASS: TestClickHouseHonoursTheStoreContract (0.27s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/setup_is_repeatable (0.02s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/a_fact_written_again_is_stored_once (0.05s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/rows_come_back_exactly_as_written (0.02s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/ranges_are_half-open,_ordered_and_scoped_to_the_instrument (0.02s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/a_cursor_visits_every_row_once,_even_rows_sharing_an_event_time (0.03s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/timestamps_the_store_cannot_keep_are_refused,_not_altered_or_dropped (0.01s)
+    --- PASS: TestClickHouseHonoursTheStoreContract/gaps_are_found_by_instrument,_by_venue_and_by_the_time_they_were_revealed (0.01s)
+--- PASS: TestKafkaNamespacesAreIsolated (0.55s)
+--- PASS: TestKafkaTopicsAreCreatedWithTheDocumentedLayout (1.69s)
+    adapters_test.go:193: physical rows before merge: 3; rows returned with FINAL: 1
+--- PASS: TestClickHouseSchemaAndDeduplication (0.07s)
+--- PASS: TestClickHouseExpiryDoesNotWrap (0.03s)
+--- PASS: TestPipelineOnRedpandaAndClickHouse (2.72s)
+    pipeline_test.go:286: physical rows: 400 before redelivery, 800 after; rows visible to queries: 400
+--- PASS: TestRedeliveryIntoClickHouseIsIdempotent (2.11s)
+    pipeline_test.go:429: sink lag during the outage: 400 records; after recovery: 0
+--- PASS: TestClickHouseOutageBecomesLagThenDrains (2.26s)
+--- PASS: TestRowRefusedByClickHouseIsDeadLettered (1.85s)
+--- PASS: TestArchiveFromClickHouseToParquet (0.92s)
+--- PASS: TestClickHouseConfigurationErrors (0.00s)
+PASS
+ok  	mdp/tests/integration	17.092s
+
+exit status: 0

@@ -1,0 +1,34 @@
+services:
+  options-api:
+    build: .
+    ports:
+      - "8011:8011"
+    environment:
+      OPTIONS_INFRA_DB_PATH: /app/data/paper_orders.sqlite3
+      OPTIONS_INFRA_FIXTURE_PATH: /app/examples/fixtures/xyz_chain_2027_01_15.json
+      OPTIONS_INFRA_MAX_QUOTE_AGE_SECONDS: "300"
+      OPTIONS_INFRA_MAX_CLOCK_SKEW_SECONDS: "30"
+    volumes:
+      - options_paper_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8011/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: options_paper
+      POSTGRES_PASSWORD: paper_only_dev_password
+      POSTGRES_DB: options_infra
+    ports:
+      - "5432:5432"
+    volumes:
+      - options_pg_data:/var/lib/postgresql/data
+    profiles:
+      - postgres
+
+volumes:
+  options_paper_data:
+  options_pg_data:

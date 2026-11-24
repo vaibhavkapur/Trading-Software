@@ -1,0 +1,12 @@
+[
+  { "venue": "binance", "asset": "USDT", "available": "150000" },
+  { "venue": "binance", "asset": "BTC", "available": "2.5" },
+  { "venue": "binance", "asset": "ETH", "available": "40" },
+  { "venue": "coinbase", "asset": "USD", "available": "100000" },
+  { "venue": "coinbase", "asset": "USDT", "available": "80000" },
+  { "venue": "coinbase", "asset": "BTC", "available": "1.2" },
+  { "venue": "coinbase", "asset": "ETH", "available": "35" },
+  { "venue": "kraken", "asset": "USDT", "available": "90000" },
+  { "venue": "kraken", "asset": "BTC", "available": "1.5" },
+  { "venue": "kraken", "asset": "ETH", "available": "30" }
+]

@@ -1,0 +1,14 @@
+{
+  "providers": [
+    {"provider": "alpha", "venue": "venueA", "seq_scope": "symbol", "trade_side": "aggressor", "seq_start": 1},
+    {"provider": "beta", "venue": "venueB", "seq_scope": "feed", "trade_side": "resting", "seq_start": 1}
+  ],
+  "instruments": [
+    {"instrument_id": "venueA:XYZ", "venue": "venueA", "native_symbol": "XYZ", "tick_size": "0.01", "lot_size": "1", "currency": "USD"},
+    {"instrument_id": "venueA:ABC", "venue": "venueA", "native_symbol": "ABC", "tick_size": "0.01", "lot_size": "1", "currency": "USD"},
+    {"instrument_id": "venueA:QRS", "venue": "venueA", "native_symbol": "QRS", "tick_size": "0.05", "lot_size": "0.001", "currency": "USD"},
+    {"instrument_id": "venueB:XYZ.B", "venue": "venueB", "native_symbol": "XYZ.B", "tick_size": "0.005", "lot_size": "1", "currency": "USD"},
+    {"instrument_id": "venueB:ABC.B", "venue": "venueB", "native_symbol": "ABC.B", "tick_size": "0.01", "lot_size": "1", "currency": "USD"},
+    {"instrument_id": "venueB:LMN.B", "venue": "venueB", "native_symbol": "LMN.B", "tick_size": "0.0001", "lot_size": "1", "currency": "EUR"}
+  ]
+}

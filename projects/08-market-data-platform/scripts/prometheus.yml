@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: mdp
+    static_configs:
+      - targets: ["ingest:9090", "normalize:9090", "sink:9090"]
+  - job_name: mdp-gateway
+    static_configs:
+      - targets: ["gateway:8080"]

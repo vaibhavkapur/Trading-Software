@@ -1,0 +1,12 @@
+{
+  "event_id": "evt-000007",
+  "type": "order.fill_corrected",
+  "client_order_id": "ord_3f9c2a7be1d04c55a1b2c3d4",
+  "broker_order_id": "B-000001",
+  "exec_id": "X-000002",
+  "ref_exec_id": "X-000001",
+  "qty": 30,
+  "price": "149.90",
+  "fee": "0.15",
+  "event_time": "2026-01-05T14:31:10Z"
+}

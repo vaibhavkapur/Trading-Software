@@ -1,0 +1,55 @@
+{
+  "version": "2026-11-sim-1",
+  "window": {
+    "size_s": 60,
+    "hop_s": 10,
+    "allowed_lateness_ms": 5000,
+    "max_future_skew_ms": 2000,
+    "idle_timeout_ms": 3000
+  },
+  "suppression": {
+    "cooldown_s": 300,
+    "max_evidence_refs": 500
+  },
+  "rules": {
+    "HIGH_CANCEL_RATE": {
+      "version": 1,
+      "enabled": true,
+      "min_new_orders": 20,
+      "min_cancel_rate_pct": 90,
+      "medium_min_new_orders": 50,
+      "high_min_new_orders": 150
+    },
+    "HIGH_ORDER_TRADE_RATIO": {
+      "version": 1,
+      "enabled": true,
+      "min_messages": 40,
+      "min_ratio": 20,
+      "medium_min_ratio": 50,
+      "high_min_ratio": 100
+    },
+    "LAYERING_LIKE": {
+      "version": 1,
+      "enabled": true,
+      "lookback_s": 30,
+      "cancel_within_s": 10,
+      "min_layer_orders": 3,
+      "min_price_levels": 3,
+      "min_cancel_pct": 80,
+      "min_imbalance_ratio": 4,
+      "medium_min_imbalance_ratio": 8,
+      "high_min_imbalance_ratio": 15
+    },
+    "WASH_TRADE_LIKE": {
+      "version": 1,
+      "enabled": true,
+      "lookback_s": 300,
+      "min_self_trades": 2,
+      "min_pair_trades": 4,
+      "min_offset_pct": 90,
+      "max_price_diff_bps": 10,
+      "medium_min_trades": 6,
+      "high_min_trades": 12
+    }
+  }
+}

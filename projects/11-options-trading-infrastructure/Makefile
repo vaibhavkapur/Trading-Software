@@ -10,6 +10,7 @@ UVICORN ?= $(VENV)/bin/uvicorn
 setup:
 	$(UV) venv --python 3.12 $(VENV)
 	$(UV) pip install --python $(PYTHON) -e ".[dev]"
+	@chflags nohidden $(VENV)/lib/python3.12/site-packages/*.pth 2>/dev/null || true
 
 lint:
 	$(RUFF) check src tests scripts
@@ -24,13 +25,13 @@ test-all:
 	$(PYTEST) tests
 
 demo:
-	$(PYTHON) scripts/demo.py
+	PYTHONPATH=src $(PYTHON) scripts/demo.py
 
 benchmark:
-	$(PYTHON) scripts/benchmark.py
+	PYTHONPATH=src $(PYTHON) scripts/benchmark.py
 
 serve:
-	$(UVICORN) options_infra.api.app:app --host 127.0.0.1 --port 8011 --reload
+	PYTHONPATH=src $(UVICORN) options_infra.api.app:app --host 127.0.0.1 --port 8011 --reload
 
 clean:
 	rm -rf .pytest_cache .ruff_cache src/*.egg-info build dist

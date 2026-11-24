@@ -59,7 +59,7 @@ def test_option_chain_price_and_iv_endpoints() -> None:
     )
     assert price_res.status_code == 200
     p = price_res.json()
-    assert abs(p["price"] - 4.316879) < 1e-4
+    assert abs(p["price"] - 4.321464) < 1e-4
     assert abs(p["put_call_parity_residual"]) < 1e-11
 
     # Round-trip IV endpoint

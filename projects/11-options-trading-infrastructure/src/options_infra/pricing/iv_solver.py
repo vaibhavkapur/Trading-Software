@@ -172,7 +172,8 @@ def solve_implied_volatility(
 
     for iteration in range(1, max_iterations + 1):
         diff, vega = eval_diff(sigma)
-        if abs(diff) <= tol or (high - low) <= tol:
+        vol_err_ok = (vega > 1e-12 and abs(diff / vega) <= 1e-7) or (high - low) <= 1e-7
+        if (abs(diff) <= tol and vol_err_ok) or (high - low) <= 1e-9:
             return IVResult(
                 converged=True,
                 implied_volatility=sigma,

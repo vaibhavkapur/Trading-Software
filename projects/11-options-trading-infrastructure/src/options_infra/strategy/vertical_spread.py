@@ -119,7 +119,8 @@ def build_vertical_spread_preview(
 
     if long_c.underlying != short_c.underlying:
         raise SpreadValidationError(
-            f"Vertical spread legs must share underlying ({long_c.underlying} != {short_c.underlying})"
+            "Vertical spread legs must share underlying "
+            f"({long_c.underlying} != {short_c.underlying})"
         )
     if long_c.expiry != short_c.expiry:
         raise SpreadValidationError(

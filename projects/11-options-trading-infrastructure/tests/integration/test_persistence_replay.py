@@ -8,7 +8,11 @@ from fastapi.testclient import TestClient
 
 from options_infra.api.app import create_app
 from options_infra.instruments.repository import InstrumentRepository
-from options_infra.instruments.simulator import DEFAULT_ASOF, generate_default_universe, save_fixture_file
+from options_infra.instruments.simulator import (
+    DEFAULT_ASOF,
+    generate_default_universe,
+    save_fixture_file,
+)
 from options_infra.paper_adapter.store import PaperOrderStore
 
 

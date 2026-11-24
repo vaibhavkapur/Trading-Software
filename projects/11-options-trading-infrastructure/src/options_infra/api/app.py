@@ -169,7 +169,10 @@ def create_app(
         if not pairs:
             raise HTTPException(
                 status_code=404,
-                detail=f"No option chain found for symbol={symbol.upper()} expiry={expiry.isoformat()}",
+                detail=(
+                    f"No option chain found for symbol={symbol.upper()} "
+                    f"expiry={expiry.isoformat()}"
+                ),
             )
 
         rows: list[ChainItem] = []

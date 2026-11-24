@@ -305,7 +305,8 @@ class PaperMultiLegAdapter:
         existing = self.store.get_order(order_id)
         if existing is None:
             raise LookupError(f"Unknown paper order: {order_id}")
-        if existing.status not in (OrderStatus.PREVIEWED, OrderStatus.VALIDATED, OrderStatus.SUBMITTED):
+        cancellable = (OrderStatus.PREVIEWED, OrderStatus.VALIDATED, OrderStatus.SUBMITTED)
+        if existing.status not in cancellable:
             raise ValueError(
                 f"Cannot cancel order {order_id} in terminal status {existing.status.value}"
             )

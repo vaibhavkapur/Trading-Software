@@ -156,7 +156,8 @@ class InstrumentRepository:
                     severity=WarningSeverity.WARNING,
                     message=(
                         f"Venue time ({quote.asof.isoformat()}) vs local receive time "
-                        f"({quote.received_at.isoformat()}) skew is {quote.clock_skew_seconds:.2f}s "
+                        f"({quote.received_at.isoformat()}) skew is "
+                        f"{quote.clock_skew_seconds:.2f}s "
                         f"(limit {self.max_clock_skew_seconds:.1f}s)."
                     ),
                 )

@@ -26,7 +26,10 @@ def _percentile(samples: list[float], pct: float) -> float:
 
 def main() -> None:
     print("=== Options Trading Infrastructure — Reproducible Benchmark ===")
-    print(f"Python: {sys.version.split()[0]} | OS: {platform.platform()} | Arch: {platform.machine()}")
+    print(
+        f"Python: {sys.version.split()[0]} | "
+        f"OS: {platform.platform()} | Arch: {platform.machine()}"
+    )
 
     tracemalloc.start()
 

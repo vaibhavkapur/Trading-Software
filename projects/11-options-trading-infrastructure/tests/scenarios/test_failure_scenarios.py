@@ -131,7 +131,7 @@ def test_clock_skew_and_out_of_order_quote_handling() -> None:
     assert drop_res.json()["accepted"] is False
     assert "Out-of-order" in drop_res.json()["reason"]
 
-    # Skewed quote (venue timestamp 90s ahead of local receive clock) triggers warning & blocks order
+    # Skewed quote (venue clock 90s ahead of receive clock) warns and blocks order
     skewed_quote = OptionQuote(
         contract_id="XYZ-20270115-100-C",
         bid=Decimal("6.00"),

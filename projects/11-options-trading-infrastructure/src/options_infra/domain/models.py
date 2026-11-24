@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from datetime import UTC, date, datetime
 from decimal import Decimal
-from enum import Enum
+from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -25,22 +25,22 @@ def ensure_utc(dt: datetime) -> datetime:
     return dt.astimezone(UTC)
 
 
-class OptionRight(str, Enum):
+class OptionRight(StrEnum):
     CALL = "CALL"
     PUT = "PUT"
 
 
-class ExerciseStyle(str, Enum):
+class ExerciseStyle(StrEnum):
     EUROPEAN = "EUROPEAN"
     AMERICAN = "AMERICAN"
 
 
-class OrderSide(str, Enum):
+class OrderSide(StrEnum):
     BUY = "BUY"
     SELL = "SELL"
 
 
-class OrderStatus(str, Enum):
+class OrderStatus(StrEnum):
     PREVIEWED = "PREVIEWED"
     VALIDATED = "VALIDATED"
     SUBMITTED = "SUBMITTED"
@@ -49,19 +49,19 @@ class OrderStatus(str, Enum):
     CANCELLED = "CANCELLED"
 
 
-class PricingModelType(str, Enum):
+class PricingModelType(StrEnum):
     BLACK_SCHOLES_MERTON = "BLACK_SCHOLES_MERTON"
     BINOMIAL_CRR = "BINOMIAL_CRR"
 
 
-class SpreadType(str, Enum):
+class SpreadType(StrEnum):
     BULL_CALL_DEBIT = "BULL_CALL_DEBIT"
     BEAR_CALL_CREDIT = "BEAR_CALL_CREDIT"
     BULL_PUT_CREDIT = "BULL_PUT_CREDIT"
     BEAR_PUT_DEBIT = "BEAR_PUT_DEBIT"
 
 
-class WarningSeverity(str, Enum):
+class WarningSeverity(StrEnum):
     INFO = "INFO"
     WARNING = "WARNING"
     CRITICAL = "CRITICAL"

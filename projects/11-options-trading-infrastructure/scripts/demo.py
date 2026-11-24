@@ -87,7 +87,8 @@ def main() -> None:
         steps=200,
     )
     print(
-        f"American Put (CRR N=200): {amer_crr.price:.4f} vs European {amer_crr.european_reference_price:.4f} "
+        f"American Put (CRR N=200): {amer_crr.price:.4f} vs "
+        f"European {amer_crr.european_reference_price:.4f} "
         f"(early-exercise premium = +{amer_crr.early_exercise_premium:.4f})"
     )
 
@@ -114,7 +115,10 @@ def main() -> None:
         f"Spread Greeks: Delta={preview.net_delta:+.2f}, Gamma={preview.net_gamma:+.4f}, "
         f"Vega/1%=${preview.net_vega_per_1pct:+.2f}, Theta/d=${preview.net_theta_per_day:+.2f}"
     )
-    print(f"Assumptions: {preview.assumptions.model.value} ({preview.assumptions.day_count_convention})")
+    print(
+        f"Assumptions: {preview.assumptions.model.value} "
+        f"({preview.assumptions.day_count_convention})"
+    )
     for lim in preview.limitations:
         print(f"  - Limitation: {lim}")
 

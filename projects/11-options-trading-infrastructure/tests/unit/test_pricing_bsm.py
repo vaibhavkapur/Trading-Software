@@ -39,13 +39,39 @@ def test_bsm_reference_values_no_dividend() -> None:
             volatility=0.30,
         )
     )
-    # Verified analytical values for these exact parameters
-    assert call.price == pytest.approx(4.316879, abs=1e-5)
-    assert put.price == pytest.approx(8.272107, abs=1e-5)
-    assert call.delta == pytest.approx(0.427207, abs=1e-5)
+    # Verified analytical values for S=100, K=105, T=0.25, r=0.04, q=0, sigma=0.30
+    assert call.price == pytest.approx(4.321464, abs=1e-5)
+    assert put.price == pytest.approx(8.276696, abs=1e-5)
+    assert call.delta == pytest.approx(0.427163, abs=1e-5)
     assert put.delta == pytest.approx(call.delta - 1.0, abs=1e-12)
     assert call.gamma == pytest.approx(put.gamma, abs=1e-12)
     assert call.vega == pytest.approx(put.vega, abs=1e-12)
+
+    # Hull textbook benchmark: S=42, K=40, T=0.5, r=0.10, q=0, sigma=0.20
+    hull_call = price_bsm(
+        BSMInput(
+            right=OptionRight.CALL,
+            spot=42.0,
+            strike=40.0,
+            years=0.5,
+            rate=0.10,
+            dividend_yield=0.0,
+            volatility=0.20,
+        )
+    )
+    hull_put = price_bsm(
+        BSMInput(
+            right=OptionRight.PUT,
+            spot=42.0,
+            strike=40.0,
+            years=0.5,
+            rate=0.10,
+            dividend_yield=0.0,
+            volatility=0.20,
+        )
+    )
+    assert hull_call.price == pytest.approx(4.759422, abs=1e-5)
+    assert hull_put.price == pytest.approx(0.808599, abs=1e-5)
 
 
 @pytest.mark.parametrize("spot", [75.0, 100.0, 130.0])

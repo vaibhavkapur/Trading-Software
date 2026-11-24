@@ -45,7 +45,9 @@ def _tree_price(
 ) -> tuple[float, float, float, float]:
     """Return (price, delta, gamma, theta_per_year) from a CRR recombining tree."""
     if years == 0.0:
-        intrinsic = max(spot - strike, 0.0) if right == OptionRight.CALL else max(strike - spot, 0.0)
+        intrinsic = (
+            max(spot - strike, 0.0) if right == OptionRight.CALL else max(strike - spot, 0.0)
+        )
         if right == OptionRight.CALL:
             delta = 1.0 if spot > strike else (0.5 if spot == strike else 0.0)
         else:

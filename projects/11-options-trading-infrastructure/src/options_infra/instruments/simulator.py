@@ -110,7 +110,8 @@ def generate_simulated_chain(
             )
             half_spread = max(float(tick_size), min(0.15, res.price * 0.012))
             bid = _quantize_tick(max(0.01, res.price - half_spread), tick_size)
-            ask = _quantize_tick(max(float(bid) + float(tick_size), res.price + half_spread), tick_size)
+            ask_raw = max(float(bid) + float(tick_size), res.price + half_spread)
+            ask = _quantize_tick(ask_raw, tick_size)
 
             quote = OptionQuote(
                 contract_id=cid,
@@ -194,9 +195,10 @@ def save_fixture_file(
     metadata: dict[str, str] | None = None,
 ) -> None:
     """Persist deterministic contracts and quotes fixture to JSON."""
+    default_meta = {"source": "SIMULATED_FEED", "note": "Deterministic replay fixture"}
     payload = {
         "schema_version": "1.0.0",
-        "metadata": metadata or {"source": "SIMULATED_FEED", "note": "Deterministic replay fixture"},
+        "metadata": metadata or default_meta,
         "contracts": [c.model_dump(mode="json") for c in contracts],
         "quotes": [q.model_dump(mode="json") for q in quotes],
     }

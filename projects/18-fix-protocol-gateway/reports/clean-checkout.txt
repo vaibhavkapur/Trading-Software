@@ -1,0 +1,49 @@
+Source revision: c54e4dcfdcfba8c005eaf2b75e32e749da60d337
+Fresh local clone; empty build/ and no cached QuickFIX archive.
+scripts/setup: PASS (download, SHA-256 verification, patch, Release build)
+scripts/validate: PASS
+scripts/demo: PASS
+git status --porcelain: empty
+
+UpdateCTestConfiguration  from :/private/tmp/fix-checkout.04aGOQ/project/build/DartConfiguration.tcl
+Parse Config file:/private/tmp/fix-checkout.04aGOQ/project/build/DartConfiguration.tcl
+Test project /private/tmp/fix-checkout.04aGOQ/project/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: conformance
+
+1: Test command: /private/tmp/fix-checkout.04aGOQ/project/build/conformance
+1: Working Directory: /private/tmp/fix-checkout.04aGOQ/project/build
+1: Test timeout computed to be: 45
+1: PASS domain invariants and dialect
+1: PASS order lifecycle and unknown order
+1: PASS logon, test request, heartbeat and logout
+1: PASS missing field and unsupported message
+1: PASS invalid checksum and recovery
+1: PASS sequence gap, resend and gap-fill
+1: PASS duplicate and conflicting execution report
+1: PASS lost fill and cross-date restart
+1: PASS process death during fill delivery
+1: PASS uncertain handoffs and exclusive state ownership
+1/2 Test #1: conformance ......................   Passed    0.60 sec
+test 2
+    Start 2: cli_contract
+
+2: Test command: /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 "/private/tmp/fix-checkout.04aGOQ/project/tests/cli.py" "/private/tmp/fix-checkout.04aGOQ/project/build/fix-gateway" "/private/tmp/fix-checkout.04aGOQ/project/data/fixtures/orders-v1.txt"
+2: Working Directory: /private/tmp/fix-checkout.04aGOQ/project/build
+2: Test timeout computed to be: 45
+2: PASS CLI new/replace/cancel, explicit reject, durable results, rerun, invalid input and reconciliation
+2/2 Test #2: cli_contract .....................   Passed    0.56 sec
+
+100% tests passed out of 2
+
+Total Test time (real) =   1.16 sec
+
+Final demo records
+{"schema": 1, "event": "reconciled", "utc": "20261127-10:18:51.813", "logged_on": true, "oms_next_send": 8, "oms_next_receive": 9, "venue_next_send": 9, "venue_next_receive": 8, "reports": 6, "fills": 1, "filled_shares": 7, "pending": 0, "duplicates": 0, "invalid_frames": 0, "protocol_rejects": 0, "resend_requests": 0, "gap_fills": 0, "endpoint_logons": 4, "endpoint_logouts": 2}
+{"schema": 1, "event": "logout", "utc": "20261127-10:18:51.813", "logged_on": false, "oms_next_send": 9, "oms_next_receive": 10, "venue_next_send": 10, "venue_next_receive": 9, "reports": 6, "fills": 1, "filled_shares": 7, "pending": 0, "duplicates": 0, "invalid_frames": 0, "protocol_rejects": 0, "resend_requests": 0, "gap_fills": 0, "endpoint_logons": 4, "endpoint_logouts": 4}

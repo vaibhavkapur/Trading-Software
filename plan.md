@@ -8,7 +8,7 @@
 | Proposed owner | CTO / trading engineering (reviewers to be assigned) |
 | Suggested stack | C++20 or Rust, FIX library such as QuickFIX, TCP/TLS, structured persistence |
 | Initial deployment | Local reproducible prototype, then approved paper/sandbox environment |
-| Status | Proposed; not an assertion of SAAT's existing capability |
+| Status | Local simulator MVP implemented and verified. External deployment and SAAT ownership confirmation remain open. |
 
 ## 1. Objective and scope
 
@@ -70,27 +70,27 @@ Milestones are ordered by dependency, not promised calendar dates. Each mileston
 
 ### M1 — Foundation and design
 
-- [ ] Select FIX version/dialect and test counterparty; define supported messages and session policy.
-- [ ] Document interfaces, assumptions and design decisions introduced in this milestone.
-- [ ] Add automated tests and store a reproducible demonstration or validation report.
+- [x] Select FIX version/dialect and test counterparty; define supported messages and session policy.
+- [x] Document interfaces, assumptions and design decisions introduced in this milestone.
+- [x] Add automated tests and store a reproducible demonstration or validation report.
 
 ### M2 — Core implementation
 
-- [ ] Implement logon, heartbeat, test request, sequence handling and persistence using a vetted library.
-- [ ] Document interfaces, assumptions and design decisions introduced in this milestone.
-- [ ] Add automated tests and store a reproducible demonstration or validation report.
+- [x] Implement logon, heartbeat, test request, sequence handling and persistence using a vetted library.
+- [x] Document interfaces, assumptions and design decisions introduced in this milestone.
+- [x] Add automated tests and store a reproducible demonstration or validation report.
 
 ### M3 — Integration and validation
 
-- [ ] Map new/cancel/replace orders and execution reports to canonical OMS; implement resend/gap-fill and reconnect.
-- [ ] Document interfaces, assumptions and design decisions introduced in this milestone.
-- [ ] Add automated tests and store a reproducible demonstration or validation report.
+- [x] Map new/cancel/replace orders and execution reports to canonical OMS; implement resend/gap-fill and reconnect.
+- [x] Document interfaces, assumptions and design decisions introduced in this milestone.
+- [x] Add automated tests and store a reproducible demonstration or validation report.
 
 ### M4 — Hardening and delivery
 
-- [ ] Run simulator conformance, fault injection and latency benchmarks; document counterparty certification requirements.
-- [ ] Document interfaces, assumptions and design decisions introduced in this milestone.
-- [ ] Add automated tests and store a reproducible demonstration or validation report.
+- [x] Run simulator conformance, fault injection and latency benchmarks; document counterparty certification requirements.
+- [x] Document interfaces, assumptions and design decisions introduced in this milestone.
+- [x] Add automated tests and store a reproducible demonstration or validation report.
 
 ## 5. Testing and validation
 
@@ -111,15 +111,24 @@ For quantitative work, use chronological splits, point-in-time inputs, realistic
 
 ## 6. Acceptance criteria / definition of done
 
-- [ ] Session recovery preserves sequence integrity.
-- [ ] Duplicate execution reports do not duplicate fills.
-- [ ] Unsupported messages are rejected with explicit reason.
-- [ ] OMS reconciliation succeeds after disconnect.
-- [ ] Benchmark reports hardware and workload.
-- [ ] A clean checkout can run the documented setup, tests and demo with permitted fixtures.
-- [ ] Architecture, dependency assumptions, known limitations and runbook are committed.
-- [ ] Relevant CI checks pass and raw evaluation or test evidence is retained.
-- [ ] Security, data licensing, IP and any deployment approval requirements are reviewed.
+- [x] Session recovery preserves sequence integrity.
+- [x] Duplicate execution reports do not duplicate fills.
+- [x] Unsupported messages are rejected with explicit reason.
+- [x] OMS reconciliation succeeds after disconnect.
+- [x] Benchmark reports hardware and workload.
+- [x] A clean checkout can run the documented setup, tests and demo with permitted fixtures.
+- [x] Architecture, dependency assumptions, known limitations and runbook are committed.
+- [x] Relevant CI checks pass and raw evaluation or test evidence is retained.
+- [x] Security, data licensing, IP and any deployment approval requirements are reviewed.
+
+
+### Local MVP evidence
+
+- M1 and M2 selected the SYNTH/USD FIX 4.4 dialect, pinned the engine and specified the session policy. [Design and contract](docs/design.md)
+- M3 and M4 exercised the order lifecycle, checksum and field errors, unsupported messages, gap-fill, replay, duplicate executions, unknown orders, logout and recovery after process death. [Conformance output](reports/conformance.txt) · [Demo output](reports/demo.jsonl)
+- A fresh checkout downloaded the pinned engine and passed the documented setup, local CI tests and demo. The repository includes a GitHub Actions workflow. Hosted CI awaits a remote repository. [Clean checkout evidence](reports/clean-checkout.txt)
+- The benchmark retained hardware, workload, trial variation and 500 raw observations. [Benchmark report](reports/README.md)
+- Local controls, dependency licenses, synthetic-data provenance, limitations and outstanding deployment approvals are documented. External certification, ownership confirmation and any paper or real-capital deployment require separate decisions. [Runbook](docs/runbook.md)
 
 ## 7. Operational controls and rollout
 

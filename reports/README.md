@@ -11,6 +11,8 @@ The release build ran on macOS 26.5.1, arm64, with Apple clang 21.0.0. Both CTes
 
 The demo produced six reports from five synthetic requests. One seven-share trade and one unknown-order rejection were among those reports. The final counter pairs matched and pending requests were zero. [Actual JSONL output](demo.jsonl)
 
+A fresh local clone downloaded the pinned dependency, built the release binaries, passed both CTest targets and completed the demo. Its working tree remained clean. Hosted CI is configured for a future remote. [Clean checkout record](clean-checkout.txt)
+
 ## Latency baseline
 
 On an Apple M5 with ten logical CPUs, 500 measured sequential one-share buys had a median local submission time of 1.406 ms, p95 of 1.965 ms and p99 of 3.212 ms. Across five fresh-state runs the individual p95 values ranged from 1.626 to 2.088 ms. Ten warm-up orders per run were excluded. Each order crossed the fixed synthetic quote and produced an acknowledgment and a filled execution report. The interval includes loopback FIX transport and both sides' journal operations. These measurements characterize this machine and workload. [Environment and all 500 samples](benchmark.json)

@@ -1,0 +1,357 @@
+{
+  "cases": [
+    {
+      "case_id": "golden_000",
+      "expected_prediction": -0.5649773689436913,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.683451,
+        "depth_ratio_bid_ask": 0.54004,
+        "microprice_deviation_bps": 0.589911,
+        "order_book_imbalance_l1": -0.097277,
+        "order_book_imbalance_l5": 0.393272,
+        "order_flow_imbalance_1s": 0.434965,
+        "realized_vol_30s_bps": 9.868768,
+        "trade_sign_momentum_5s": -0.742885
+      }
+    },
+    {
+      "case_id": "golden_001",
+      "expected_prediction": -1.2462441354251523,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.872121,
+        "depth_ratio_bid_ask": -0.091487,
+        "microprice_deviation_bps": -1.646449,
+        "order_book_imbalance_l1": -0.415323,
+        "order_book_imbalance_l5": -0.199814,
+        "order_flow_imbalance_1s": -2.817567,
+        "realized_vol_30s_bps": 8.522554,
+        "trade_sign_momentum_5s": -0.252549
+      }
+    },
+    {
+      "case_id": "golden_002",
+      "expected_prediction": -0.13407687720971323,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.783301,
+        "depth_ratio_bid_ask": -0.656086,
+        "microprice_deviation_bps": -0.139317,
+        "order_book_imbalance_l1": 0.113986,
+        "order_book_imbalance_l5": -0.184707,
+        "order_flow_imbalance_1s": 1.355752,
+        "realized_vol_30s_bps": 8.015075,
+        "trade_sign_momentum_5s": -0.09579
+      }
+    },
+    {
+      "case_id": "golden_003",
+      "expected_prediction": 2.8266261803477803,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.59956,
+        "depth_ratio_bid_ask": 0.052376,
+        "microprice_deviation_bps": 4.757758,
+        "order_book_imbalance_l1": 0.738382,
+        "order_book_imbalance_l5": 0.256477,
+        "order_flow_imbalance_1s": 3.057521,
+        "realized_vol_30s_bps": 9.279269,
+        "trade_sign_momentum_5s": 0.603035
+      }
+    },
+    {
+      "case_id": "golden_004",
+      "expected_prediction": 0.06642658048537493,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.447197,
+        "depth_ratio_bid_ask": 0.225741,
+        "microprice_deviation_bps": -0.549689,
+        "order_book_imbalance_l1": 0.015835,
+        "order_book_imbalance_l5": 0.113103,
+        "order_flow_imbalance_1s": 0.613178,
+        "realized_vol_30s_bps": 7.714971,
+        "trade_sign_momentum_5s": 0.289882
+      }
+    },
+    {
+      "case_id": "golden_005",
+      "expected_prediction": -0.324299344108222,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.596648,
+        "depth_ratio_bid_ask": 0.091197,
+        "microprice_deviation_bps": -1.314913,
+        "order_book_imbalance_l1": -0.394816,
+        "order_book_imbalance_l5": -0.187761,
+        "order_flow_imbalance_1s": 0.783419,
+        "realized_vol_30s_bps": 8.083423,
+        "trade_sign_momentum_5s": 0.488009
+      }
+    },
+    {
+      "case_id": "golden_006",
+      "expected_prediction": -1.9336221241096514,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.520171,
+        "depth_ratio_bid_ask": 0.263558,
+        "microprice_deviation_bps": -2.937217,
+        "order_book_imbalance_l1": -0.592117,
+        "order_book_imbalance_l5": -0.386593,
+        "order_flow_imbalance_1s": -1.223276,
+        "realized_vol_30s_bps": 8.717887,
+        "trade_sign_momentum_5s": -0.387781
+      }
+    },
+    {
+      "case_id": "golden_007",
+      "expected_prediction": 0.27173880107387755,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.71775,
+        "depth_ratio_bid_ask": -0.016073,
+        "microprice_deviation_bps": 1.666991,
+        "order_book_imbalance_l1": 0.121645,
+        "order_book_imbalance_l5": -0.169355,
+        "order_flow_imbalance_1s": -0.070709,
+        "realized_vol_30s_bps": 10.411906,
+        "trade_sign_momentum_5s": 0.080329
+      }
+    },
+    {
+      "case_id": "golden_008",
+      "expected_prediction": -2.081340765333476,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.030944,
+        "depth_ratio_bid_ask": 0.173941,
+        "microprice_deviation_bps": -2.356566,
+        "order_book_imbalance_l1": -0.71052,
+        "order_book_imbalance_l5": -0.644608,
+        "order_flow_imbalance_1s": -3.069769,
+        "realized_vol_30s_bps": 10.937296,
+        "trade_sign_momentum_5s": -0.235824
+      }
+    },
+    {
+      "case_id": "golden_009",
+      "expected_prediction": 0.45714969916108616,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.112631,
+        "depth_ratio_bid_ask": 0.170876,
+        "microprice_deviation_bps": 1.880826,
+        "order_book_imbalance_l1": 0.357725,
+        "order_book_imbalance_l5": -0.1633,
+        "order_flow_imbalance_1s": -1.196249,
+        "realized_vol_30s_bps": 11.953497,
+        "trade_sign_momentum_5s": -0.584595
+      }
+    },
+    {
+      "case_id": "golden_010",
+      "expected_prediction": -0.26138712121226276,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.317685,
+        "depth_ratio_bid_ask": -0.286473,
+        "microprice_deviation_bps": -0.997658,
+        "order_book_imbalance_l1": -0.048805,
+        "order_book_imbalance_l5": 0.332507,
+        "order_flow_imbalance_1s": 0.220598,
+        "realized_vol_30s_bps": 10.717598,
+        "trade_sign_momentum_5s": 0.124438
+      }
+    },
+    {
+      "case_id": "golden_011",
+      "expected_prediction": -3.1260462073011546,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.680725,
+        "depth_ratio_bid_ask": -1.238043,
+        "microprice_deviation_bps": -4.457002,
+        "order_book_imbalance_l1": -0.967604,
+        "order_book_imbalance_l5": -0.827777,
+        "order_flow_imbalance_1s": -4.339861,
+        "realized_vol_30s_bps": 10.038932,
+        "trade_sign_momentum_5s": -0.198226
+      }
+    },
+    {
+      "case_id": "golden_012",
+      "expected_prediction": -3.782233803754209,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.805653,
+        "depth_ratio_bid_ask": -0.365422,
+        "microprice_deviation_bps": -4.618355,
+        "order_book_imbalance_l1": -0.911974,
+        "order_book_imbalance_l5": -0.376798,
+        "order_flow_imbalance_1s": -2.949155,
+        "realized_vol_30s_bps": 9.382203,
+        "trade_sign_momentum_5s": -0.838574
+      }
+    },
+    {
+      "case_id": "golden_013",
+      "expected_prediction": 0.46537495997092004,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.018603,
+        "depth_ratio_bid_ask": 0.156253,
+        "microprice_deviation_bps": 1.452001,
+        "order_book_imbalance_l1": 0.282467,
+        "order_book_imbalance_l5": 0.058039,
+        "order_flow_imbalance_1s": 1.014652,
+        "realized_vol_30s_bps": 9.83002,
+        "trade_sign_momentum_5s": -0.490752
+      }
+    },
+    {
+      "case_id": "golden_014",
+      "expected_prediction": 3.505434040610354,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.14172,
+        "depth_ratio_bid_ask": 0.671815,
+        "microprice_deviation_bps": 5.27959,
+        "order_book_imbalance_l1": 0.969882,
+        "order_book_imbalance_l5": 0.382177,
+        "order_flow_imbalance_1s": 2.330693,
+        "realized_vol_30s_bps": 9.394916,
+        "trade_sign_momentum_5s": -0.067753
+      }
+    },
+    {
+      "case_id": "golden_015",
+      "expected_prediction": 0.0648497502248123,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.141506,
+        "depth_ratio_bid_ask": -0.046111,
+        "microprice_deviation_bps": 0.843641,
+        "order_book_imbalance_l1": 0.146165,
+        "order_book_imbalance_l5": 0.027174,
+        "order_flow_imbalance_1s": 0.875999,
+        "realized_vol_30s_bps": 9.780289,
+        "trade_sign_momentum_5s": -0.237707
+      }
+    },
+    {
+      "case_id": "golden_016",
+      "expected_prediction": 2.666816938477715,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.227944,
+        "depth_ratio_bid_ask": 0.508478,
+        "microprice_deviation_bps": 2.446009,
+        "order_book_imbalance_l1": 0.473849,
+        "order_book_imbalance_l5": 0.646232,
+        "order_flow_imbalance_1s": 2.365753,
+        "realized_vol_30s_bps": 11.715551,
+        "trade_sign_momentum_5s": 0.723209
+      }
+    },
+    {
+      "case_id": "golden_017",
+      "expected_prediction": 1.8022754757677846,
+      "raw_features": {
+        "bid_ask_spread_bps": 2.907822,
+        "depth_ratio_bid_ask": 0.073541,
+        "microprice_deviation_bps": 1.154376,
+        "order_book_imbalance_l1": 0.235549,
+        "order_book_imbalance_l5": 0.444747,
+        "order_flow_imbalance_1s": 4.156466,
+        "realized_vol_30s_bps": 11.574507,
+        "trade_sign_momentum_5s": -0.07385
+      }
+    },
+    {
+      "case_id": "golden_018",
+      "expected_prediction": -0.7815452059752467,
+      "raw_features": {
+        "bid_ask_spread_bps": 4.068082,
+        "depth_ratio_bid_ask": -0.037246,
+        "microprice_deviation_bps": -0.476978,
+        "order_book_imbalance_l1": -0.071016,
+        "order_book_imbalance_l5": -0.075955,
+        "order_flow_imbalance_1s": -0.01046,
+        "realized_vol_30s_bps": 10.822395,
+        "trade_sign_momentum_5s": 0.38631
+      }
+    },
+    {
+      "case_id": "golden_019",
+      "expected_prediction": 0.29633112482776314,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.051603,
+        "depth_ratio_bid_ask": 0.311804,
+        "microprice_deviation_bps": 1.522973,
+        "order_book_imbalance_l1": 0.220596,
+        "order_book_imbalance_l5": 0.258841,
+        "order_flow_imbalance_1s": 0.439554,
+        "realized_vol_30s_bps": 12.114315,
+        "trade_sign_momentum_5s": -0.73352
+      }
+    },
+    {
+      "case_id": "golden_020",
+      "expected_prediction": -0.7263349815288712,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.07401,
+        "depth_ratio_bid_ask": -0.411686,
+        "microprice_deviation_bps": -0.640872,
+        "order_book_imbalance_l1": -0.11263,
+        "order_book_imbalance_l5": -0.271122,
+        "order_flow_imbalance_1s": -1.715774,
+        "realized_vol_30s_bps": 12.622676,
+        "trade_sign_momentum_5s": -0.397669
+      }
+    },
+    {
+      "case_id": "golden_021",
+      "expected_prediction": -0.5782797461609053,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.053799,
+        "depth_ratio_bid_ask": -1.250933,
+        "microprice_deviation_bps": -1.368529,
+        "order_book_imbalance_l1": -0.338104,
+        "order_book_imbalance_l5": -0.701838,
+        "order_flow_imbalance_1s": -2.991162,
+        "realized_vol_30s_bps": 12.812389,
+        "trade_sign_momentum_5s": -0.434725
+      }
+    },
+    {
+      "case_id": "golden_022",
+      "expected_prediction": -0.43128854977735814,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.438716,
+        "depth_ratio_bid_ask": -0.235905,
+        "microprice_deviation_bps": -0.878331,
+        "order_book_imbalance_l1": -0.139175,
+        "order_book_imbalance_l5": 0.104075,
+        "order_flow_imbalance_1s": -2.031086,
+        "realized_vol_30s_bps": 13.464896,
+        "trade_sign_momentum_5s": -0.398462
+      }
+    },
+    {
+      "case_id": "golden_023",
+      "expected_prediction": -1.2548176309414494,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.361991,
+        "depth_ratio_bid_ask": -0.312411,
+        "microprice_deviation_bps": -2.408136,
+        "order_book_imbalance_l1": -0.417576,
+        "order_book_imbalance_l5": -0.019599,
+        "order_flow_imbalance_1s": 0.229716,
+        "realized_vol_30s_bps": 13.568149,
+        "trade_sign_momentum_5s": -0.078845
+      }
+    },
+    {
+      "case_id": "golden_024",
+      "expected_prediction": -2.148545651039519,
+      "raw_features": {
+        "bid_ask_spread_bps": 3.173041,
+        "depth_ratio_bid_ask": 0.46603,
+        "microprice_deviation_bps": -2.750353,
+        "order_book_imbalance_l1": -0.535712,
+        "order_book_imbalance_l5": -0.120793,
+        "order_flow_imbalance_1s": -1.193656,
+        "realized_vol_30s_bps": 13.763015,
+        "trade_sign_momentum_5s": -0.487327
+      }
+    }
+  ],
+  "model_id": "lob_alpha_mlp",
+  "model_version": "1.0.0",
+  "schema_version": "1.0.0"
+}

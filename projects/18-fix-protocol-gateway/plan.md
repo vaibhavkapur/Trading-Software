@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Project | 15 of 25 |
+| Collection entry | [18 · FIX Protocol Gateway](../../README.md#projects) |
 | Classification | New capability |
 | Priority | Strategy-dependent |
 | Proposed owner | CTO / trading engineering (reviewers to be assigned) |
@@ -126,7 +126,7 @@ For quantitative work, use chronological splits, point-in-time inputs, realistic
 
 - M1 and M2 selected the SYNTH/USD FIX 4.4 dialect, pinned the engine and specified the session policy. [Design and contract](docs/design.md)
 - M3 and M4 exercised the order lifecycle, checksum and field errors, unsupported messages, gap-fill, replay, duplicate executions, unknown orders, logout and recovery after process death. [Conformance output](reports/conformance.txt) · [Demo output](reports/demo.jsonl)
-- A fresh checkout downloaded the pinned engine and passed the documented setup, local CI tests and demo. The repository includes a GitHub Actions workflow. Hosted CI awaits a remote repository. [Clean checkout evidence](reports/clean-checkout.txt)
+- A fresh checkout downloaded the pinned engine and passed the documented setup, local CI tests and demo. The [GitHub Actions workflow](../../.github/workflows/fix-protocol-gateway.yml) runs conformance checks on changes to the gateway. [Clean checkout evidence](reports/clean-checkout.txt)
 - The benchmark retained hardware, workload, trial variation and 500 raw observations. [Benchmark report](reports/README.md)
 - Local controls, dependency licenses, synthetic-data provenance, limitations and outstanding deployment approvals are documented. External certification, ownership confirmation and any paper or real-capital deployment require separate decisions. [Runbook](docs/runbook.md)
 

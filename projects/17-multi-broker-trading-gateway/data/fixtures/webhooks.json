@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "webhooks": [
+    {
+      "event_id": "wh-evt-1001",
+      "broker_id": "sandbox-alpha",
+      "event_type": "FILL",
+      "broker_order_id": "alpha-ord-1",
+      "client_order_id": "cli-wh-001",
+      "broker_fill_id": "alpha-fill-2",
+      "sequence": 2,
+      "fill_qty": 6,
+      "fill_price": 195.40,
+      "fee": 0.12,
+      "currency": "USD",
+      "event_time_utc": "2026-11-27T10:00:02Z"
+    },
+    {
+      "event_id": "wh-evt-1002",
+      "broker_id": "sandbox-alpha",
+      "event_type": "FILL",
+      "broker_order_id": "alpha-ord-1",
+      "client_order_id": "cli-wh-001",
+      "broker_fill_id": "alpha-fill-1",
+      "sequence": 1,
+      "fill_qty": 4,
+      "fill_price": 195.20,
+      "fee": 0.08,
+      "currency": "USD",
+      "event_time_utc": "2026-11-27T10:00:01Z"
+    },
+    {
+      "event_id": "wh-evt-1001",
+      "broker_id": "sandbox-alpha",
+      "event_type": "FILL",
+      "broker_order_id": "alpha-ord-1",
+      "client_order_id": "cli-wh-001",
+      "broker_fill_id": "alpha-fill-2",
+      "sequence": 2,
+      "fill_qty": 6,
+      "fill_price": 195.40,
+      "fee": 0.12,
+      "currency": "USD",
+      "event_time_utc": "2026-11-27T10:00:02Z"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "feed_id": "SYNTH-EQUITIES-L1",
+  "currency": "USD",
+  "seed": 42,
+  "note": "Timestamps are relative offsets in milliseconds from replay start_utc so clean-checkout runs always evaluate against deterministic fresh UTC timestamps.",
+  "ticks": [
+    {"tick_id": "TK-AAPL-001", "symbol": "AAPL", "bid": "190.00", "ask": "190.04", "last": "190.02", "volume": "1200", "sequence_no": 1, "offset_ms": 0},
+    {"tick_id": "TK-AAPL-002", "symbol": "AAPL", "bid": "190.10", "ask": "190.14", "last": "190.12", "volume": "1100", "sequence_no": 2, "offset_ms": 500},
+    {"tick_id": "TK-AAPL-003", "symbol": "AAPL", "bid": "190.15", "ask": "190.19", "last": "190.17", "volume": "950", "sequence_no": 3, "offset_ms": 1000},
+    {"tick_id": "TK-AAPL-004", "symbol": "AAPL", "bid": "190.40", "ask": "190.44", "last": "190.42", "volume": "1400", "sequence_no": 4, "offset_ms": 1500},
+    {"tick_id": "TK-AAPL-005", "symbol": "AAPL", "bid": "190.85", "ask": "190.89", "last": "190.87", "volume": "1650", "sequence_no": 5, "offset_ms": 2000},
+    {"tick_id": "TK-AAPL-006", "symbol": "AAPL", "bid": "191.40", "ask": "191.44", "last": "191.42", "volume": "1800", "sequence_no": 6, "offset_ms": 2500},
+    {"tick_id": "TK-AAPL-007", "symbol": "AAPL", "bid": "191.60", "ask": "191.64", "last": "191.62", "volume": "1300", "sequence_no": 7, "offset_ms": 3000},
+    {"tick_id": "TK-AAPL-008", "symbol": "AAPL", "bid": "190.90", "ask": "190.94", "last": "190.92", "volume": "1500", "sequence_no": 8, "offset_ms": 3500},
+    {"tick_id": "TK-AAPL-009", "symbol": "AAPL", "bid": "190.10", "ask": "190.14", "last": "190.12", "volume": "1700", "sequence_no": 9, "offset_ms": 4000},
+    {"tick_id": "TK-AAPL-010", "symbol": "AAPL", "bid": "189.40", "ask": "189.44", "last": "189.42", "volume": "1900", "sequence_no": 10, "offset_ms": 4500},
+
+    {"tick_id": "TK-MSFT-001", "symbol": "MSFT", "bid": "420.00", "ask": "420.06", "last": "420.03", "volume": "800", "sequence_no": 1, "offset_ms": 100},
+    {"tick_id": "TK-MSFT-002", "symbol": "MSFT", "bid": "420.10", "ask": "420.16", "last": "420.13", "volume": "820", "sequence_no": 2, "offset_ms": 600},
+    {"tick_id": "TK-MSFT-003", "symbol": "MSFT", "bid": "420.20", "ask": "420.26", "last": "420.23", "volume": "840", "sequence_no": 3, "offset_ms": 1100},
+    {"tick_id": "TK-MSFT-004", "symbol": "MSFT", "bid": "420.70", "ask": "420.76", "last": "420.73", "volume": "910", "sequence_no": 4, "offset_ms": 1600},
+    {"tick_id": "TK-MSFT-005", "symbol": "MSFT", "bid": "421.40", "ask": "421.46", "last": "421.43", "volume": "980", "sequence_no": 5, "offset_ms": 2100},
+    {"tick_id": "TK-MSFT-006", "symbol": "MSFT", "bid": "422.20", "ask": "422.26", "last": "422.23", "volume": "1100", "sequence_no": 6, "offset_ms": 2600},
+
+    {"tick_id": "TK-NVDA-001", "symbol": "NVDA", "bid": "130.00", "ask": "130.04", "last": "130.02", "volume": "2500", "sequence_no": 1, "offset_ms": 200},
+    {"tick_id": "TK-NVDA-002", "symbol": "NVDA", "bid": "130.10", "ask": "130.14", "last": "130.12", "volume": "2600", "sequence_no": 2, "offset_ms": 700},
+    {"tick_id": "TK-NVDA-003", "symbol": "NVDA", "bid": "129.95", "ask": "129.99", "last": "129.97", "volume": "2400", "sequence_no": 3, "offset_ms": 1200},
+    {"tick_id": "TK-NVDA-004", "symbol": "NVDA", "bid": "130.05", "ask": "130.09", "last": "130.07", "volume": "2550", "sequence_no": 4, "offset_ms": 1700},
+    {"tick_id": "TK-NVDA-005", "symbol": "NVDA", "bid": "130.00", "ask": "130.04", "last": "130.02", "volume": "2700", "sequence_no": 5, "offset_ms": 2200},
+    {"tick_id": "TK-NVDA-006", "symbol": "NVDA", "bid": "128.40", "ask": "128.44", "last": "128.42", "volume": "3400", "sequence_no": 6, "offset_ms": 2700},
+    {"tick_id": "TK-NVDA-007", "symbol": "NVDA", "bid": "131.70", "ask": "131.74", "last": "131.72", "volume": "3600", "sequence_no": 7, "offset_ms": 3200}
+  ]
+}

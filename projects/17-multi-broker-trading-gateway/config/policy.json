@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "saat-mvp-paper-sandbox-only-v1",
+  "execution_enabled": true,
+  "permitted_modes": ["paper", "sandbox"],
+  "deny_live_execution": true,
+  "require_independent_approval_for_live": true,
+  "max_single_order_notional_usd": 250000.0,
+  "fail_closed_on_reconciliation_drift": true,
+  "fail_closed_on_auth_error": false,
+  "approved_by": "architecture-review-mvp",
+  "reviewed_at_utc": "2026-11-27T00:00:00Z"
+}

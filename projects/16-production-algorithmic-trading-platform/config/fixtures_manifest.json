@@ -1,0 +1,49 @@
+{
+  "manifest_version": "1.0.0",
+  "owner": "trading-engineering",
+  "secrets_present": false,
+  "entitlements": [
+    {
+      "schema_version": "1.0.0",
+      "feed_id": "SYNTH-EQUITIES-L1",
+      "provider": "SAAT_SYNTHETIC_GENERATOR",
+      "license_type": "SYNTHETIC_INTERNAL_PERMITTED",
+      "asset_class": "US_EQUITIES",
+      "allowed_modes": ["PAPER", "SHADOW"],
+      "symbols": ["AAPL", "MSFT", "NVDA", "SPY"],
+      "provenance_uri": "data/fixtures/synthetic_paper_feed.json",
+      "valid_until_utc": "2030-01-01T00:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "feed_id": "ENTITLED-DELAYED-SHADOW-L1",
+      "provider": "SAAT_SANDBOX_FEED_SIM",
+      "license_type": "PERMITTED_SHADOW_EVALUATION",
+      "asset_class": "US_EQUITIES",
+      "allowed_modes": ["SHADOW"],
+      "symbols": ["AAPL", "MSFT"],
+      "provenance_uri": "data/fixtures/entitled_shadow_feed.json",
+      "valid_until_utc": "2030-01-01T00:00:00Z"
+    }
+  ],
+  "fixtures": [
+    {
+      "file": "data/fixtures/synthetic_paper_feed.json",
+      "description": "Deterministic synthetic L1 quotes for AAPL, MSFT, NVDA, SPY exercising momentum crossover and mean reversion signals.",
+      "seed": 42,
+      "contains_pii_or_vendor_data": false
+    },
+    {
+      "file": "data/fixtures/entitled_shadow_feed.json",
+      "description": "Deterministic entitled shadow-mode L1 feed for AAPL and MSFT validating zero-dispatch shadow evaluation.",
+      "seed": 101,
+      "contains_pii_or_vendor_data": false
+    },
+    {
+      "file": "data/fixtures/broker_reconciliation_fixture.json",
+      "description": "Independent broker account snapshot fixture for verifying ledger-to-broker reconciliation.",
+      "seed": 42,
+      "contains_pii_or_vendor_data": false
+    }
+  ]
+}

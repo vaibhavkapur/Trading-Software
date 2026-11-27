@@ -1,5 +1,16 @@
 name: Local FIX simulator
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'projects/18-fix-protocol-gateway/**'
+      - '.github/workflows/fix-protocol-gateway.yml'
+  pull_request:
+    paths:
+      - 'projects/18-fix-protocol-gateway/**'
+      - '.github/workflows/fix-protocol-gateway.yml'
+defaults:
+  run:
+    working-directory: projects/18-fix-protocol-gateway
 permissions:
   contents: read
 jobs:
@@ -15,4 +26,4 @@ jobs:
         if: always()
         with:
           name: ctest-log
-          path: build/Testing/Temporary/LastTest.log
+          path: projects/18-fix-protocol-gateway/build/Testing/Temporary/LastTest.log

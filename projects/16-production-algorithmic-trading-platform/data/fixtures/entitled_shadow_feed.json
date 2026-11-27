@@ -1,0 +1,13 @@
+{
+  "feed_id": "ENTITLED-DELAYED-SHADOW-L1",
+  "currency": "USD",
+  "seed": 101,
+  "ticks": [
+    {"tick_id": "SH-AAPL-001", "symbol": "AAPL", "bid": "192.00", "ask": "192.04", "last": "192.02", "volume": "1000", "sequence_no": 1, "offset_ms": 0},
+    {"tick_id": "SH-AAPL-002", "symbol": "AAPL", "bid": "192.10", "ask": "192.14", "last": "192.12", "volume": "1050", "sequence_no": 2, "offset_ms": 500},
+    {"tick_id": "SH-AAPL-003", "symbol": "AAPL", "bid": "192.25", "ask": "192.29", "last": "192.27", "volume": "1100", "sequence_no": 3, "offset_ms": 1000},
+    {"tick_id": "SH-AAPL-004", "symbol": "AAPL", "bid": "192.60", "ask": "192.64", "last": "192.62", "volume": "1150", "sequence_no": 4, "offset_ms": 1500},
+    {"tick_id": "SH-AAPL-005", "symbol": "AAPL", "bid": "193.10", "ask": "193.14", "last": "193.12", "volume": "1200", "sequence_no": 5, "offset_ms": 2000},
+    {"tick_id": "SH-AAPL-006", "symbol": "AAPL", "bid": "193.75", "ask": "193.79", "last": "193.77", "volume": "1350", "sequence_no": 6, "offset_ms": 2500}
+  ]
+}

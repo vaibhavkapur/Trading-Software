@@ -1,0 +1,94 @@
+{
+  "dataset": {
+    "chronological_split": {
+      "test_count": 180,
+      "test_end_utc": "2026-01-15T14:34:59.750Z",
+      "test_start_utc": "2026-01-15T14:34:15.000Z",
+      "train_count": 840,
+      "train_end_utc": "2026-01-15T14:33:29.750Z",
+      "train_start_utc": "2026-01-15T14:30:00.000Z",
+      "val_count": 180,
+      "val_end_utc": "2026-01-15T14:34:14.750Z",
+      "val_start_utc": "2026-01-15T14:33:30.000Z"
+    },
+    "currency": "USD",
+    "dataset_id": "synthetic_lob_microprice_v1",
+    "file": "synthetic_lob_features.jsonl",
+    "instrument_id": "SYN-EQUITY-A",
+    "license": "Internal synthetic test fixture \u2014 permitted for local and CI use.",
+    "num_records": 1200,
+    "provenance": "Deterministically generated synthetic data (seed=42); zero proprietary or external market data.",
+    "schema_version": "1.0.0",
+    "sha256": "9a566f278e7f80aafdead800b86f549978b726b62f105d11909c4bfe72c85f1d"
+  },
+  "exported_models": [
+    {
+      "bundle_dir": "data/fixtures/models/lob_alpha_mlp/v1.0.0",
+      "test_metrics": {
+        "assumed_round_trip_cost_bps": 0.5,
+        "directional_accuracy": 0.877778,
+        "mae_bps": 0.742471,
+        "r2": 0.795994,
+        "rmse_bps": 0.956377,
+        "samples": 180.0,
+        "simulated_avg_net_bps_per_trade": 1.423404,
+        "simulated_trades_after_cost": 125.0
+      },
+      "val_metrics": {
+        "assumed_round_trip_cost_bps": 0.5,
+        "directional_accuracy": 0.811111,
+        "mae_bps": 0.787201,
+        "r2": 0.783291,
+        "rmse_bps": 0.968016,
+        "samples": 180.0,
+        "simulated_avg_net_bps_per_trade": 1.373795,
+        "simulated_trades_after_cost": 133.0
+      },
+      "version": "1.0.0",
+      "weights_byte_size": 2312,
+      "weights_sha256": "10a24c27b90a034697670e01fe43428bbd8a277726c9f63d1d7fa3f2bc163521"
+    },
+    {
+      "bundle_dir": "data/fixtures/models/lob_alpha_mlp/v2.0.0",
+      "test_metrics": {
+        "assumed_round_trip_cost_bps": 0.5,
+        "directional_accuracy": 0.861111,
+        "mae_bps": 0.730754,
+        "r2": 0.826691,
+        "rmse_bps": 0.881492,
+        "samples": 180.0,
+        "simulated_avg_net_bps_per_trade": 1.415554,
+        "simulated_trades_after_cost": 130.0
+      },
+      "val_metrics": {
+        "assumed_round_trip_cost_bps": 0.5,
+        "directional_accuracy": 0.861111,
+        "mae_bps": 0.658727,
+        "r2": 0.843649,
+        "rmse_bps": 0.822232,
+        "samples": 180.0,
+        "simulated_avg_net_bps_per_trade": 1.34861,
+        "simulated_trades_after_cost": 140.0
+      },
+      "version": "2.0.0",
+      "weights_byte_size": 6664,
+      "weights_sha256": "a2edacc7adb19263f00054371a7465e2fd0879ec81f2b543c0568c32e172b2d8"
+    }
+  ],
+  "rejected_experiments": [
+    {
+      "experiment_id": "linear_over_regularized_l2_0.5",
+      "reason_rejected": "Higher RMSE and lower R2 on chronological test split due to underfitting non-linear LOB interactions.",
+      "test_metrics": {
+        "assumed_round_trip_cost_bps": 0.5,
+        "directional_accuracy": 0.855556,
+        "mae_bps": 0.753332,
+        "r2": 0.812668,
+        "rmse_bps": 0.916458,
+        "samples": 180.0,
+        "simulated_avg_net_bps_per_trade": 1.417945,
+        "simulated_trades_after_cost": 131.0
+      }
+    }
+  ]
+}

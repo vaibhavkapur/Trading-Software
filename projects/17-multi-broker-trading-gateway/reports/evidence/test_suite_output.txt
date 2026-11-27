@@ -1,0 +1,78 @@
+?   	github.com/saat/multi-broker-trading-gateway/cmd/gateway	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/adapters/mock	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/adapters/sandbox_alpha	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/adapters/sandbox_beta	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/api	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/broker	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/domain	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/gateway	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/ratelimit	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/reconciler	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/security	[no test files]
+?   	github.com/saat/multi-broker-trading-gateway/src/storage	[no test files]
+=== RUN   TestRESTAPIAndWebSocketEventStream
+--- PASS: TestRESTAPIAndWebSocketEventStream (0.00s)
+=== RUN   TestJournalStoreCrashRecoveryAndIdempotencyPersistence
+--- PASS: TestJournalStoreCrashRecoveryAndIdempotencyPersistence (0.02s)
+=== RUN   TestSharedBrokerContractSuite
+=== RUN   TestSharedBrokerContractSuite/AdapterContract/mock
+=== RUN   TestSharedBrokerContractSuite/AdapterContract/sandbox-alpha
+=== RUN   TestSharedBrokerContractSuite/AdapterContract/sandbox-beta
+--- PASS: TestSharedBrokerContractSuite (0.02s)
+    --- PASS: TestSharedBrokerContractSuite/AdapterContract/mock (0.01s)
+    --- PASS: TestSharedBrokerContractSuite/AdapterContract/sandbox-alpha (0.00s)
+    --- PASS: TestSharedBrokerContractSuite/AdapterContract/sandbox-beta (0.00s)
+PASS
+ok  	github.com/saat/multi-broker-trading-gateway/tests/integration	1.252s
+=== RUN   TestScenario_RateLimit
+--- PASS: TestScenario_RateLimit (0.00s)
+=== RUN   TestScenario_ExpiredCredential
+--- PASS: TestScenario_ExpiredCredential (0.00s)
+=== RUN   TestScenario_SymbolMismatch
+--- PASS: TestScenario_SymbolMismatch (0.00s)
+=== RUN   TestScenario_DuplicateWebhook
+--- PASS: TestScenario_DuplicateWebhook (0.00s)
+=== RUN   TestScenario_OutOfOrderFill
+--- PASS: TestScenario_OutOfOrderFill (0.00s)
+=== RUN   TestScenario_UnknownSubmitResult
+--- PASS: TestScenario_UnknownSubmitResult (0.00s)
+=== RUN   TestScenario_CancelTimeout
+--- PASS: TestScenario_CancelTimeout (0.01s)
+=== RUN   TestScenario_AsyncReplayAndFailClosedDrill
+--- PASS: TestScenario_AsyncReplayAndFailClosedDrill (0.00s)
+PASS
+ok  	github.com/saat/multi-broker-trading-gateway/tests/scenarios	1.369s
+=== RUN   TestOrderRequestValidationInvariants
+=== RUN   TestOrderRequestValidationInvariants/empty_client_id
+=== RUN   TestOrderRequestValidationInvariants/empty_broker_id
+=== RUN   TestOrderRequestValidationInvariants/empty_instrument
+=== RUN   TestOrderRequestValidationInvariants/bad_side
+=== RUN   TestOrderRequestValidationInvariants/zero_qty
+=== RUN   TestOrderRequestValidationInvariants/neg_qty
+=== RUN   TestOrderRequestValidationInvariants/missing_limit_price
+=== RUN   TestOrderRequestValidationInvariants/missing_stop_price
+=== RUN   TestOrderRequestValidationInvariants/bad_tif
+=== RUN   TestOrderRequestValidationInvariants/empty_currency
+--- PASS: TestOrderRequestValidationInvariants (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/empty_client_id (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/empty_broker_id (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/empty_instrument (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/bad_side (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/zero_qty (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/neg_qty (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/missing_limit_price (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/missing_stop_price (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/bad_tif (0.00s)
+    --- PASS: TestOrderRequestValidationInvariants/empty_currency (0.00s)
+=== RUN   TestRecomputeOrderFromFillsVWAPAndMonotonicity
+--- PASS: TestRecomputeOrderFromFillsVWAPAndMonotonicity (0.00s)
+=== RUN   TestSecretStringAndLoggerNeverLeakSecrets
+--- PASS: TestSecretStringAndLoggerNeverLeakSecrets (0.00s)
+=== RUN   TestExecutionPolicyPaperSandboxDefaultAndLiveDenied
+--- PASS: TestExecutionPolicyPaperSandboxDefaultAndLiveDenied (0.00s)
+=== RUN   TestTokenBucketRateLimitAndRetryAfter
+--- PASS: TestTokenBucketRateLimitAndRetryAfter (0.00s)
+=== RUN   TestInstrumentMappingAndCapabilityMatrix
+--- PASS: TestInstrumentMappingAndCapabilityMatrix (0.00s)
+PASS
+ok  	github.com/saat/multi-broker-trading-gateway/tests/unit	1.476s

@@ -1,0 +1,78 @@
+{
+  "suite": "plan_section_5_mandatory_fault_drills",
+  "executed_at_utc": "2026-11-27T10:13:23.703149+00:00",
+  "total_scenarios": 8,
+  "all_passed": true,
+  "scenarios": {
+    "1_duplicate_submit": {
+      "passed": true,
+      "broker_submit_calls": 1,
+      "idempotent_replay_returned_same_order": true,
+      "conflicting_payload_rejected": true
+    },
+    "2_unknown_order_outcome": {
+      "passed": true,
+      "state_after_timeout": "UNKNOWN_OUTCOME",
+      "reservation_retained_notional": "95050.0000",
+      "excess_order_blocked_by_retained_reserve": "RISK_REJECTED",
+      "resolved_state_after_reconcile": "FILLED",
+      "reconcile_matched": true
+    },
+    "3_stale_feed": {
+      "passed": true,
+      "accepted": false,
+      "rejection_code": "STALE_FEED",
+      "rejection_message": "Stale feed detected for AAPL: age 12000.0ms exceeds max 5000ms"
+    },
+    "4_broker_disconnect": {
+      "passed": true,
+      "state_during_outage": "UNKNOWN_OUTCOME",
+      "reservation_retained_during_outage": true,
+      "state_after_reconnect_reconcile": "REJECTED",
+      "reservation_released_after_reconcile": true,
+      "reconcile_matched": true
+    },
+    "5_cancel_fill_race": {
+      "passed": true,
+      "final_state": "FILLED",
+      "filled_quantity": "100",
+      "ledger_balanced": true,
+      "reconcile_matched": true
+    },
+    "6_restart": {
+      "passed": true,
+      "recovery_summary": {
+        "recovered_at_utc": "2026-11-27T10:13:23.701588+00:00",
+        "audit_chain_valid": true,
+        "audit_chain_message": "Verified 4 hash-chained audit events",
+        "ledger_balanced": true,
+        "active_kill_switches": 1,
+        "open_orders_before_reconcile": 1,
+        "active_reservations_before_reconcile": 1,
+        "reconciled": true,
+        "unknown_orders_resolved": 1
+      },
+      "recovered_order_state": "FILLED",
+      "persisted_kill_switches": [
+        "SYMBOL:NVDA"
+      ]
+    },
+    "7_limit_breach": {
+      "passed": true,
+      "fat_finger_blocked": [
+        "R04_PRICE_COLLAR: Fat-finger price collar breach: 1051.47 bps > 250 bps"
+      ],
+      "oversize_blocked": [
+        "R05_MAX_ORDER_QTY: Order qty 600 exceeds max 500",
+        "R06_MAX_ORDER_NOTIONAL: Order notional 114060.0000 exceeds max 100000"
+      ],
+      "broker_submit_calls": 0
+    },
+    "8_clock_skew": {
+      "passed": true,
+      "accepted": false,
+      "rejection_code": "CLOCK_SKEW_DETECTED",
+      "rejection_message": "Forward clock skew detected on AAPL: event_time is 10000.0ms ahead of UTC clock (max 2000ms)"
+    }
+  }
+}

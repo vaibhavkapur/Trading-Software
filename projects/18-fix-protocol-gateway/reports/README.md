@@ -11,7 +11,7 @@ The release build ran on macOS 26.5.1, arm64, with Apple clang 21.0.0. Both CTes
 
 The demo produced six reports from five synthetic requests. One seven-share trade and one unknown-order rejection were among those reports. The final counter pairs matched and pending requests were zero. [Actual JSONL output](demo.jsonl)
 
-A fresh local clone downloaded the pinned dependency, built the release binaries, passed both CTest targets and completed the demo. Its working tree remained clean. Hosted CI is configured for a future remote. [Clean checkout record](clean-checkout.txt)
+A fresh local clone downloaded the pinned dependency, built the release binaries, passed both CTest targets and completed the demo. Its working tree remained clean. The [GitHub Actions workflow](../../../.github/workflows/fix-protocol-gateway.yml) runs the build, tests and demo on Ubuntu. [Clean checkout record](clean-checkout.txt)
 
 ## Latency baseline
 

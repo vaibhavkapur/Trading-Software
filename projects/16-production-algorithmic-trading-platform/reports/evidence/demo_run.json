@@ -1,0 +1,110 @@
+{
+  "demo": "vertical_slice_and_shadow_mode",
+  "paper_mode": {
+    "ticks_processed": 23,
+    "orders_summary": {
+      "total": 5,
+      "open": 0,
+      "unknown_outcome": 0,
+      "filled": 5,
+      "risk_rejected": 0
+    },
+    "ledger": {
+      "balanced": true,
+      "cash_balance": "989447.6425",
+      "realized_pnl": "11.2550",
+      "unrealized_pnl": "-2.8625",
+      "commissions": "5.0000",
+      "net_daily_pnl": "3.3925",
+      "positions": {
+        "MSFT": "25"
+      }
+    },
+    "reconciliation_matched": true,
+    "reconciliation_cash_delta": "0.0000",
+    "audit_chain": {
+      "valid": true,
+      "message": "Verified 9 hash-chained audit events"
+    },
+    "live_gate": {
+      "live_allowed": false,
+      "policy_id": "POL-PAPER-ONLY-DEFAULT-001",
+      "gaps": [
+        "Policy explicitly disables live execution (allow_live_execution=false)",
+        "Missing live_rollout_bundle with written approvals and readiness attestations"
+      ]
+    },
+    "telemetry_counters": {
+      "fills_applied": 5,
+      "kill_switch_engagements": 1,
+      "market_ticks_accepted": 23,
+      "market_ticks_received": 23,
+      "orders_acked": 5,
+      "orders_filled": 5,
+      "orders_submitted": 5,
+      "reconciliations_total": 1,
+      "risk_checks_approved": 5,
+      "risk_checks_total": 5
+    },
+    "telemetry_histograms": {
+      "oms_submit_latency_ms": {
+        "count": 5,
+        "min_ms": 0.3017,
+        "mean_ms": 0.3604,
+        "p50_ms": 0.325,
+        "p95_ms": 0.5086,
+        "p99_ms": 0.5086,
+        "max_ms": 0.5086
+      },
+      "reconciliation_latency_ms": {
+        "count": 1,
+        "min_ms": 0.2527,
+        "mean_ms": 0.2527,
+        "p50_ms": 0.2527,
+        "p95_ms": 0.2527,
+        "p99_ms": 0.2527,
+        "max_ms": 0.2527
+      },
+      "risk_check_latency_ms": {
+        "count": 5,
+        "min_ms": 0.0958,
+        "mean_ms": 0.1204,
+        "p50_ms": 0.1208,
+        "p95_ms": 0.1521,
+        "p99_ms": 0.1521,
+        "max_ms": 0.1521
+      },
+      "tick_to_decision_latency_ms": {
+        "count": 23,
+        "min_ms": 0.0023,
+        "mean_ms": 0.0871,
+        "p50_ms": 0.0044,
+        "p95_ms": 0.3696,
+        "p99_ms": 0.542,
+        "max_ms": 0.542
+      }
+    }
+  },
+  "shadow_mode": {
+    "execution_mode": "SHADOW",
+    "ticks_processed": 6,
+    "shadow_decisions_recorded": 1,
+    "broker_orders_dispatched": 0,
+    "decisions": [
+      {
+        "schema_version": "1.0.0",
+        "shadow_id": "SHD-D7158E7019EF",
+        "tick_id": "SH-AAPL-006",
+        "strategy_id": "STRAT-MOM-01",
+        "symbol": "AAPL",
+        "side": "BUY",
+        "quantity": "25",
+        "reference_price": "193.79",
+        "risk_approved": true,
+        "blocking_reasons": [],
+        "dispatched_to_broker": false,
+        "recorded_at_utc": "2026-11-27T14:30:02.515000Z"
+      }
+    ]
+  }
+}

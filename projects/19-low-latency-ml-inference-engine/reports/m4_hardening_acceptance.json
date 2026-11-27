@@ -1,0 +1,178 @@
+{
+  "canary_sample_versions": [
+    "1.0.0",
+    "1.0.0",
+    "2.0.0",
+    "1.0.0",
+    "2.0.0",
+    "1.0.0",
+    "1.0.0",
+    "2.0.0",
+    "2.0.0",
+    "1.0.0"
+  ],
+  "health": {
+    "current_in_flight": 0,
+    "loaded_versions": {
+      "1.0.0": {
+        "artifact_sha256": "826c933443690346f0d187551328a8b6ce5c87da68e8a3da2bd1adb0c2520108",
+        "loaded_at_utc": "2026-11-27T09:49:03.774Z",
+        "model_id": "lob_alpha_mlp",
+        "runtime": "cpp_native"
+      },
+      "2.0.0": {
+        "artifact_sha256": "be4ca15c10c31dea2ecbb5434afb7c81a2257f66fb736f7a0d0e2f7106c1e907",
+        "loaded_at_utc": "2026-11-27T09:49:03.775Z",
+        "model_id": "lob_alpha_mlp",
+        "runtime": "cpp_native"
+      }
+    },
+    "max_in_flight": 8,
+    "order_execution_enabled": false,
+    "routing_policy": {
+      "canary_version": null,
+      "canary_weight": 0.0,
+      "primary_version": "1.0.0"
+    },
+    "runtime": "cpp_native",
+    "status": "healthy"
+  },
+  "loaded": [
+    {
+      "active_primary": "1.0.0",
+      "artifact_sha256": "826c933443690346f0d187551328a8b6ce5c87da68e8a3da2bd1adb0c2520108",
+      "load_ms": 1.309,
+      "model_id": "lob_alpha_mlp",
+      "model_version": "1.0.0",
+      "runtime": "cpp_native"
+    },
+    {
+      "active_primary": "1.0.0",
+      "artifact_sha256": "be4ca15c10c31dea2ecbb5434afb7c81a2257f66fb736f7a0d0e2f7106c1e907",
+      "load_ms": 0.702,
+      "model_id": "lob_alpha_mlp",
+      "model_version": "2.0.0",
+      "runtime": "cpp_native"
+    }
+  ],
+  "metrics": {
+    "errors_by_code": {
+      "NON_FINITE_FEATURE": 1,
+      "STALE_FEATURE": 1
+    },
+    "overload_rejections": 0,
+    "reload_failures": 0,
+    "reload_successes": 2,
+    "requests_by_route": {
+      "canary": 4,
+      "primary": 8
+    },
+    "requests_by_version": {
+      "1.0.0": 7,
+      "2.0.0": 5
+    },
+    "rollbacks": 2,
+    "rollout_events": [
+      {
+        "action": "load_and_activate",
+        "artifact_sha256": "826c933443690346f0d187551328a8b6ce5c87da68e8a3da2bd1adb0c2520108",
+        "model_id": "lob_alpha_mlp",
+        "model_version": "1.0.0",
+        "runtime": "cpp_native",
+        "timestamp_utc": "2026-11-27T09:49:03.774Z"
+      },
+      {
+        "action": "load_staged",
+        "artifact_sha256": "be4ca15c10c31dea2ecbb5434afb7c81a2257f66fb736f7a0d0e2f7106c1e907",
+        "model_id": "lob_alpha_mlp",
+        "model_version": "2.0.0",
+        "runtime": "cpp_native",
+        "timestamp_utc": "2026-11-27T09:49:03.775Z"
+      },
+      {
+        "action": "routing_updated",
+        "canary_version": "2.0.0",
+        "canary_weight": 0.5,
+        "primary_version": "1.0.0",
+        "timestamp_utc": "2026-11-27T09:49:03.776Z"
+      },
+      {
+        "action": "routing_updated",
+        "canary_version": null,
+        "canary_weight": 0.0,
+        "primary_version": "2.0.0",
+        "timestamp_utc": "2026-11-27T09:49:03.776Z"
+      },
+      {
+        "action": "rollback",
+        "canary_version": "2.0.0",
+        "canary_weight": 0.5,
+        "primary_version": "1.0.0",
+        "timestamp_utc": "2026-11-27T09:49:03.776Z"
+      },
+      {
+        "action": "rollback",
+        "canary_version": null,
+        "canary_weight": 0.0,
+        "primary_version": "1.0.0",
+        "timestamp_utc": "2026-11-27T09:49:03.776Z"
+      }
+    ]
+  },
+  "rollback_step_1_primary": "1.0.0",
+  "rollback_step_2_primary": "1.0.0",
+  "safe_failures": {
+    "nan_feature": {
+      "details": {
+        "feature": "order_book_imbalance_l1",
+        "value": "nan"
+      },
+      "error_code": "NON_FINITE_FEATURE",
+      "message": "Feature 'order_book_imbalance_l1' has non-finite value nan."
+    },
+    "stale_feature": {
+      "details": {
+        "event_ts_utc": "2026-01-15T14:00:00.000Z",
+        "feature_age_ms": 27287343776.0,
+        "max_feature_age_ms": 5000
+      },
+      "error_code": "STALE_FEATURE",
+      "message": "Feature age 27287343776.00ms exceeds max_feature_age_ms=5000ms."
+    }
+  },
+  "timestamp_utc": "2026-11-27T09:49:03.776Z",
+  "v1_prediction": {
+    "artifact_sha256": "826c933443690346f0d187551328a8b6ce5c87da68e8a3da2bd1adb0c2520108",
+    "currency": "USD",
+    "feature_age_ms": 0.0,
+    "inference_ts_utc": "2026-11-27T09:49:03.776Z",
+    "instrument_id": "SYN-EQUITY-A",
+    "latency_us": 20.5,
+    "model_id": "lob_alpha_mlp",
+    "model_version": "1.0.0",
+    "order_execution_enabled": false,
+    "output_name": "expected_return_1s_bps",
+    "output_unit": "bps",
+    "prediction": -0.5649773689436913,
+    "request_id": "demo-req-001",
+    "route_tag": "primary",
+    "runtime_name": "cpp_native"
+  },
+  "v2_prediction": {
+    "artifact_sha256": "be4ca15c10c31dea2ecbb5434afb7c81a2257f66fb736f7a0d0e2f7106c1e907",
+    "currency": "USD",
+    "feature_age_ms": 0.0,
+    "inference_ts_utc": "2026-11-27T09:49:03.776Z",
+    "instrument_id": "SYN-EQUITY-A",
+    "latency_us": 5.792,
+    "model_id": "lob_alpha_mlp",
+    "model_version": "2.0.0",
+    "order_execution_enabled": false,
+    "output_name": "expected_return_1s_bps",
+    "output_unit": "bps",
+    "prediction": -0.123131595286562,
+    "request_id": "demo-req-001",
+    "route_tag": "primary",
+    "runtime_name": "cpp_native"
+  }
+}

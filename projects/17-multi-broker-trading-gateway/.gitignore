@@ -1,0 +1,4 @@
+bin/
+data/runtime/
+*.out
+.DS_Store

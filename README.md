@@ -1,6 +1,6 @@
 # Trading Software
 
-Fifteen independent projects cover the lifecycle of a simulated trade, from market data and order matching to risk checks, execution analysis, and broker reconciliation.
+Nineteen independent projects cover the lifecycle of a simulated trade, from market data and order matching to risk checks, execution analysis, and broker reconciliation.
 
 ## Getting started
 
@@ -13,7 +13,7 @@ make setup
 make demo
 ```
 
-For another project, open its directory under `projects/` and follow its README. Each project has its own dependencies, tests, and demo commands. Run them from that project's directory.
+For another project, open its directory under `projects/` and follow its README. Each project README lists the dependencies and commands for its own tests and demo.
 
 ## Projects
 
@@ -32,5 +32,9 @@ For another project, open its directory under `projects/` and follow its README.
 - [13 · Broker Reliability & Reconciliation](projects/13-broker-reliability-reconciliation/) — Finds discrepancies between internal records and broker reports for orders, fills, cash, and positions.
 - [14 · AI Quant Research Agent](projects/14-ai-quant-research-agent/) — Runs reproducible backtests for trading hypotheses with checks for look-ahead bias.
 - [15 · Agentic Trading Guardrails](projects/15-agentic-trading-guardrails/) — Enforces delegated permissions and single-use approvals, and records policy decisions for paper orders.
+- [16 · Production Algorithmic Trading Platform](projects/16-production-algorithmic-trading-platform/) — Runs paper strategies through pre-trade checks and records orders, fills, and cash in a reconciled ledger.
+- [17 · Multi-Broker Trading Gateway](projects/17-multi-broker-trading-gateway/) — Routes orders across simulated brokers and reconciles uncertain fills before retrying.
+- [18 · FIX Protocol Gateway](projects/18-fix-protocol-gateway/) — Exchanges FIX 4.4 messages with a simulated venue and recovers session and order state after a restart.
+- [19 · Low-Latency ML Inference Engine](projects/19-low-latency-ml-inference-engine/) — Checks a C++20 model scorer against a Python reference and exercises canary releases and rollback on synthetic order-book data.
 
 To follow an order through the collection, start with matching and market data (02, 04, 08), then risk and routing (05, 07, 03), and finally execution analysis and agent controls (09, 01, 15).

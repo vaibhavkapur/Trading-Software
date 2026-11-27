@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "orders": [
+    {
+      "label": "valid_limit_buy_alpha",
+      "client_order_id": "cli-fix-001",
+      "broker_id": "sandbox-alpha",
+      "mode": "sandbox",
+      "instrument_id": "EQ:US:AAPL",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "quantity": 10,
+      "limit_price": 195.50,
+      "currency": "USD"
+    },
+    {
+      "label": "valid_stop_limit_beta",
+      "client_order_id": "cli-fix-002",
+      "broker_id": "sandbox-beta",
+      "mode": "sandbox",
+      "instrument_id": "CRYPTO:SPOT:BTC-USD",
+      "side": "BUY",
+      "order_type": "STOP_LIMIT",
+      "time_in_force": "GTC",
+      "quantity": 0.05,
+      "limit_price": 92000.00,
+      "stop_price": 91500.00,
+      "currency": "USD"
+    },
+    {
+      "label": "unsupported_stop_limit_on_alpha",
+      "client_order_id": "cli-fix-003",
+      "broker_id": "sandbox-alpha",
+      "mode": "sandbox",
+      "instrument_id": "EQ:US:MSFT",
+      "side": "SELL",
+      "order_type": "STOP_LIMIT",
+      "time_in_force": "DAY",
+      "quantity": 5,
+      "limit_price": 410.00,
+      "stop_price": 412.00,
+      "currency": "USD"
+    },
+    {
+      "label": "symbol_mismatch_crypto_on_alpha",
+      "client_order_id": "cli-fix-004",
+      "broker_id": "sandbox-alpha",
+      "mode": "sandbox",
+      "instrument_id": "CRYPTO:SPOT:BTC-USD",
+      "side": "BUY",
+      "order_type": "MARKET",
+      "time_in_force": "DAY",
+      "quantity": 1,
+      "currency": "USD"
+    },
+    {
+      "label": "live_mode_rejected_by_policy",
+      "client_order_id": "cli-fix-005",
+      "broker_id": "sandbox-alpha",
+      "mode": "live",
+      "instrument_id": "EQ:US:AAPL",
+      "side": "BUY",
+      "order_type": "LIMIT",
+      "time_in_force": "DAY",
+      "quantity": 1,
+      "limit_price": 190.00,
+      "currency": "USD"
+    }
+  ]
+}

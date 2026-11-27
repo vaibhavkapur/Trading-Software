@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "environment": "sandbox",
+  "default_mode": "paper",
+  "live_trading_enabled": false,
+  "http_listen_addr": "127.0.0.1:8080",
+  "journal_path": "data/runtime/gateway_journal.jsonl",
+  "reconciliation": {
+    "auto_reconcile_on_unknown": true,
+    "max_unresolved_drift_before_halt": 1,
+    "unknown_outcome_retry_budget": 0,
+    "cancel_timeout_ms": 250,
+    "submit_timeout_ms": 250
+  },
+  "brokers": {
+    "mock": {
+      "enabled": true,
+      "mode": "paper",
+      "rate_limit_per_sec": 50,
+      "rate_limit_burst": 10,
+      "secret_ref": "mock/api_key",
+      "seed": 42
+    },
+    "sandbox-alpha": {
+      "enabled": true,
+      "mode": "sandbox",
+      "rate_limit_per_sec": 10,
+      "rate_limit_burst": 5,
+      "secret_ref": "sandbox-alpha/oauth_token",
+      "seed": 101
+    },
+    "sandbox-beta": {
+      "enabled": true,
+      "mode": "sandbox",
+      "rate_limit_per_sec": 8,
+      "rate_limit_burst": 4,
+      "secret_ref": "sandbox-beta/hmac_key",
+      "seed": 202
+    }
+  }
+}

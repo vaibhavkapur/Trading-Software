@@ -1,0 +1,46 @@
+{
+  "all_passed": true,
+  "timestamp_utc": "2026-11-27T09:49:02.732Z",
+  "verified_models": [
+    {
+      "artifact_sha256": "826c933443690346f0d187551328a8b6ce5c87da68e8a3da2bd1adb0c2520108",
+      "cpp_golden_parity": {
+        "cases_checked": 25,
+        "max_abs_error": 0.0,
+        "passed": true,
+        "tolerance_abs": 1e-09
+      },
+      "model_id": "lob_alpha_mlp",
+      "model_version": "1.0.0",
+      "passed": true,
+      "python_golden_parity": {
+        "cases_checked": 25,
+        "max_abs_error": 0.0,
+        "passed": true,
+        "tolerance_abs": 1e-09
+      },
+      "python_vs_cpp_max_abs_error": 0.0,
+      "tolerance_abs": 1e-09
+    },
+    {
+      "artifact_sha256": "be4ca15c10c31dea2ecbb5434afb7c81a2257f66fb736f7a0d0e2f7106c1e907",
+      "cpp_golden_parity": {
+        "cases_checked": 25,
+        "max_abs_error": 0.0,
+        "passed": true,
+        "tolerance_abs": 1e-09
+      },
+      "model_id": "lob_alpha_mlp",
+      "model_version": "2.0.0",
+      "passed": true,
+      "python_golden_parity": {
+        "cases_checked": 25,
+        "max_abs_error": 0.0,
+        "passed": true,
+        "tolerance_abs": 1e-09
+      },
+      "python_vs_cpp_max_abs_error": 0.0,
+      "tolerance_abs": 1e-09
+    }
+  ]
+}

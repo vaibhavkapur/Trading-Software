@@ -1,0 +1,13 @@
+# Acceptance Criteria / Definition of Done — Evidence Checklist
+
+| # | Criterion (`plan.md` §6) | Status | Verification Evidence |
+|---|---|---|---|
+| 1 | Each adapter passes shared contract suite | **PASS** | `TestSharedBrokerContractSuite/AdapterContract/{mock,sandbox-alpha,sandbox-beta}` in [`evidence/test_suite_output.txt`](evidence/test_suite_output.txt) |
+| 2 | Secrets never appear in logs | **PASS** | `TestSecretStringAndLoggerNeverLeakSecrets`, `secret_leak_detected: false` in [`evidence/demo_output.json`](evidence/demo_output.json) & [`evidence/drill_output.json`](evidence/drill_output.json), plus `config/` hygiene audit in `scripts/validate.sh` |
+| 3 | Unsupported order types are rejected before dispatch | **PASS** | `unsupported_order_error: "UNSUPPORTED_CAPABILITY"` & `unsupported_zero_dispatch: true` in [`evidence/demo_output.json`](evidence/demo_output.json); verified across all 3 adapters in `TestSharedBrokerContractSuite` |
+| 4 | Unknown outcomes are reconciled rather than blindly retried | **PASS** | `no_blind_retry: true` & `resolved_status: "FILLED"` in [`evidence/drill_output.json`](evidence/drill_output.json); `TestScenario_UnknownSubmitResult` & `TestScenario_CancelTimeout` |
+| 5 | Paper or sandbox remains default | **PASS** | `config/gateway.json` (`default_mode: "paper"`, `live_trading_enabled: false`), `config/policy.json` (`deny_live_execution: true`), `live_mode_error: "POLICY_DENIED"` in [`evidence/demo_output.json`](evidence/demo_output.json) |
+| 6 | Clean checkout can run documented setup, tests and demo with permitted fixtures | **PASS** | Zero external Go deps (`go.mod`), synthetic fixtures (`data/fixtures/manifest.json`), verified via `./scripts/setup.sh && ./scripts/validate.sh` |
+| 7 | Architecture, dependency assumptions, known limitations and runbook committed | **PASS** | [`docs/architecture.md`](../docs/architecture.md), [`docs/api_and_schema.md`](../docs/api_and_schema.md), [`docs/schema.sql`](../docs/schema.sql), [`docs/dependency_and_ip_audit.md`](../docs/dependency_and_ip_audit.md), [`docs/unsupported_features.md`](../docs/unsupported_features.md), [`docs/runbook.md`](../docs/runbook.md), and `docs/adr/ADR-001..003` |
+| 8 | Relevant CI checks pass and raw evaluation or test evidence retained | **PASS** | `go vet ./...`, `go test -race -count=1 -v ./...`, `go test -bench`, demo & drill raw outputs retained in `reports/evidence/` |
+| 9 | Security, data licensing, IP and deployment approval requirements reviewed | **PASS** | Clean-room IP stance documented in [`docs/dependency_and_ip_audit.md`](../docs/dependency_and_ip_audit.md); threat model & Gate 1/2/3 rollout checklist in [`docs/security_review.md`](../docs/security_review.md) |

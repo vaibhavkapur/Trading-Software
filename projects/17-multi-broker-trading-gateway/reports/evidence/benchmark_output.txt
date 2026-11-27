@@ -1,0 +1,9 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/saat/multi-broker-trading-gateway/tests/scenarios
+cpu: Apple M5
+BenchmarkGatewaySubmitOrder-10    	   41270	     28591 ns/op	    9424 B/op	     113 allocs/op
+BenchmarkGatewaySubmitOrder-10    	   43432	     28035 ns/op	    9267 B/op	     113 allocs/op
+BenchmarkGatewaySubmitOrder-10    	   43339	     27969 ns/op	    9278 B/op	     113 allocs/op
+PASS
+ok  	github.com/saat/multi-broker-trading-gateway/tests/scenarios	4.897s

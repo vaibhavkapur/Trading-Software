@@ -1,0 +1,155 @@
+{
+  "architecture": "mlp_v1",
+  "created_at_utc": "2026-01-15T15:00:00.000Z",
+  "features": [
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 1.0,
+      "mean": -0.00740793,
+      "min_allowed": -1.0,
+      "name": "order_book_imbalance_l1",
+      "std": 0.41209372,
+      "unit": "ratio"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 1.0,
+      "mean": -0.00049855,
+      "min_allowed": -1.0,
+      "name": "order_book_imbalance_l5",
+      "std": 0.36285706,
+      "unit": "ratio"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 500.0,
+      "mean": 2.94957234,
+      "min_allowed": 0.0,
+      "name": "bid_ask_spread_bps",
+      "std": 0.43850077,
+      "unit": "bps"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 200.0,
+      "mean": -0.051781,
+      "min_allowed": -200.0,
+      "name": "microprice_deviation_bps",
+      "std": 2.26947636,
+      "unit": "bps"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 50.0,
+      "mean": -0.02118488,
+      "min_allowed": -50.0,
+      "name": "order_flow_imbalance_1s",
+      "std": 1.63035963,
+      "unit": "zscore"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 1.0,
+      "mean": -0.0124827,
+      "min_allowed": -1.0,
+      "name": "trade_sign_momentum_5s",
+      "std": 0.38189884,
+      "unit": "ratio"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 1000.0,
+      "mean": 8.88855553,
+      "min_allowed": 0.0,
+      "name": "realized_vol_30s_bps",
+      "std": 2.19999227,
+      "unit": "bps"
+    },
+    {
+      "clip_z": 5.0,
+      "dtype": "float64",
+      "max_allowed": 10.0,
+      "mean": -0.02711702,
+      "min_allowed": -10.0,
+      "name": "depth_ratio_bid_ask",
+      "std": 0.64759133,
+      "unit": "log_ratio"
+    }
+  ],
+  "golden_file": "reference_golden.json",
+  "golden_sha256": "9340263a919c3bc21d0dccc187514c65522f4eb43968c89ccab7cd116d8f8e64",
+  "layers": [
+    {
+      "activation": "relu",
+      "in_dim": 8,
+      "name": "dense_0",
+      "out_dim": 16
+    },
+    {
+      "activation": "tanh",
+      "in_dim": 16,
+      "name": "dense_1",
+      "out_dim": 8
+    },
+    {
+      "activation": "linear",
+      "in_dim": 8,
+      "name": "dense_2",
+      "out_dim": 1
+    }
+  ],
+  "model_id": "lob_alpha_mlp",
+  "model_version": "1.0.0",
+  "output": {
+    "name": "expected_return_1s_bps",
+    "prediction_tolerance_abs": 1e-09,
+    "task_type": "regression",
+    "unit": "bps"
+  },
+  "schema_version": "1.0.0",
+  "serialization_format": "safe_ieee754_bin_v1",
+  "staleness_policy": {
+    "max_clock_skew_ms": 250,
+    "max_feature_age_ms": 5000,
+    "require_availability_not_after_inference": true
+  },
+  "training_metadata": {
+    "dataset_id": "synthetic_lob_microprice_v1",
+    "dataset_sha256": "9a566f278e7f80aafdead800b86f549978b726b62f105d11909c4bfe72c85f1d",
+    "epochs": 28,
+    "live_performance_claim": "NONE \u2014 synthetic data only; never infer live performance from synthetic tests.",
+    "notes": "Primary MVP compact MLP (8->16->8->1) trained strictly on chronological train split.",
+    "seed": 42,
+    "split_policy": "chronological_no_lookahead",
+    "test_metrics": {
+      "assumed_round_trip_cost_bps": 0.5,
+      "directional_accuracy": 0.877778,
+      "mae_bps": 0.742471,
+      "r2": 0.795994,
+      "rmse_bps": 0.956377,
+      "samples": 180.0,
+      "simulated_avg_net_bps_per_trade": 1.423404,
+      "simulated_trades_after_cost": 125.0
+    },
+    "val_metrics": {
+      "assumed_round_trip_cost_bps": 0.5,
+      "directional_accuracy": 0.811111,
+      "mae_bps": 0.787201,
+      "r2": 0.783291,
+      "rmse_bps": 0.968016,
+      "samples": 180.0,
+      "simulated_avg_net_bps_per_trade": 1.373795,
+      "simulated_trades_after_cost": 133.0
+    }
+  },
+  "weights_byte_size": 2312,
+  "weights_file": "weights.bin",
+  "weights_sha256": "10a24c27b90a034697670e01fe43428bbd8a277726c9f63d1d7fa3f2bc163521"
+}

@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "orders_submitted": 7,
+    "orders_accepted": 4,
+    "orders_filled": 1,
+    "orders_cancelled": 0,
+    "orders_rejected_pre_dispatch": 2,
+    "orders_rejected_by_broker": 0,
+    "idempotent_hits": 1,
+    "rate_limit_rejections": 2,
+    "auth_failures": 1,
+    "unknown_outcomes": 1,
+    "cancel_timeouts": 1,
+    "fills_recorded": 4,
+    "duplicate_webhooks_ignored": 1,
+    "out_of_order_fills_handled": 1,
+    "reconciliation_runs": 3,
+    "reconciliation_findings": 3,
+    "fail_closed_trips": 1
+  },
+  "run_type": "reconciliation_and_fault_drill",
+  "scenarios": [
+    {
+      "cooldown_error": "RATE_LIMITED",
+      "initial_error": "RATE_LIMITED",
+      "recovered": true,
+      "scenario": "rate_limit"
+    },
+    {
+      "initial_error": "AUTH_EXPIRED",
+      "recovered": true,
+      "scenario": "expired_credential"
+    },
+    {
+      "error": "SYMBOL_MISMATCH",
+      "scenario": "symbol_mismatch",
+      "zero_dispatches": true
+    },
+    {
+      "avg_fill_price": 190.24,
+      "duplicate_applied": false,
+      "filled_qty": 10,
+      "final_status": "FILLED",
+      "scenario": "duplicate_webhook_and_out_of_order_fill"
+    },
+    {
+      "no_blind_retry": true,
+      "recon_findings": 1,
+      "replay_error": "UNKNOWN_OUTCOME",
+      "resolved_filled": 5,
+      "resolved_status": "FILLED",
+      "scenario": "unknown_submit_result",
+      "submit_error": "UNKNOWN_OUTCOME"
+    },
+    {
+      "cancel_error": "CANCEL_TIMEOUT",
+      "pending_status": "CANCEL_PENDING",
+      "resolved_status": "CANCELLED",
+      "scenario": "cancel_timeout"
+    },
+    {
+      "blocked_order_error": "GATEWAY_HALTED",
+      "resumed_cleanly": true,
+      "scenario": "reconciliation_drift_fail_closed_drill",
+      "triggered_fail_safe": true,
+      "unresolved_count": 1
+    }
+  ],
+  "secret_leak_detected": false,
+  "timestamp_utc": "2026-11-27T10:00:01Z"
+}

@@ -1,0 +1,66 @@
+{
+  "benchmark": "controlled_paper_soak_baseline",
+  "disclaimer": "Measured on local in-process SQLite paper sandbox only. Do NOT extrapolate these numbers to live exchange latency, production availability, or live alpha performance.",
+  "environment": {
+    "python_version": "3.12.15",
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "storage": "sqlite_in_memory",
+    "seed": 2026
+  },
+  "sample": {
+    "ticks_processed": 2000,
+    "elapsed_seconds": 0.4274,
+    "throughput_ticks_per_sec": 4679.51
+  },
+  "orders": {
+    "total": 146,
+    "open": 0,
+    "unknown_outcome": 0,
+    "filled": 146,
+    "risk_rejected": 0
+  },
+  "ledger_balanced": true,
+  "reconciliation_matched": true,
+  "reconciliation_cash_delta": "0.0000",
+  "active_reservations_end": 0,
+  "audit_chain_valid": true,
+  "latency_histograms_ms": {
+    "oms_submit_latency_ms": {
+      "count": 146,
+      "min_ms": 0.3086,
+      "mean_ms": 2.7516,
+      "p50_ms": 2.4596,
+      "p95_ms": 5.6862,
+      "p99_ms": 6.0091,
+      "max_ms": 7.4852
+    },
+    "reconciliation_latency_ms": {
+      "count": 1,
+      "min_ms": 5.4182,
+      "mean_ms": 5.4182,
+      "p50_ms": 5.4182,
+      "p95_ms": 5.4182,
+      "p99_ms": 5.4182,
+      "max_ms": 5.4182
+    },
+    "risk_check_latency_ms": {
+      "count": 146,
+      "min_ms": 0.0931,
+      "mean_ms": 2.5411,
+      "p50_ms": 2.2637,
+      "p95_ms": 5.457,
+      "p99_ms": 5.7825,
+      "max_ms": 7.1908
+    },
+    "tick_to_decision_latency_ms": {
+      "count": 2000,
+      "min_ms": 0.0024,
+      "mean_ms": 0.2061,
+      "p50_ms": 0.0038,
+      "p95_ms": 1.5336,
+      "p99_ms": 5.0915,
+      "max_ms": 7.5051
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at_utc": "2026-11-27T00:00:00Z",
+  "brokers": [
+    {
+      "broker_id": "mock",
+      "display_name": "Deterministic Mock Broker",
+      "allowed_modes": ["paper"],
+      "supported_asset_classes": ["EQUITY", "ETF", "CRYPTO"],
+      "supported_order_types": ["MARKET", "LIMIT", "STOP_LIMIT"],
+      "supported_time_in_force": ["DAY", "GTC", "IOC", "FOK"],
+      "supports_fractional_qty": true,
+      "supports_replace": true,
+      "supports_webhooks": true,
+      "supports_event_replay": true,
+      "max_notional_usd": 1000000.0
+    },
+    {
+      "broker_id": "sandbox-alpha",
+      "display_name": "Approved Sandbox Alpha (Sync REST + Webhooks)",
+      "allowed_modes": ["sandbox", "paper"],
+      "supported_asset_classes": ["EQUITY", "ETF"],
+      "supported_order_types": ["MARKET", "LIMIT"],
+      "supported_time_in_force": ["DAY", "IOC"],
+      "supports_fractional_qty": false,
+      "supports_replace": false,
+      "supports_webhooks": true,
+      "supports_event_replay": false,
+      "max_notional_usd": 250000.0
+    },
+    {
+      "broker_id": "sandbox-beta",
+      "display_name": "Approved Sandbox Beta (Async Queue + Cursor Replay)",
+      "allowed_modes": ["sandbox", "paper"],
+      "supported_asset_classes": ["EQUITY", "ETF", "CRYPTO"],
+      "supported_order_types": ["MARKET", "LIMIT", "STOP_LIMIT"],
+      "supported_time_in_force": ["DAY", "GTC", "IOC"],
+      "supports_fractional_qty": true,
+      "supports_replace": false,
+      "supports_webhooks": true,
+      "supports_event_replay": true,
+      "max_notional_usd": 500000.0
+    }
+  ]
+}

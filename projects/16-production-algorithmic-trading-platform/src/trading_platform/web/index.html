@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Production Algorithmic Trading Platform — Operator Console</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --blue: #38bdf8;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { margin: 0; background: var(--bg); color: var(--text); padding: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 18px; }
+    h1 { font-size: 18px; margin: 0; }
+    .badges { display: flex; gap: 10px; align-items: center; }
+    .badge { padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .badge.paper { background: #0369a1; color: #e0f2fe; }
+    .badge.blocked { background: #7f1d1d; color: #fecaca; }
+    .badge.ok { background: #14532d; color: #bbf7d0; }
+    .badge.halt { background: #991b1b; color: #fee2e2; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 18px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+    .card h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+    .metric { font-size: 22px; font-weight: 700; }
+    .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    button { cursor: pointer; border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; font-size: 12px; font-weight: 600; background: #0f172a; color: var(--text); }
+    button.danger { background: #991b1b; border-color: #ef4444; }
+    button.primary { background: #0369a1; border-color: #38bdf8; }
+    button.safe { background: #14532d; border-color: #22c55e; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 600; }
+    .section { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+    .section h2 { margin: 0 0 10px; font-size: 14px; color: var(--blue); }
+    #toast { font-size: 12px; color: var(--amber); margin-left: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Production Algorithmic Trading Platform — Operator Console</h1>
+      <div class="sub">Paper-First Prototype | Deterministic Pre-Trade Risk | Idempotent OMS | Double-Entry Ledger</div>
+    </div>
+    <div class="badges">
+      <span id="modeBadge" class="badge paper">MODE: ...</span>
+      <span id="liveBadge" class="badge blocked">LIVE: BLOCKED</span>
+      <span id="ksBadge" class="badge ok">KILL SWITCH: CLEAR</span>
+      <button onclick="refreshAll()">Refresh</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Cash &amp; Daily PnL</h2>
+      <div class="metric" id="cashVal">--</div>
+      <div class="sub" id="pnlVal">Realized: -- | Unrealized: -- | Balanced: --</div>
+    </div>
+    <div class="card">
+      <h2>Orders &amp; Reservations</h2>
+      <div class="metric" id="ordersVal">--</div>
+      <div class="sub" id="resVal">Active Reservations: -- | Reserved Notional: --</div>
+    </div>
+    <div class="card">
+      <h2>Reconciliation &amp; Audit</h2>
+      <div class="metric" id="reconVal">--</div>
+      <div class="sub" id="auditVal">Audit Hash Chain: --</div>
+    </div>
+    <div class="card">
+      <h2>Incident Controls</h2>
+      <div class="controls">
+        <button class="danger" onclick="engageKillSwitch()">Engage Global Kill Switch</button>
+        <button class="safe" onclick="releaseKillSwitch()">Release Kill Switch</button>
+        <button class="primary" onclick="runReconcile()">Run Reconciliation</button>
+      </div>
+      <div id="toast"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Positions</h2>
+    <table id="posTable"><thead><tr><th>Symbol</th><th>Quantity</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="section">
+    <h2>Order Blotter</h2>
+    <table id="ordersTable">
+      <thead>
+        <tr><th>Client Order ID</th><th>Strategy</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Filled</th><th>State</th><th>Reason</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Recent Hash-Chained Audit Events</h2>
+    <table id="auditTable">
+      <thead><tr><th>Seq</th><th>Type</th><th>Actor</th><th>Entity</th><th>Time (UTC)</th><th>Hash (prefix)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const opHeaders = { "Content-Type": "application/json", "X-Actor-Id": "web-operator", "X-Actor-Role": "RISK_OFFICER" };
+    function setToast(msg) { document.getElementById("toast").textContent = msg; }
+
+    async function refreshAll() {
+      const [status, ordersRes, auditRes] = await Promise.all([
+        fetch("/api/status").then(r => r.json()),
+        fetch("/api/orders").then(r => r.json()),
+        fetch("/api/audit").then(r => r.json()),
+      ]);
+      document.getElementById("modeBadge").textContent = "MODE: " + status.execution_mode;
+      document.getElementById("liveBadge").textContent = status.live_gate.live_allowed ? "LIVE: APPROVED" : "LIVE: BLOCKED";
+      const ksOn = status.kill_switches_engaged.length > 0;
+      const ksEl = document.getElementById("ksBadge");
+      ksEl.textContent = ksOn ? "KILL SWITCH: ENGAGED" : "KILL SWITCH: CLEAR";
+      ksEl.className = "badge " + (ksOn ? "halt" : "ok");
+
+      document.getElementById("cashVal").textContent = "$" + status.ledger.cash_balance;
+      document.getElementById("pnlVal").textContent =
+        `Realized: $${status.ledger.realized_pnl} | Unrealized: $${status.ledger.unrealized_pnl} | Balanced: ${status.ledger.balanced}`;
+      document.getElementById("ordersVal").textContent =
+        `${status.orders.total} total (${status.orders.filled} filled, ${status.orders.unknown_outcome} unknown)`;
+      document.getElementById("resVal").textContent =
+        `Active Reservations: ${status.reservations.active_count} | Reserved Notional: $${status.reservations.total_reserved_notional}`;
+
+      const latestRec = status.reconciliation.latest;
+      document.getElementById("reconVal").textContent = latestRec ? (latestRec.matched ? "MATCHED" : "BREAK DETECTED") : "NOT RUN";
+      document.getElementById("auditVal").textContent = `Audit Chain: ${status.audit_chain.valid ? "VALID" : "TAMPERED"} (${status.audit_chain.message})`;
+
+      const posTbody = document.querySelector("#posTable tbody");
+      posTbody.innerHTML = Object.entries(status.ledger.positions).map(([s, q]) => `<tr><td>${s}</td><td>${q}</td></tr>`).join("") || "<tr><td colspan='2'>Flat</td></tr>";
+
+      const ordTbody = document.querySelector("#ordersTable tbody");
+      ordTbody.innerHTML = ordersRes.orders.slice(-25).reverse().map(o =>
+        `<tr><td>${o.client_order_id}</td><td>${o.strategy_id}</td><td>${o.symbol}</td><td>${o.side}</td><td>${o.quantity}</td><td>${o.filled_quantity}</td><td>${o.state}</td><td>${o.reject_reason || ""}</td></tr>`
+      ).join("") || "<tr><td colspan='8'>No orders yet</td></tr>";
+
+      const audTbody = document.querySelector("#auditTable tbody");
+      audTbody.innerHTML = auditRes.events.slice(-15).reverse().map(e =>
+        `<tr><td>${e.sequence_no}</td><td>${e.event_type}</td><td>${e.actor} (${e.actor_role})</td><td>${e.entity_id}</td><td>${e.occurred_at_utc}</td><td>${e.event_hash.slice(0, 14)}...</td></tr>`
+      ).join("");
+    }
+
+    async function engageKillSwitch() {
+      const res = await fetch("/api/kill-switch/engage", { method: "POST", headers: opHeaders, body: JSON.stringify({ scope: "GLOBAL", target: "ALL", reason: "Manual operator console halt" }) }).then(r => r.json());
+      setToast("Kill switch engaged; canceled: " + (res.canceled_orders || []).length);
+      refreshAll();
+    }
+
+    async function releaseKillSwitch() {
+      const res = await fetch("/api/kill-switch/release", { method: "POST", headers: opHeaders, body: JSON.stringify({ scope: "GLOBAL", target: "ALL", reason: "Operator console release" }) }).then(r => r.json());
+      setToast(res.error_code ? res.message : "Kill switch released");
+      refreshAll();
+    }
+
+    async function runReconcile() {
+      const res = await fetch("/api/reconcile", { method: "POST", headers: opHeaders, body: JSON.stringify({}) }).then(r => r.json());
+      setToast(res.report ? ("Reconcile matched=" + res.report.matched + ", cash_delta=" + res.report.cash_delta) : res.message);
+      refreshAll();
+    }
+
+    refreshAll();
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at_utc": "2026-11-27T00:00:00Z",
+  "instruments": [
+    {
+      "canonical_id": "EQ:US:AAPL",
+      "asset_class": "EQUITY",
+      "currency": "USD",
+      "tick_size": "0.01",
+      "lot_size": "1",
+      "min_qty": "1",
+      "broker_symbols": {
+        "mock": "AAPL",
+        "sandbox-alpha": "US:AAPL",
+        "sandbox-beta": "AAPL.US"
+      }
+    },
+    {
+      "canonical_id": "EQ:US:MSFT",
+      "asset_class": "EQUITY",
+      "currency": "USD",
+      "tick_size": "0.01",
+      "lot_size": "1",
+      "min_qty": "1",
+      "broker_symbols": {
+        "mock": "MSFT",
+        "sandbox-alpha": "US:MSFT",
+        "sandbox-beta": "MSFT.US"
+      }
+    },
+    {
+      "canonical_id": "ETF:US:SPY",
+      "asset_class": "ETF",
+      "currency": "USD",
+      "tick_size": "0.01",
+      "lot_size": "1",
+      "min_qty": "1",
+      "broker_symbols": {
+        "mock": "SPY",
+        "sandbox-alpha": "US:SPY",
+        "sandbox-beta": "SPY.US"
+      }
+    },
+    {
+      "canonical_id": "CRYPTO:SPOT:BTC-USD",
+      "asset_class": "CRYPTO",
+      "currency": "USD",
+      "tick_size": "0.50",
+      "lot_size": "0.001",
+      "min_qty": "0.001",
+      "broker_symbols": {
+        "mock": "BTC-USD",
+        "sandbox-beta": "BTC-USD"
+      }
+    }
+  ]
+}

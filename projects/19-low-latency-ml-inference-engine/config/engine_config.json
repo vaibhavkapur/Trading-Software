@@ -1,0 +1,27 @@
+{
+  "config_version": "1.0.0",
+  "environment": "local_sandbox",
+  "order_execution_enabled": false,
+  "default_runtime": "cpp_native",
+  "model_root": "data/fixtures/models",
+  "active_model_id": "lob_alpha_mlp",
+  "default_version": "1.0.0",
+  "routing": {
+    "strategy": "primary",
+    "primary_version": "1.0.0",
+    "canary_version": null,
+    "canary_weight": 0.0
+  },
+  "limits": {
+    "max_in_flight": 16,
+    "max_batch_size": 256,
+    "max_feature_age_ms": 5000,
+    "parity_tolerance_abs": 1e-9
+  },
+  "security": {
+    "allowed_serialization_formats": ["safe_ieee754_bin_v1"],
+    "reject_untrusted_extensions": [".pkl", ".pickle", ".joblib", ".dill", ".pt", ".pth", ".ckpt"],
+    "require_sha256_verification": true,
+    "require_golden_parity_on_load": true
+  }
+}

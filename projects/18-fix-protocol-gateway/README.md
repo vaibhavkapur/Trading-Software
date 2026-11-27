@@ -1,12 +1,15 @@
-# FIX protocol gateway
+# FIX Protocol Gateway
 
 A local C++20 order-entry gateway and synthetic counterparty exchange FIX 4.4 over loopback TCP. Both sessions persist their sequence numbers and messages. The OMS adapter journals commands before transmission and applies execution reports by stable identity. A successful batch ends with matching OMS and venue journals, matching sequence counters, and a bilateral logout.
 
-## Build and run
+## Getting started
 
 Use macOS or Linux with a C++20 compiler, CMake 3.20+, SQLite 3 development headers, Python 3.8+, curl, patch, tar, and a writable local filesystem. Loopback TCP must be available. The first setup downloads a SHA-256-pinned QuickFIX archive. Subsequent builds reuse it from `build/deps/`.
 
+From the repository root, enter the project directory and run the following commands.
+
 ```sh
+cd projects/18-fix-protocol-gateway
 ./scripts/setup
 ./scripts/validate
 ./scripts/demo
@@ -23,7 +26,7 @@ build/fix-gateway state status
 
 Inputs use whole shares and integer USD cents. The binary emits versioned JSON Lines. Each order result includes a stable event ID and event and availability timestamps. Resubmitting an identical command returns its stored results. Reusing its ID with changed terms exits with an error.
 
-## Implementation and evidence
+## Documentation and evidence
 
 - [Architecture, FIX dialect, OMS interface and recovery](docs/design.md)
 - [Operator runbook, scope and certification requirements](docs/runbook.md)

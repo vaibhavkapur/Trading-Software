@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "seed": 42,
+  "scenarios": [
+    {
+      "name": "rate_limit",
+      "broker_id": "sandbox-alpha",
+      "expected_error_code": "RATE_LIMITED",
+      "expected_outcome": "rejected_with_retry_after_and_recovered_after_window"
+    },
+    {
+      "name": "expired_credential",
+      "broker_id": "sandbox-alpha",
+      "expected_error_code": "AUTH_EXPIRED",
+      "expected_outcome": "rejected_no_secret_in_logs_and_recovered_after_rotation"
+    },
+    {
+      "name": "symbol_mismatch",
+      "broker_id": "sandbox-alpha",
+      "expected_error_code": "SYMBOL_MISMATCH",
+      "expected_outcome": "rejected_before_dispatch_zero_adapter_calls"
+    },
+    {
+      "name": "duplicate_webhook",
+      "broker_id": "sandbox-alpha",
+      "expected_error_code": "",
+      "expected_outcome": "idempotent_dedup_exact_filled_qty_preserved"
+    },
+    {
+      "name": "out_of_order_fill",
+      "broker_id": "sandbox-beta",
+      "expected_error_code": "",
+      "expected_outcome": "monotonic_state_and_exact_vwap_after_reordering"
+    },
+    {
+      "name": "unknown_submit_result",
+      "broker_id": "sandbox-beta",
+      "expected_error_code": "UNKNOWN_OUTCOME",
+      "expected_outcome": "no_blind_retry_reconciled_to_broker_truth"
+    },
+    {
+      "name": "cancel_timeout",
+      "broker_id": "sandbox-beta",
+      "expected_error_code": "CANCEL_TIMEOUT",
+      "expected_outcome": "marked_cancel_pending_then_reconciled_to_terminal_state"
+    }
+  ]
+}

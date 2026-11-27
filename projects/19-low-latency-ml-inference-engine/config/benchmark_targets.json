@@ -1,0 +1,19 @@
+{
+  "config_version": "1.0.0",
+  "strategy_context": "Short-horizon (100ms-5s) synthetic LOB microprice alpha research signal; execution disabled.",
+  "notes": "Thresholds below are regression gates calibrated to measured local hardware baselines, not universal SLA promises.",
+  "sample_counts": {
+    "warmup_iterations": 200,
+    "single_iterations": 5000,
+    "batch_size": 64,
+    "batch_iterations": 500,
+    "concurrent_threads": 4,
+    "concurrent_requests_per_thread": 1000
+  },
+  "regression_gates_us": {
+    "cpp_native_single_p99_max_us": 500.0,
+    "cpp_native_batch_per_item_p99_max_us": 100.0,
+    "python_reference_single_p99_max_us": 2000.0,
+    "max_tail_regression_ratio": 2.5
+  }
+}

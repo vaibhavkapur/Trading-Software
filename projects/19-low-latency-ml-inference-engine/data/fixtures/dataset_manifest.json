@@ -1,0 +1,22 @@
+{
+  "chronological_split": {
+    "test_count": 180,
+    "test_end_utc": "2026-01-15T14:34:59.750Z",
+    "test_start_utc": "2026-01-15T14:34:15.000Z",
+    "train_count": 840,
+    "train_end_utc": "2026-01-15T14:33:29.750Z",
+    "train_start_utc": "2026-01-15T14:30:00.000Z",
+    "val_count": 180,
+    "val_end_utc": "2026-01-15T14:34:14.750Z",
+    "val_start_utc": "2026-01-15T14:33:30.000Z"
+  },
+  "currency": "USD",
+  "dataset_id": "synthetic_lob_microprice_v1",
+  "file": "synthetic_lob_features.jsonl",
+  "instrument_id": "SYN-EQUITY-A",
+  "license": "Internal synthetic test fixture \u2014 permitted for local and CI use.",
+  "num_records": 1200,
+  "provenance": "Deterministically generated synthetic data (seed=42); zero proprietary or external market data.",
+  "schema_version": "1.0.0",
+  "sha256": "9a566f278e7f80aafdead800b86f549978b726b62f105d11909c4bfe72c85f1d"
+}

@@ -1,0 +1,34 @@
+test_full_suite_produces_percentiles_environment_and_markdown (tests.integration.test_benchmark_harness.TestBenchmarkHarness) ... ok
+test_tail_regression_detector_flags_regression (tests.integration.test_benchmark_harness.TestBenchmarkHarness) ... ok
+test_single_and_batch_parity_across_v1_and_v2 (tests.integration.test_native_parity.TestNativeParity) ... ok
+test_primary_canary_pinning_and_rollback (tests.integration.test_router_and_rollout.TestRouterAndRollout) ... ok
+test_scenario_1_python_native_parity (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_2_missing_feature (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_3_nan_feature (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_4_invalid_artifact_rejected (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_5_model_reload_and_safe_failure_isolation (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_6_overload_shedding (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_7_cold_start_vs_warm (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_scenario_8_latency_tail_regression_detected (tests.scenarios.test_failure_scenarios.TestRequiredFailureScenarios) ... ok
+test_load_verified_v1_bundle (tests.unit.test_artifact_integrity.TestArtifactIntegrity) ... ok
+test_reject_bundle_containing_pickle_file (tests.unit.test_artifact_integrity.TestArtifactIntegrity) ... ok
+test_reject_disallowed_serialization_format_in_manifest (tests.unit.test_artifact_integrity.TestArtifactIntegrity) ... ok
+test_reject_path_traversal_in_manifest (tests.unit.test_artifact_integrity.TestArtifactIntegrity) ... ok
+test_reject_tampered_weights_sha256 (tests.unit.test_artifact_integrity.TestArtifactIntegrity) ... ok
+test_reject_untrusted_pickle_file_directly (tests.unit.test_artifact_integrity.TestArtifactIntegrity) ... ok
+test_bool_and_string_feature_rejected (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_invalid_feature_spec_std (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_missing_feature_rejected (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_naive_timestamp_rejected (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_nan_and_inf_rejected (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_out_of_bounds_rejected (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_timestamp_validation_fresh_stale_and_future (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_valid_extraction_and_standardization_with_clipping (tests.unit.test_contracts_and_preprocessing.TestContractsAndPreprocessing) ... ok
+test_python_reference_matches_golden_vectors (tests.unit.test_reference_scorer.TestReferenceScorer) ... ok
+test_python_reference_request_observability (tests.unit.test_reference_scorer.TestReferenceScorer) ... ok
+test_synthetic_dataset_is_deterministic_and_chronological (tests.unit.test_reference_scorer.TestReferenceScorer) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.477s
+
+OK

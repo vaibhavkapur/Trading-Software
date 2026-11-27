@@ -1,0 +1,10 @@
+{
+  "bundle_id": "LIVE-GATE-TEMPLATE-UNAPPROVED",
+  "venue_readiness_verified": false,
+  "regulatory_readiness_verified": false,
+  "independent_risk_review_ref": null,
+  "security_review_ref": null,
+  "soak_report_ref": null,
+  "approvals": [],
+  "notes": "Template only. Live mode remains strictly blocked by code and policy until written approvals from RISK_OFFICER, COMPLIANCE, and CTO plus verified venue/regulatory readiness are attached."
+}

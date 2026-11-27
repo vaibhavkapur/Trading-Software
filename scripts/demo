@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+state=${1:-$(mktemp -d)}
+echo "Simulator state: $state" >&2
+exec build/fix-gateway "$state" run data/fixtures/orders-v1.txt

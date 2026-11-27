@@ -1,0 +1,38 @@
+UpdateCTestConfiguration  from :/Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build/DartConfiguration.tcl
+Parse Config file:/Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build/DartConfiguration.tcl
+Test project /Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: conformance
+
+1: Test command: /Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build/conformance
+1: Working Directory: /Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build
+1: Test timeout computed to be: 45
+1: PASS domain invariants and dialect
+1: PASS order lifecycle and unknown order
+1: PASS logon, test request, heartbeat and logout
+1: PASS missing field and unsupported message
+1: PASS invalid checksum and recovery
+1: PASS sequence gap, resend and gap-fill
+1: PASS duplicate and conflicting execution report
+1: PASS lost fill and cross-date restart
+1: PASS process death during fill delivery
+1: PASS uncertain handoffs and exclusive state ownership
+1/2 Test #1: conformance ......................   Passed    0.58 sec
+test 2
+    Start 2: cli_contract
+
+2: Test command: /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 "/Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/tests/cli.py" "/Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build/fix-gateway" "/Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/data/fixtures/orders-v1.txt"
+2: Working Directory: /Users/vaibhavkapur/Desktop/new/fix-protocol-gateway/build
+2: Test timeout computed to be: 45
+2: PASS CLI new/replace/cancel, explicit reject, durable results, rerun, invalid input and reconciliation
+2/2 Test #2: cli_contract .....................   Passed    0.10 sec
+
+100% tests passed out of 2
+
+Total Test time (real) =   0.68 sec

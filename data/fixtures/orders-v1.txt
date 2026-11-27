@@ -1,0 +1,8 @@
+# Synthetic shares. Prices are integer USD cents.
+new rest SYNTH buy 10 9900
+replace amend rest SYNTH buy 12 9950
+cancel pull amend SYNTH buy 12
+new cross SYNTH sell 7 10000
+cancel unknown absent SYNTH sell 1
+reconnect
+status

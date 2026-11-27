@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+archive=build/deps/quickfix-1.16.0.tar.gz
+mkdir -p build/deps
+if [ ! -f "$archive" ]; then
+  curl --fail --location --retry 3 https://codeload.github.com/quickfix/quickfix/tar.gz/refs/tags/v1.16.0 -o "$archive.part"
+  mv "$archive.part" "$archive"
+fi
+python3 - "$archive" <<'PY'
+import hashlib, pathlib, sys
+actual = hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest()
+if actual != "6eb0e678288473e57db220d3bf53c4d5c92814629ca548af09ca7e365fd7ee70":
+    sys.exit("QuickFIX archive digest mismatch")
+PY
+if [ ! -f build/deps/quickfix-1.16.0/CMakeLists.txt ]; then
+  tar xzf "$archive" -C build/deps
+fi
+if [ ! -f build/deps/quickfix-1.16.0/.nonstop-v1 ]; then
+  (cd build/deps/quickfix-1.16.0 && patch -p1 < ../../../patches/nonstop-startup.patch)
+  touch build/deps/quickfix-1.16.0/.nonstop-v1
+fi
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel "${JOBS:-4}"
